@@ -31,19 +31,10 @@ GVAR(registeredComputers) = [];
 	["Theme", "Client-side MMC desktop theme."],
 	["Moony's Magnificent Computer", "Player Profile"],
 	[
-		["dark", "light"],
-		["Dark", "Light"],
+		["dark", "light", "user"],
+		["Dark", "Light", "User"],
 		0
 	],
-	0
-] call CBA_fnc_addSetting;
-
-[
-	QGVAR(useLayoutColors),
-	"CHECKBOX",
-	["Use Layout Colors", "Use your Arma interface color for MMC highlights and buttons."],
-	["Moony's Magnificent Computer", "Player Profile"],
-	true,
 	0
 ] call CBA_fnc_addSetting;
 
@@ -53,18 +44,9 @@ GVAR(registeredComputers) = [];
 	["Desktop Background", "Client-side preferred MMC desktop background."],
 	["Moony's Magnificent Computer", "Player Profile"],
 	[
-		["default_dark", "default_light", "nato", "csat", "aaf", "fia", "custom"],
-		["Default Dark", "Default Light", "NATO", "CSAT", "AAF", "FIA", "Custom Texture Path"],
+		["default_dark", "default_light", "nato", "csat", "aaf", "fia"],
+		["Default Dark", "Default Light", "NATO", "CSAT", "AAF", "FIA"],
 		0
 	],
-	0
-] call CBA_fnc_addSetting;
-
-[
-	QGVAR(profileBackgroundCustom),
-	"EDITBOX",
-	["Custom Background Texture", "Optional texture path used when Desktop Background is set to Custom, or when a computer defines no background."],
-	["Moony's Magnificent Computer", "Player Profile"],
-	"",
 	0
 ] call CBA_fnc_addSetting;

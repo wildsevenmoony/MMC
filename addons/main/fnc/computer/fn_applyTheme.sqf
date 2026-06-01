@@ -15,7 +15,9 @@ params [["_display", displayNull, [displayNull]]];
 
 if (isNull _display) exitWith {};
 
-private _isLight = GVAR(profileTheme) isEqualTo "light";
+private _theme = GVAR(profileTheme);
+private _isLight = _theme isEqualTo "light";
+private _isUser = _theme isEqualTo "user";
 private _accent = [
 	profileNamespace getVariable ["GUI_BCG_RGB_R", 0.13],
 	profileNamespace getVariable ["GUI_BCG_RGB_G", 0.54],
@@ -23,12 +25,30 @@ private _accent = [
 	profileNamespace getVariable ["GUI_BCG_RGB_A", 0.8]
 ];
 
-private _desktop = if (_isLight) then {[0.82, 0.86, 0.88, 1]} else {[0.035, 0.075, 0.115, 1]};
-private _panel = if (_isLight) then {[0.93, 0.94, 0.95, 0.94]} else {[0.02, 0.025, 0.035, 0.94]};
-private _panelStrong = if (_isLight) then {[0.86, 0.88, 0.9, 0.98]} else {[0.015, 0.018, 0.024, 0.98]};
-private _text = if (_isLight) then {[0.04, 0.05, 0.06, 1]} else {[0.92, 0.94, 0.97, 1]};
-private _tint = if (_isLight) then {[1, 1, 1, 0.08]} else {[0, 0, 0, 0.18]};
-private _button = [_panelStrong, _accent] select GVAR(useLayoutColors);
+private _desktop = [0.035, 0.075, 0.115, 1];
+private _panel = [0.02, 0.025, 0.035, 0.94];
+private _panelStrong = [0.015, 0.018, 0.024, 0.98];
+private _text = [0.92, 0.94, 0.97, 1];
+private _tint = [0, 0, 0, 0.18];
+private _button = [0.028, 0.032, 0.042, 0.98];
+
+if (_isLight) then {
+	_desktop = [0.9, 0.92, 0.94, 1];
+	_panel = [0.98, 0.985, 0.99, 0.94];
+	_panelStrong = [0.84, 0.86, 0.88, 0.98];
+	_text = [0.035, 0.04, 0.05, 1];
+	_tint = [1, 1, 1, 0.08];
+	_button = [0.88, 0.895, 0.91, 0.98];
+};
+
+if (_isUser) then {
+	_desktop = [0.035, 0.075, 0.115, 1];
+	_panel = [0.02, 0.025, 0.035, 0.94];
+	_panelStrong = [0.015, 0.018, 0.024, 0.98];
+	_text = [0.92, 0.94, 0.97, 1];
+	_tint = [0, 0, 0, 0.18];
+	_button = _accent;
+};
 
 (_display displayCtrl IDC_MMC_DESKTOP_BG) ctrlSetBackgroundColor _desktop;
 (_display displayCtrl IDC_MMC_DESKTOP_TINT) ctrlSetBackgroundColor _tint;
