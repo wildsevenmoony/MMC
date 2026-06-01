@@ -5,9 +5,43 @@
  * Registers synced objects as MMC computers from an Eden/Zeus module.
  */
 
-params ["_logic"];
+private _logic = objNull;
+private _objects = [];
+private _activated = true;
 
-private _objects = synchronizedObjects _logic;
+if ((_this param [0, objNull]) isEqualType "") then {
+	private _mode = _this param [0, "", [""]];
+	private _input = _this param [1, [], [[]]];
+
+	if !(_mode in ["init", "attributesChanged3DEN", "registeredToWorld3DEN", "connectionChanged3DEN"]) exitWith {true};
+
+	_input params [
+		["_logicInput", objNull, [objNull]],
+		["_activatedInput", true, [true]]
+	];
+
+	_logic = _logicInput;
+	_activated = _activatedInput;
+
+	if (is3DEN) exitWith {true};
+} else {
+	_this params [
+		["_logicInput", objNull, [objNull]],
+		["_objectsInput", [], [[]]],
+		["_activatedInput", true, [true]]
+	];
+
+	_logic = _logicInput;
+	_objects = _objectsInput;
+	_activated = _activatedInput;
+};
+
+if (!_activated || {isNull _logic}) exitWith {true};
+
+if (_objects isEqualTo []) then {
+	_objects = synchronizedObjects _logic;
+};
+
 private _config = createHashMapFromArray [
 	["poweredOn", _logic getVariable [QGVAR(poweredOn), true]],
 	["background", _logic getVariable [QGVAR(background), ""]],
@@ -20,4 +54,8 @@ private _config = createHashMapFromArray [
 	};
 } forEach _objects;
 
-deleteVehicle _logic;
+if (!is3DEN) then {
+	deleteVehicle _logic;
+};
+
+true
