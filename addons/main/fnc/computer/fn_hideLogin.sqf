@@ -43,6 +43,8 @@ if (_background isEqualTo "") then {
 };
 (_display displayCtrl IDC_MMC_DESKTOP_IMAGE) ctrlSetText ([_background] call FUNC(getBackgroundPath));
 
+[_display] call FUNC(applyTheme);
+
 {
 	(_display displayCtrl _x) ctrlShow true;
 } forEach [

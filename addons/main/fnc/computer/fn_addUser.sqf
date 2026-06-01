@@ -10,7 +10,8 @@ params [
 	["_username", "operator", [""]],
 	["_password", "", [""]],
 	["_email", "", [""]],
-	["_background", "default_dark", [""]]
+	["_background", "default_dark", [""]],
+	["_forceTheme", "", [""]]
 ];
 
 if (isNull _object) exitWith {false};
@@ -28,6 +29,7 @@ private _user = createHashMapFromArray [
 	["password", _password],
 	["email", _email],
 	["background", _background],
+	["forceTheme", _forceTheme],
 	["files", []],
 	["mail", []],
 	["source", "module"]

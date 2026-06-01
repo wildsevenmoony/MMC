@@ -37,6 +37,7 @@ class GVAR(RscComputer) {
 	enableSimulation = 1;
 	onLoad = "_this call MMC_fnc_initDisplay";
 	onUnload = "_this call MMC_fnc_handleDisplayUnload";
+	onKeyDown = "if ((_this select 1) in [28, 156]) then {call MMC_fnc_login; true} else {false}";
 
 	class ControlsBackground {
 		class DesktopBackground: RscText {
@@ -371,10 +372,10 @@ class GVAR(RscComputer) {
 		class LoginButton: GVAR(RscComputerButton) {
 			idc = IDC_MMC_LOGIN_BUTTON;
 			text = "Login";
-			x = "safeZoneX + safeZoneW * 0.39";
-			y = "safeZoneY + safeZoneH * 0.555";
-			w = "safeZoneW * 0.22";
-			h = 0.042;
+			x = "safeZoneX + safeZoneW * 0.43";
+			y = "safeZoneY + safeZoneH * 0.55";
+			w = "safeZoneW * 0.14";
+			h = 0.048;
 			action = "call MMC_fnc_login";
 		};
 
@@ -521,10 +522,10 @@ class GVAR(RscComputer) {
 
 		class FrameLoginButton: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_LOGIN_BUTTON;
-			x = "safeZoneX + safeZoneW * 0.39";
-			y = "safeZoneY + safeZoneH * 0.555";
-			w = "safeZoneW * 0.22";
-			h = 0.042;
+			x = "safeZoneX + safeZoneW * 0.43";
+			y = "safeZoneY + safeZoneH * 0.55";
+			w = "safeZoneW * 0.14";
+			h = 0.048;
 		};
 	};
 };

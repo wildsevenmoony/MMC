@@ -162,6 +162,26 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(userForceTheme): Combo {
+				property = QGVAR(userForceTheme);
+				displayName = "Force Layout";
+				tooltip = "Optional layout override for this user. If set, it ignores the player's CBA Theme setting while this user is logged in.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+
+				class Values {
+					class None {name = "None"; value = "";};
+					class Dark {name = "Dark"; value = "dark";};
+					class Light {name = "Light"; value = "light";};
+					class User {name = "User"; value = "user";};
+					class BLUFOR {name = "BLUFOR"; value = "blufor";};
+					class OPFOR {name = "OPFOR"; value = "opfor";};
+					class Independent {name = "Independent"; value = "independent";};
+					class Civilian {name = "Civilian"; value = "civilian";};
+				};
+			};
+
 			class ModuleDescription: ModuleDescription {};
 		};
 

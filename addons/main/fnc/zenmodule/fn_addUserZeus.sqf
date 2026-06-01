@@ -30,11 +30,21 @@ if (!isNull _objectUnderCursor && {!(_objectUnderCursor getVariable [QGVAR(isCom
 			],
 			false
 		],
-		["EDIT", ["Custom Background Texture", "Optional texture path. If filled, this overrides the Background selection above."], "", false]
+		["EDIT", ["Custom Background Texture", "Optional texture path. If filled, this overrides the Background selection above."], "", false],
+		[
+			"COMBO",
+			["Force Layout", "Optional layout override for this user."],
+			[
+				["", "dark", "light", "user", "blufor", "opfor", "independent", "civilian"],
+				["None", "Dark", "Light", "User", "BLUFOR", "OPFOR", "Independent", "Civilian"],
+				0
+			],
+			false
+		]
 	],
 	{
 		params ["_dialogValues", "_object"];
-		_dialogValues params ["_username", "_password", "_email", "_background", "_backgroundCustom"];
+		_dialogValues params ["_username", "_password", "_email", "_background", "_backgroundCustom", "_forceTheme"];
 
 		if (_backgroundCustom isNotEqualTo "") then {
 			_background = _backgroundCustom;
@@ -47,7 +57,7 @@ if (!isNull _objectUnderCursor && {!(_objectUnderCursor getVariable [QGVAR(isCom
 		};
 
 		{
-			[_x, _username, _password, _email, _background] remoteExecCall [QFUNC(addUser), 0, true];
+			[_x, _username, _password, _email, _background, _forceTheme] remoteExecCall [QFUNC(addUser), 0, true];
 		} forEach _targets;
 		[objNull, "USER ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
 	},

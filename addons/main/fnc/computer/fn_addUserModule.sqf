@@ -47,6 +47,7 @@ private _password = _logic getVariable [QGVAR(userPassword), ""];
 private _email = _logic getVariable [QGVAR(userEmail), "operator@mccsystems.com"];
 private _background = _logic getVariable [QGVAR(userBackground), "default_dark"];
 private _backgroundCustom = _logic getVariable [QGVAR(userBackgroundCustom), ""];
+private _forceTheme = _logic getVariable [QGVAR(userForceTheme), ""];
 if (_backgroundCustom isNotEqualTo "") then {
 	_background = _backgroundCustom;
 };
@@ -56,7 +57,8 @@ _logic setVariable [QGVAR(userConfig), createHashMapFromArray [
 	["username", _username],
 	["password", _password],
 	["email", _email],
-	["background", _background]
+	["background", _background],
+	["forceTheme", _forceTheme]
 ], true];
 
 private _computerObjects = _objects select {_x getVariable [QGVAR(isComputer), false]};
@@ -66,7 +68,7 @@ if (_computerObjects isEqualTo []) then {
 
 {
 	if (!isNull _x) then {
-		[_x, _username, _password, _email, _background] call FUNC(addUser);
+		[_x, _username, _password, _email, _background, _forceTheme] call FUNC(addUser);
 	};
 } forEach _computerObjects;
 

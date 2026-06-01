@@ -1,8 +1,6 @@
 #include "..\..\script_component.hpp"
 
 #define IDC_TITLE 10
-#define GUI_GRID_W (safeZoneW / 40)
-#define GUI_GRID_H (safeZoneH / 25)
 
 /*
  * Author: Moony
@@ -15,22 +13,14 @@ params ["_display", "_content"];
 
 private _controls = [];
 private _fields = [];
-private _contentPaddingY = 0.45 * GUI_GRID_H;
-private _xField = 12.5 * GUI_GRID_W;
-private _rowWLabel = 11 * GUI_GRID_W;
-private _rowWField = 13.5 * GUI_GRID_W;
-private _categoryBodyX = 0.35 * GUI_GRID_W;
-private _categoryBodyW = 26.9 * GUI_GRID_W;
-private _rowBackgroundX = 1.55 * GUI_GRID_W;
-private _columnGapW = 0.16 * GUI_GRID_W;
-private _sliderEditW = 2.3 * GUI_GRID_W;
-private _sliderGapW = 0.25 * GUI_GRID_W;
-private _toggleGapW = 0;
-private _sectionPadY = 0.16 * GUI_GRID_H;
-private _rowH = 1 * GUI_GRID_H;
-private _categoryH = 1 * GUI_GRID_H;
-private _rowGap = 0.16 * GUI_GRID_H;
-private _categoryGapTop = 0.32 * GUI_GRID_H;
+private _contentPaddingY = 0.018;
+private _rowBackgroundX = 0.035;
+private _xField = 0.34;
+private _rowWLabel = 0.26;
+private _rowWField = 0.42;
+private _columnGapW = 0.012;
+private _rowH = 0.04;
+private _rowGap = 0.006;
 private _savedValues = [];
 private _y = _contentPaddingY;
 
@@ -48,8 +38,8 @@ private _addControl = {
 
 private _addRowBackground = {
 	private _backgroundX = _rowBackgroundX;
-	private _labelTextX = _backgroundX + (0.25 * GUI_GRID_W);
-	private _backgroundW = (_xField - _columnGapW - _backgroundX) max GUI_GRID_W;
+	private _labelTextX = _backgroundX + 0.008;
+	private _backgroundW = (_xField - _columnGapW - _backgroundX) max 0.05;
 	private _background = ["RscText", -1, [_backgroundX, _y, _backgroundW, _rowH], ""] call _addControl;
 	_background ctrlSetBackgroundColor [0, 0, 0, 0.35];
 	[_labelTextX, _xField]
@@ -88,10 +78,10 @@ private _checkboxes = [];
 	private _username = _x getOrDefault ["username", "Unknown"];
 	private _rowY = _forEachIndex * _rowH;
 	private _checkbox = _display ctrlCreate ["RscCheckBox", -1, _group];
-	_checkbox ctrlSetPosition [0, _rowY + 0.005, 0.75 * GUI_GRID_W, 0.75 * GUI_GRID_H];
+	_checkbox ctrlSetPosition [0.006, _rowY + 0.004, 0.026, 0.032];
 	_checkbox ctrlCommit 0;
 	private _text = _display ctrlCreate ["RscText", -1, _group];
-	_text ctrlSetPosition [0.9 * GUI_GRID_W, _rowY, _rowWField - (1.1 * GUI_GRID_W), _rowH];
+	_text ctrlSetPosition [0.038, _rowY, _rowWField - 0.045, _rowH];
 	_text ctrlSetText _username;
 	_text ctrlSetTooltip (_x getOrDefault ["email", ""]);
 	_text ctrlCommit 0;

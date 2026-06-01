@@ -54,5 +54,6 @@ if ((_user getOrDefault ["password", ""]) isNotEqualTo _password) exitWith {
 _computer setVariable [QGVAR(activeUser), _user, true];
 _display setVariable [QGVAR(activeUser), _user];
 
+[_display] call FUNC(applyTheme);
 [_display] call FUNC(hideLogin);
 ["desktop"] call FUNC(renderApp);

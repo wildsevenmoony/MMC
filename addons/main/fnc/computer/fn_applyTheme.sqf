@@ -15,7 +15,12 @@ params [["_display", displayNull, [displayNull]]];
 
 if (isNull _display) exitWith {};
 
-private _theme = GVAR(profileTheme);
+private _computer = _display getVariable [QGVAR(computer), objNull];
+private _activeUser = [_computer] call FUNC(getActiveUser);
+private _theme = _activeUser getOrDefault ["forceTheme", ""];
+if (_theme isEqualTo "") then {
+	_theme = GVAR(profileTheme);
+};
 private _isLight = _theme isEqualTo "light";
 private _isUser = _theme isEqualTo "user";
 private _accent = [
