@@ -19,6 +19,6 @@ if !(isClass (configFile >> "CfgPatches" >> "zen_custom_modules")) exitWith {};
 
 	{
 		_x params ["_displayName", "_statement"];
-		["Moony's Magnificent Computer", _displayName, _statement] call zen_custom_modules_fnc_register;
+		["Moony's Magnificent Computers", _displayName, _statement] call zen_custom_modules_fnc_register;
 	} forEach _modules;
 };

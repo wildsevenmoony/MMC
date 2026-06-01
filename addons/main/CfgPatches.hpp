@@ -5,7 +5,7 @@
 
 class CfgPatches {
 	class ADDON {
-		name = "Moonys Magnificent Computer";
+		name = "Moonys Magnificent Computers";
 		author = "Moony";
 		requiredAddons[] = {
 			"ace_interact_menu",

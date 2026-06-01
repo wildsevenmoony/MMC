@@ -22,7 +22,7 @@ _data set ["files", _config getOrDefault ["files", [
 		["name", "welcome.txt"],
 		["type", "text"],
 		["path", "\Desktop\welcome.txt"],
-		["content", "Welcome to Moony's Magnificent Computer.\n\nThis is placeholder intel content. Mission makers will be able to inject files, pictures, audio, mail, messages, and notes through modules and scripts."]
+		["content", "Welcome to Moony's Magnificent Computers.\n\nThis is placeholder intel content. Mission makers will be able to inject files, pictures, audio, mail, messages, and notes through modules and scripts."]
 	],
 	createHashMapFromArray [
 		["name", "photo_placeholder.jpg"],

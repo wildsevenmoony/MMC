@@ -29,7 +29,7 @@ private _desktop = [0.035, 0.075, 0.115, 1];
 private _panel = [0.02, 0.025, 0.035, 0.94];
 private _panelStrong = [0.015, 0.018, 0.024, 0.98];
 private _text = [0.92, 0.94, 0.97, 1];
-private _tint = [0, 0, 0, 0.18];
+private _tint = [0, 0, 0, 0];
 private _button = [0.028, 0.032, 0.042, 0.98];
 
 if (_isLight) then {
@@ -37,7 +37,7 @@ if (_isLight) then {
 	_panel = [0.98, 0.985, 0.99, 0.94];
 	_panelStrong = [0.84, 0.86, 0.88, 0.98];
 	_text = [0.035, 0.04, 0.05, 1];
-	_tint = [1, 1, 1, 0.08];
+	_tint = [0, 0, 0, 0];
 	_button = [0.88, 0.895, 0.91, 0.98];
 };
 
@@ -46,7 +46,7 @@ if (_isUser) then {
 	_panel = [0.02, 0.025, 0.035, 0.94];
 	_panelStrong = [0.015, 0.018, 0.024, 0.98];
 	_text = [0.92, 0.94, 0.97, 1];
-	_tint = [0, 0, 0, 0.18];
+	_tint = [0, 0, 0, 0];
 	_button = _accent;
 };
 

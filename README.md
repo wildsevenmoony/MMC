@@ -1,6 +1,6 @@
-# Moony's Magnificent Computer
+# Moony's Magnificent Computers
 
-Moony's Magnificent Computer, or MMC, is planned as an Arma 3 framework for interactive in-mission computers. Mission makers will be able to attach a computer system to objects, define whether it starts powered on or off, and let players open a PC-style screen with apps, files, and mission intel.
+Moony's Magnificent Computers, or MMC, is planned as an Arma 3 framework for interactive in-mission computers. Mission makers will be able to attach a computer system to objects, define whether it starts powered on or off, and let players open a PC-style screen with apps, files, and mission intel.
 
 ## Planned Features
 

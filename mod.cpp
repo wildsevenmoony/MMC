@@ -1,12 +1,12 @@
-name = "Moony's Magnificent Computer";
+name = "Moony's Magnificent Computers";
 picture = "mmc.paa";
 logo = "mmc.paa";
 logoOver = "mmc.paa";
-tooltip = "Moony's Magnificent Computer";
-tooltipOwned = "Moony's Magnificent Computer";
+tooltip = "Moony's Magnificent Computers";
+tooltipOwned = "Moony's Magnificent Computers";
 overview = "Interactive in-mission computer systems for intel, files, mail, messages, and mission storytelling.";
 author = "Moony";
 overviewPicture = "mmc.paa";
-overviewText = "Moony's Magnificent Computer";
+overviewText = "Moony's Magnificent Computers";
 hideName = 0;
 hidePicture = 0;

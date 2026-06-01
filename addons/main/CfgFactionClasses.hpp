@@ -5,6 +5,6 @@
 
 class CfgFactionClasses {
 	class GVAR(Modules) {
-		displayName = "Moony's Magnificent Computer";
+		displayName = "Moony's Magnificent Computers";
 	};
 };
