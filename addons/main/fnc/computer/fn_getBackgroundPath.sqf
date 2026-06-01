@@ -24,11 +24,11 @@ if (_background isEqualTo "custom") then {
 if ((toArray _background) param [0, -1] isEqualTo 92) exitWith {_background};
 
 switch (toLowerANSI _background) do {
-	case "default_light": {PATHTOF(img\desktop_default_light.png)};
-	case "nato": {PATHTOF(img\desktop_nato.png)};
-	case "csat": {PATHTOF(img\desktop_csat.png)};
-	case "aaf": {PATHTOF(img\desktop_aaf.png)};
-	case "fia": {PATHTOF(img\desktop_fia.png)};
-	case "custom": {PATHTOF(img\desktop_default_dark.png)};
-	default {PATHTOF(img\desktop_default_dark.png)};
+	case "default_light": {PATHTOF(img\desktop_default_light.paa)};
+	case "nato": {PATHTOF(img\desktop_nato.paa)};
+	case "csat": {PATHTOF(img\desktop_csat.paa)};
+	case "aaf": {PATHTOF(img\desktop_aaf.paa)};
+	case "fia": {PATHTOF(img\desktop_fia.paa)};
+	case "custom": {PATHTOF(img\desktop_default_dark.paa)};
+	default {PATHTOF(img\desktop_default_dark.paa)};
 }
