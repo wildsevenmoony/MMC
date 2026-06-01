@@ -11,4 +11,16 @@ if (isNull _object) exitWith {createHashMap};
 
 private _user = _object getVariable [QGVAR(activeUser), createHashMap];
 if !(_user isEqualType createHashMap) exitWith {createHashMap};
+
+private _username = _user getOrDefault ["username", ""];
+if (_username isNotEqualTo "") then {
+	private _data = _object getVariable [QGVAR(data), createHashMap];
+	private _users = _data getOrDefault ["users", []];
+	private _index = _users findIf {toLowerANSI (_x getOrDefault ["username", ""]) isEqualTo toLowerANSI _username};
+	if (_index >= 0) then {
+		_user = _users select _index;
+		_object setVariable [QGVAR(activeUser), _user, true];
+	};
+};
+
 _user

@@ -101,7 +101,7 @@ class CfgVehicles {
 		category = QGVAR(Modules);
 		displayName = "Computer: Add User";
 		function = QFUNC(addUserModule);
-		functionPriority = 10;
+		functionPriority = 20;
 		isDisposable = 0;
 		is3DEN = 1;
 		isGlobal = 0;
@@ -184,7 +184,7 @@ class CfgVehicles {
 		category = QGVAR(Modules);
 		displayName = "Computer: Add Text File";
 		function = QFUNC(addTextFileModule);
-		functionPriority = 10;
+		functionPriority = 30;
 		isDisposable = 0;
 		is3DEN = 1;
 		isGlobal = 0;
@@ -238,7 +238,7 @@ class CfgVehicles {
 		category = QGVAR(Modules);
 		displayName = "Computer: Add Mail";
 		function = QFUNC(addMailModule);
-		functionPriority = 10;
+		functionPriority = 30;
 		isDisposable = 0;
 		is3DEN = 1;
 		isGlobal = 0;

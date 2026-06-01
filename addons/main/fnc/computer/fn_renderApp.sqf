@@ -56,7 +56,7 @@ private _setBody = {
 switch (_app) do {
 	case "files": {
 		_title ctrlSetText "Files";
-		private _files = _data getOrDefault ["files", []];
+		private _files = (_data getOrDefault ["files", []]) + (_activeUser getOrDefault ["files", []]);
 		{
 			private _row = _list lbAdd format ["%1  (%2)", _x getOrDefault ["name", "Untitled"], _x getOrDefault ["type", "file"]];
 			_list lbSetTooltip [_row, format [
@@ -79,7 +79,7 @@ switch (_app) do {
 	case "mail": {
 		_title ctrlSetText "Mail";
 		private _email = toLowerANSI (_activeUser getOrDefault ["email", ""]);
-		private _mail = (_data getOrDefault ["mail", []]) select {
+		private _mail = ((_data getOrDefault ["mail", []]) + (_activeUser getOrDefault ["mail", []])) select {
 			private _to = toLowerANSI (_x getOrDefault ["to", ""]);
 			_to in ["", "*"] || {_to isEqualTo _email}
 		};

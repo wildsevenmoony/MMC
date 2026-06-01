@@ -28,6 +28,8 @@ private _user = createHashMapFromArray [
 	["password", _password],
 	["email", _email],
 	["background", _background],
+	["files", []],
+	["mail", []],
 	["source", "module"]
 ];
 
@@ -35,9 +37,24 @@ private _index = _users findIf {toLowerANSI (_x getOrDefault ["username", ""]) i
 if (_index < 0) then {
 	_users pushBack _user;
 } else {
+	private _existing = _users select _index;
+	_user set ["files", _existing getOrDefault ["files", []]];
+	_user set ["mail", _existing getOrDefault ["mail", []]];
 	_users set [_index, _user];
 };
 
 _data set ["users", _users];
 _object setVariable [QGVAR(data), _data, true];
+
+if !(GVAR(registeredUsers) isEqualType []) then {
+	GVAR(registeredUsers) = [];
+};
+
+private _globalIndex = GVAR(registeredUsers) findIf {toLowerANSI (_x getOrDefault ["username", ""]) isEqualTo _lookup};
+if (_globalIndex < 0) then {
+	GVAR(registeredUsers) pushBack _user;
+} else {
+	GVAR(registeredUsers) set [_globalIndex, _user];
+};
+
 true

@@ -45,12 +45,28 @@ if (_objects isEqualTo []) then {
 private _name = _logic getVariable [QGVAR(fileName), "intel.txt"];
 private _path = _logic getVariable [QGVAR(filePath), "\Desktop\intel.txt"];
 private _content = _logic getVariable [QGVAR(fileContent), "Mission intel goes here."];
+private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), false]};
 
-{
-	if (!isNull _x) then {
-		[_x, _name, _content, "text", _path] call FUNC(addFile);
-	};
-} forEach _objects;
+if (_userModules isNotEqualTo []) then {
+	{
+		private _userConfig = _x getVariable [QGVAR(userConfig), createHashMap];
+		private _username = _userConfig getOrDefault ["username", ""];
+		private _targets = (synchronizedObjects _x) select {_x getVariable [QGVAR(isComputer), false]};
+		if (_targets isEqualTo []) then {
+			_targets = +GVAR(registeredComputers);
+		};
+
+		{
+			[_x, _username, _name, _content, "text", _path] call FUNC(addFileToUser);
+		} forEach _targets;
+	} forEach _userModules;
+} else {
+	{
+		if (!isNull _x) then {
+			[_x, _name, _content, "text", _path] call FUNC(addFile);
+		};
+	} forEach (_objects select {_x getVariable [QGVAR(isComputer), false]});
+};
 
 if (!is3DEN) then {
 	deleteVehicle _logic;

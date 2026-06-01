@@ -47,12 +47,28 @@ private _to = _logic getVariable [QGVAR(mailTo), "operator@mmc.local"];
 private _subject = _logic getVariable [QGVAR(mailSubject), "Mission Update"];
 private _body = _logic getVariable [QGVAR(mailBody), "Mail body goes here."];
 private _date = _logic getVariable [QGVAR(mailDate), "2035-06-01 08:00"];
+private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), false]};
 
-{
-	if (!isNull _x) then {
-		[_x, _from, _to, _subject, _body, _date] call FUNC(addMail);
-	};
-} forEach _objects;
+if (_userModules isNotEqualTo []) then {
+	{
+		private _userConfig = _x getVariable [QGVAR(userConfig), createHashMap];
+		private _username = _userConfig getOrDefault ["username", ""];
+		private _targets = (synchronizedObjects _x) select {_x getVariable [QGVAR(isComputer), false]};
+		if (_targets isEqualTo []) then {
+			_targets = +GVAR(registeredComputers);
+		};
+
+		{
+			[_x, _username, _from, _to, _subject, _body, _date] call FUNC(addMailToUser);
+		} forEach _targets;
+	} forEach _userModules;
+} else {
+	{
+		if (!isNull _x) then {
+			[_x, _from, _to, _subject, _body, _date] call FUNC(addMail);
+		};
+	} forEach (_objects select {_x getVariable [QGVAR(isComputer), false]});
+};
 
 if (!is3DEN) then {
 	deleteVehicle _logic;

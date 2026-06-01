@@ -38,13 +38,13 @@ if (_knownIndex >= 0) then {
 	_user = _users select _knownIndex;
 } else {
 	private _profileUser = [] call FUNC(createProfileUser);
-	if (!_closedSystem && {toLowerANSI (_profileUser getOrDefault ["username", ""]) isEqualTo _lookup}) then {
+	if (GVAR(allowPersonalAccounts) && {!_closedSystem} && {toLowerANSI (_profileUser getOrDefault ["username", ""]) isEqualTo _lookup}) then {
 		_user = _profileUser;
 	};
 };
 
 if (count _user == 0) exitWith {
-	[["Unknown user.", "Unknown user on closed system."] select _closedSystem] call _setError;
+	[if (!GVAR(allowPersonalAccounts) && {!_closedSystem}) then {"Personal accounts disabled."} else {["Unknown user.", "Unknown user on closed system."] select _closedSystem}] call _setError;
 };
 
 if ((_user getOrDefault ["password", ""]) isNotEqualTo _password) exitWith {

@@ -51,14 +51,25 @@ if (_backgroundCustom isNotEqualTo "") then {
 	_background = _backgroundCustom;
 };
 
+_logic setVariable [QGVAR(isUserModule), true, true];
+_logic setVariable [QGVAR(userConfig), createHashMapFromArray [
+	["username", _username],
+	["password", _password],
+	["email", _email],
+	["background", _background]
+], true];
+
+private _computerObjects = _objects select {_x getVariable [QGVAR(isComputer), false]};
+if (_computerObjects isEqualTo []) then {
+	_computerObjects = +GVAR(registeredComputers);
+};
+
 {
 	if (!isNull _x) then {
 		[_x, _username, _password, _email, _background] call FUNC(addUser);
 	};
-} forEach _objects;
+} forEach _computerObjects;
 
-if (!is3DEN) then {
-	deleteVehicle _logic;
-};
+// Keep the module logic alive so synced file/mail modules can target this user.
 
 true

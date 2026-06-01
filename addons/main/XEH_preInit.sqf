@@ -6,6 +6,7 @@
  */
 
 GVAR(registeredComputers) = [];
+GVAR(registeredUsers) = [];
 
 [
 	QGVAR(profileLoginName),
@@ -40,6 +41,15 @@ GVAR(registeredComputers) = [];
 	["Logout When Closed", "If enabled, closing the computer dialog logs the current user out of that computer."],
 	["Moony's Magnificent Computers", "Player Profile"],
 	false,
+	0
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(allowPersonalAccounts),
+	"CHECKBOX",
+	["Allow Personal Accounts", "If disabled, players cannot log in with their personal CBA profile account. Only mission-defined users are allowed."],
+	["Moony's Magnificent Computers", "Player Profile"],
+	true,
 	0
 ] call CBA_fnc_addSetting;
 

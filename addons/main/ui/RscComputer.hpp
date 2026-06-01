@@ -262,7 +262,7 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + safeZoneH * 0.36";
 			w = "safeZoneW";
 			h = 0.08;
-			sizeEx = 0.068;
+			sizeEx = 0.078;
 			style = 2;
 			colorBackground[] = {0, 0, 0, 0};
 		};
@@ -275,7 +275,7 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + safeZoneH * 0.445";
 			w = "safeZoneW";
 			h = 0.045;
-			sizeEx = 0.037;
+			sizeEx = 0.045;
 			style = 2;
 			colorBackground[] = {0, 0, 0, 0};
 		};
@@ -288,7 +288,7 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + safeZoneH * 0.595";
 			w = "safeZoneW";
 			h = 0.04;
-			sizeEx = 0.03;
+			sizeEx = 0.036;
 			style = 2;
 			colorBackground[] = {0, 0, 0, 0};
 		};

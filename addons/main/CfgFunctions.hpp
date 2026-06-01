@@ -8,7 +8,9 @@ class CfgFunctions {
 		class Computer {
 			file = PATHTOF(fnc\computer);
 			class addFile {};
+			class addFileToUser {};
 			class addMail {};
+			class addMailToUser {};
 			class addMessage {};
 			class addNote {};
 			class addUser {};
@@ -18,6 +20,7 @@ class CfgFunctions {
 			class createDefaultData {};
 			class createProfileUser {};
 			class getActiveUser {};
+			class getRegisteredUsers {};
 			class initDisplay {};
 			class handleDisplayUnload {};
 			class addMailModule {};
