@@ -11,6 +11,8 @@ if (isNull _display) exitWith {};
 private _computer = _display getVariable [QGVAR(computer), objNull];
 [_computer, "power_down"] call FUNC(setScreenState);
 [_computer] call FUNC(logout);
+[_computer] call FUNC(stopAudio);
+[] call FUNC(stopVideo);
 _display setVariable [QGVAR(startMenuOpen), false];
 [
 	_display,

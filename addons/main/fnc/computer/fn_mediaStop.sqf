@@ -10,5 +10,6 @@ if (isNull _display) exitWith {false};
 
 private _computer = _display getVariable [QGVAR(computer), objNull];
 [_computer] call FUNC(stopAudio);
+[] call FUNC(stopVideo);
 (_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText "Stopped";
 true

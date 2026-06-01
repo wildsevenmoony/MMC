@@ -56,10 +56,14 @@ if (count _activeUser == 0) exitWith {
 	[_display] call FUNC(showLogin);
 };
 
+private _isSelect = _app isEqualTo "select";
 if (_app isEqualTo "select") then {
 	_app = _display getVariable [QGVAR(currentApp), "desktop"];
 } else {
 	_display setVariable [QGVAR(currentApp), _app];
+	if (_app isEqualTo "files") then {
+		_display setVariable [QGVAR(filesFolder), ""];
+	};
 };
 
 private _index = if (_event isEqualTo []) then {lbCurSel _list} else {_event select 1};
@@ -75,36 +79,99 @@ switch (_app) do {
 	case "files": {
 		_title ctrlSetText "Files";
 		private _files = (_data getOrDefault ["files", []]) + (_activeUser getOrDefault ["files", []]);
+		{
+			(_display displayCtrl _x) ctrlShow true;
+			(_display displayCtrl _x) ctrlSetFade 0;
+			(_display displayCtrl _x) ctrlCommit 0;
+		} forEach _mediaControls;
+		(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText "Selected: No Audio File Selected";
+		_display setVariable [QGVAR(selectedMediaFile), createHashMap];
+
 		if (_files isEqualTo []) exitWith {
 			[_noContent] call _setBody;
 		};
-		{
-			private _row = _list lbAdd format ["%1  (%2)", _x getOrDefault ["name", "Untitled"], _x getOrDefault ["type", "file"]];
-			_list lbSetTooltip [_row, format [
-				"%1%2Type: %3",
-				_x getOrDefault ["path", _x getOrDefault ["name", "Untitled"]],
-				toString [10],
-				_x getOrDefault ["type", "file"]
-			]];
-		} forEach _files;
-		if (_index < 0) then {_index = 0};
-		_list lbSetCurSel _index;
-		private _file = _files param [_index, createHashMap];
-		private _type = _file getOrDefault ["type", "file"];
-		if (_type isEqualTo "audio") then {
-			{
-				(_display displayCtrl _x) ctrlShow true;
-			} forEach _mediaControls;
-			(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText format ["Selected: %1", _file getOrDefault ["name", "audio"]];
+
+		private _folder = _display getVariable [QGVAR(filesFolder), ""];
+		if (_isSelect) then {
+			private _rows = _display getVariable [QGVAR(fileListRows), []];
+			private _selectedRow = _rows param [_index, createHashMap];
+			private _action = _selectedRow getOrDefault ["action", ""];
+			if (_action isEqualTo "folder") then {
+				_folder = _selectedRow getOrDefault ["type", ""];
+				_display setVariable [QGVAR(filesFolder), _folder];
+				_index = 0;
+			};
+			if (_action isEqualTo "back") then {
+				_folder = "";
+				_display setVariable [QGVAR(filesFolder), _folder];
+				_index = 0;
+			};
 		};
-		private _mediaHint = ["", "<br/><br/><t color='#9fb6d8'>Use the media controls below to play this file from the computer object.</t>"] select (_type isEqualTo "audio");
-		[format [
-			"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t><br/><br/>%3%4",
-			_file getOrDefault ["name", "No file selected"],
-			_file getOrDefault ["path", ""],
-			_file getOrDefault ["content", ""],
-			_mediaHint
-		]] call _setBody;
+
+		private _rows = [];
+		if (_folder isEqualTo "") then {
+			{
+				_x params ["_label", "_type"];
+				private _row = _list lbAdd _label;
+				_list lbSetTooltip [_row, format ["Open %1.", _label]];
+				_rows pushBack createHashMapFromArray [["action", "folder"], ["type", _type]];
+			} forEach [
+				["Text Files", "text"],
+				["Audio Files", "audio"],
+				["Pictures", "picture"],
+				["Videos", "video"]
+			];
+			_display setVariable [QGVAR(fileListRows), _rows];
+			["<t size='1.25'>Folders</t><br/><br/>Select a folder to view files from the computer and the active user account."] call _setBody;
+		} else {
+			private _backRow = _list lbAdd "↩ Back";
+			_list lbSetTooltip [_backRow, "Return to file folders."];
+			_rows pushBack createHashMapFromArray [["action", "back"]];
+
+			private _folderFiles = _files select {(_x getOrDefault ["type", "file"]) isEqualTo _folder};
+			{
+				private _row = _list lbAdd (_x getOrDefault ["name", "Untitled"]);
+				_list lbSetTooltip [_row, format [
+					"%1%2Type: %3",
+					_x getOrDefault ["path", _x getOrDefault ["name", "Untitled"]],
+					toString [10],
+					_x getOrDefault ["type", "file"]
+				]];
+				_rows pushBack createHashMapFromArray [["action", "file"], ["file", _x]];
+			} forEach _folderFiles;
+
+			_display setVariable [QGVAR(fileListRows), _rows];
+
+			if (_folderFiles isEqualTo []) exitWith {
+				[_noContent] call _setBody;
+			};
+
+			private _rowData = _rows param [_index, createHashMap];
+			if ((_rowData getOrDefault ["action", ""]) isNotEqualTo "file") exitWith {
+				["<t size='1.25'>Folders</t><br/><br/>Select a file in this folder."] call _setBody;
+			};
+
+			private _file = _rowData getOrDefault ["file", createHashMap];
+			private _type = _file getOrDefault ["type", "file"];
+			if (_type in ["audio", "video"]) then {
+				_display setVariable [QGVAR(selectedMediaFile), _file];
+				(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText format ["Selected: %1", _file getOrDefault ["name", "media"]];
+			};
+			private _mediaHint = ["", "<br/><br/><t color='#9fb6d8'>Use the media controls below to play this file.</t>"] select (_type in ["audio", "video"]);
+			private _assetInfo = switch (_type) do {
+				case "picture": {format ["<br/><br/><t color='#9fb6d8'>Texture: %1</t>", _file getOrDefault ["texture", ""]]};
+				case "video": {format ["<br/><br/><t color='#9fb6d8'>Video: %1</t>", _file getOrDefault ["videoPath", ""]]};
+				default {""};
+			};
+			[format [
+				"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t><br/><br/>%3%4%5",
+				_file getOrDefault ["name", "No file selected"],
+				_file getOrDefault ["path", ""],
+				_file getOrDefault ["content", ""],
+				_assetInfo,
+				_mediaHint
+			]] call _setBody;
+		};
 	};
 	case "mail": {
 		_title ctrlSetText "Mail";

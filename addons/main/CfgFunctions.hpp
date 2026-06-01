@@ -21,6 +21,7 @@ class CfgFunctions {
 			class createProfileUser {};
 			class getActiveUser {};
 			class getAudioFiles {};
+			class getMediaFiles {};
 			class getRegisteredUsers {};
 			class initDisplay {};
 			class handleDisplayUnload {};
@@ -38,6 +39,7 @@ class CfgFunctions {
 			class open {};
 			class playAudio {};
 			class playAudioLocal {};
+			class playVideo {};
 			class registerComputerModule {};
 			class registerObject {};
 			class renderApp {};
@@ -49,6 +51,7 @@ class CfgFunctions {
 			class startComputer {};
 			class stopAudio {};
 			class stopAudioLocal {};
+			class stopVideo {};
 			class startup {};
 			class toggleStartMenu {};
 			class togglePasswordVisibility {};

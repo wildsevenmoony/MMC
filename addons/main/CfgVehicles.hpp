@@ -5,6 +5,7 @@
 
 class CfgVehicles {
 	class Logic;
+	class Sound;
 	class Module_F: Logic {
 		class AttributesBase {
 			class Checkbox;
@@ -324,8 +325,9 @@ class CfgVehicles {
 		};
 	};
 
-	class GVAR(sound_testaudio) {
+	class GVAR(sound_testaudio): Sound {
 		scope = 1;
+		side = -1;
 		sound = QGVAR(testaudio);
 	};
 };
