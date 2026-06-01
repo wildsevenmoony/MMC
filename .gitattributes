@@ -1,0 +1,23 @@
+* text=auto
+
+*.md text eol=lf
+*.txt text eol=lf
+*.toml text eol=lf
+*.cpp text eol=lf
+*.hpp text eol=lf
+*.sqf text eol=lf
+*.inc text eol=lf
+
+*.paa binary
+*.ogg binary
+*.pbo binary
+*.bisign binary
+*.bikey binary
+*.biprivatekey binary
+*.hemttprivatekey binary
+*.zip binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.wav binary
+*.mp3 binary

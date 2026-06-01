@@ -1,0 +1,14 @@
+*.pbo
+.hemttout
+.hemttprivatekey
+*.biprivatekey
+*.png
+*.jpg
+*.jpeg
+*.wav
+*.mp3
+releases/
+include/
+.hemtt/*
+!.hemtt/project.toml
+.vscode
