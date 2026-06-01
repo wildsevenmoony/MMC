@@ -8,6 +8,7 @@ class CfgVehicles {
 	class Module_F: Logic {
 		class AttributesBase {
 			class Checkbox;
+			class Combo;
 			class Edit;
 			class ModuleDescription;
 		};
@@ -34,10 +35,28 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
-			class GVAR(background): Edit {
+			class GVAR(background): Combo {
 				property = QGVAR(background);
-				displayName = "Background Texture";
-				tooltip = "Optional texture path. Leave empty to use the built-in placeholder desktop.";
+				displayName = "Background";
+				tooltip = "Preset desktop background. Ignored if Custom Background Texture is filled.";
+				typeName = "STRING";
+				defaultValue = "'default_dark'";
+				expression = "_this setVariable ['%s', _value, true];";
+
+				class Values {
+					class DefaultDark {name = "Default Dark"; value = "default_dark";};
+					class DefaultLight {name = "Default Light"; value = "default_light";};
+					class NATO {name = "NATO"; value = "nato";};
+					class CSAT {name = "CSAT"; value = "csat";};
+					class AAF {name = "AAF"; value = "aaf";};
+					class FIA {name = "FIA"; value = "fia";};
+				};
+			};
+
+			class GVAR(backgroundCustom): Edit {
+				property = QGVAR(backgroundCustom);
+				displayName = "Custom Background Texture";
+				tooltip = "Optional texture path. If filled, this overrides the Background selection above.";
 				typeName = "STRING";
 				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";

@@ -42,9 +42,15 @@ if (_objects isEqualTo []) then {
 	_objects = synchronizedObjects _logic;
 };
 
+private _background = _logic getVariable [QGVAR(background), "default_dark"];
+private _backgroundCustom = _logic getVariable [QGVAR(backgroundCustom), ""];
+if (_backgroundCustom isNotEqualTo "") then {
+	_background = _backgroundCustom;
+};
+
 private _config = createHashMapFromArray [
 	["poweredOn", _logic getVariable [QGVAR(poweredOn), true]],
-	["background", _logic getVariable [QGVAR(background), ""]],
+	["background", _background],
 	["systemName", _logic getVariable [QGVAR(systemName), "MMC Workstation"]]
 ];
 

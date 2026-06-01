@@ -28,8 +28,18 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 			false
 		],
 		[
+			"COMBO",
+			["Background", "Preset desktop background. Ignored if Custom Background Texture is filled."],
+			[
+				["default_dark", "default_light", "nato", "csat", "aaf", "fia"],
+				["Default Dark", "Default Light", "NATO", "CSAT", "AAF", "FIA"],
+				0
+			],
+			false
+		],
+		[
 			"EDIT",
-			["Background Texture", "Optional texture path for this computer's desktop background."],
+			["Custom Background Texture", "Optional texture path. If filled, this overrides the Background selection above."],
 			"",
 			false
 		],
@@ -42,7 +52,11 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 	],
 	{
 		params ["_dialogValues", "_object"];
-		_dialogValues params ["_systemName", "_background", "_poweredOn"];
+		_dialogValues params ["_systemName", "_background", "_backgroundCustom", "_poweredOn"];
+
+		if (_backgroundCustom isNotEqualTo "") then {
+			_background = _backgroundCustom;
+		};
 
 		private _config = createHashMapFromArray [
 			["systemName", _systemName],
