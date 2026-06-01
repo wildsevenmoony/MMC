@@ -9,6 +9,4 @@ private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (isNull _display) exitWith {};
 
 private _computer = _display getVariable [QGVAR(computer), objNull];
-[_computer, true] call FUNC(setPowerState);
-_display setVariable [QGVAR(startMenuOpen), false];
-["desktop"] call FUNC(renderApp);
+[_computer, false] call FUNC(startComputer);

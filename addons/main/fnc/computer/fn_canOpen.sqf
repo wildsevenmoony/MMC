@@ -15,3 +15,5 @@ params [["_object", objNull, [objNull]]];
 
 !(isNull _object)
 && {_object getVariable [QGVAR(isComputer), false]}
+&& {_object getVariable [QGVAR(poweredOn), true]}
+&& {!(_object getVariable [QGVAR(booting), false])}

@@ -13,14 +13,16 @@
 
 params [["_object", objNull, [objNull]]];
 
-if !([_object] call FUNC(canOpen)) exitWith {false};
+if (isNull _object || {!(_object getVariable [QGVAR(isComputer), false])}) exitWith {false};
 
-private _poweredOn = _object getVariable [QGVAR(poweredOn), true];
+if (_object getVariable [QGVAR(booting), false]) exitWith {
+	hint "The computer is booting.";
+	false
+};
 
-if (!_poweredOn) exitWith {
-	GVAR(activeComputer) = _object;
-	createDialog QGVAR(RscComputer);
-	true
+if !(_object getVariable [QGVAR(poweredOn), true]) exitWith {
+	hint "The computer is powered off.";
+	false
 };
 
 GVAR(activeComputer) = _object;

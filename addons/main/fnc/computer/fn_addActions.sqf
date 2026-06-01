@@ -28,3 +28,17 @@ private _action = [
 ] call ace_interact_menu_fnc_createAction;
 
 [_object, 0, ["ACE_MainActions"], _action] call ace_interact_menu_fnc_addActionToObject;
+
+private _startAction = [
+	QGVAR(startComputer),
+	"Start Computer",
+	"",
+	{[_target, true] call FUNC(startComputer)},
+	{
+		(_target getVariable [QGVAR(isComputer), false])
+		&& {!(_target getVariable [QGVAR(poweredOn), true])}
+		&& {!(_target getVariable [QGVAR(booting), false])}
+	}
+] call ace_interact_menu_fnc_createAction;
+
+[_object, 0, ["ACE_MainActions"], _startAction] call ace_interact_menu_fnc_addActionToObject;

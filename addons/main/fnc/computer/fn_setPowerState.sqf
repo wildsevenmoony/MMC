@@ -20,4 +20,7 @@ params [
 if (isNull _object) exitWith {false};
 
 _object setVariable [QGVAR(poweredOn), _poweredOn, true];
+if (!_poweredOn) then {
+	_object setVariable [QGVAR(booting), false, true];
+};
 _poweredOn

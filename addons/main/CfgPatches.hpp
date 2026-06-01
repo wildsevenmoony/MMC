@@ -13,7 +13,9 @@ class CfgPatches {
 			"cba_events",
 			"cba_jr",
 			"cba_settings",
-			"cba_ui"
+			"cba_ui",
+			"zen_main",
+			"zen_modules"
 		};
 		requiredVersion = 2.14;
 		units[] = {

@@ -23,9 +23,20 @@ class CfgFunctions {
 			class renderApp {};
 			class setPowerState {};
 			class shutdown {};
+			class startComputer {};
 			class startup {};
 			class toggleStartMenu {};
 			class updateClock {};
+		};
+
+		class ZeusModules {
+			file = PATHTOF(fnc\zenmodule);
+			class zenInit {postInit = 1;};
+			class addMailZeus {};
+			class addTextFileZeus {};
+			class powerOffZeus {};
+			class powerOnZeus {};
+			class registerComputerZeus {};
 		};
 	};
 };

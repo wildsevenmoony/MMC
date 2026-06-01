@@ -22,6 +22,7 @@ if (isNull _object) exitWith {objNull};
 _object setVariable [QGVAR(isComputer), true, true];
 _object setVariable [QGVAR(config), _config, true];
 _object setVariable [QGVAR(poweredOn), _config getOrDefault ["poweredOn", true], true];
+_object setVariable [QGVAR(booting), false, true];
 _object setVariable [QGVAR(data), _config getOrDefault ["data", [_config] call FUNC(createDefaultData)], true];
 
 if !(GVAR(registeredComputers) isEqualType []) then {

@@ -55,7 +55,13 @@ switch (_app) do {
 		_title ctrlSetText "Files";
 		private _files = _data getOrDefault ["files", []];
 		{
-			_list lbAdd format ["%1  (%2)", _x getOrDefault ["name", "Untitled"], _x getOrDefault ["type", "file"]];
+			private _row = _list lbAdd format ["%1  (%2)", _x getOrDefault ["name", "Untitled"], _x getOrDefault ["type", "file"]];
+			_list lbSetTooltip [_row, format [
+				"%1%2Type: %3",
+				_x getOrDefault ["path", _x getOrDefault ["name", "Untitled"]],
+				toString [10],
+				_x getOrDefault ["type", "file"]
+			]];
 		} forEach _files;
 		if (_index < 0) then {_index = 0};
 		_list lbSetCurSel _index;
@@ -71,7 +77,14 @@ switch (_app) do {
 		_title ctrlSetText "Mail";
 		private _mail = _data getOrDefault ["mail", []];
 		{
-			_list lbAdd format ["%1 - %2", _x getOrDefault ["from", "Unknown"], _x getOrDefault ["subject", "No subject"]];
+			private _row = _list lbAdd format ["%1 - %2", _x getOrDefault ["from", "Unknown"], _x getOrDefault ["subject", "No subject"]];
+			_list lbSetTooltip [_row, format [
+				"From: %1%4To: %2%4Subject: %3",
+				_x getOrDefault ["from", "Unknown"],
+				_x getOrDefault ["to", ""],
+				_x getOrDefault ["subject", "No subject"],
+				toString [10]
+			]];
 		} forEach _mail;
 		if (_index < 0) then {_index = 0};
 		_list lbSetCurSel _index;
