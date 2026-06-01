@@ -325,6 +325,7 @@ class CfgVehicles {
 	};
 
 	class GVAR(sound_testaudio) {
+		scope = 1;
 		sound = QGVAR(testaudio);
 	};
 };
