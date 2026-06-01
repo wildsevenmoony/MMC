@@ -13,7 +13,11 @@ private _data = _display getVariable [QGVAR(data), createHashMap];
 if (isNull _computer || {!(_computer getVariable [QGVAR(poweredOn), true])}) exitWith {};
 
 private _username = ctrlText (_display displayCtrl IDC_MMC_LOGIN_USERNAME);
-private _password = ctrlText (_display displayCtrl IDC_MMC_LOGIN_PASSWORD);
+private _password = if (_display getVariable [QGVAR(passwordVisible), false]) then {
+	ctrlText (_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE)
+} else {
+	ctrlText (_display displayCtrl IDC_MMC_LOGIN_PASSWORD)
+};
 private _error = _display displayCtrl IDC_MMC_LOGIN_ERROR;
 private _setError = {
 	params ["_text"];

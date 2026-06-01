@@ -39,6 +39,8 @@ class CfgFunctions {
 			class startComputer {};
 			class startup {};
 			class toggleStartMenu {};
+			class togglePasswordVisibility {};
+			class setButtonHover {};
 			class updateClock {};
 		};
 

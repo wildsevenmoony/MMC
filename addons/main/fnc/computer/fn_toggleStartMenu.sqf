@@ -14,8 +14,8 @@ _display setVariable [QGVAR(startMenuOpen), _open];
 private _computer = _display getVariable [QGVAR(computer), objNull];
 private _poweredOn = _computer getVariable [QGVAR(poweredOn), true];
 private _booting = _computer getVariable [QGVAR(booting), false];
-private _menuY = if (_poweredOn) then {safeZoneY + safeZoneH - 0.144} else {safeZoneY + safeZoneH - 0.099};
-private _menuH = [0.044, 0.089] select _poweredOn;
+private _menuY = if (_poweredOn) then {safeZoneY + safeZoneH - 0.153} else {safeZoneY + safeZoneH - 0.108};
+private _menuH = [0.053, 0.098] select _poweredOn;
 
 {
 	(_display displayCtrl _x) ctrlSetPositionY _menuY;

@@ -56,7 +56,10 @@ _display setVariable [QGVAR(startMenuOpen), false];
 	IDC_MMC_LOGIN_USERNAME,
 	IDC_MMC_LOGIN_PASSWORD_LABEL,
 	IDC_MMC_LOGIN_PASSWORD,
+	IDC_MMC_LOGIN_PASSWORD_VISIBLE,
 	IDC_MMC_FRAME_LOGIN_PASSWORD,
+	IDC_MMC_LOGIN_PASSWORD_TOGGLE,
+	IDC_MMC_FRAME_LOGIN_PASSWORD_TOGGLE,
 	IDC_MMC_LOGIN_BUTTON,
 	IDC_MMC_FRAME_LOGIN_BUTTON,
 	IDC_MMC_LOGIN_ERROR,
@@ -66,5 +69,10 @@ _display setVariable [QGVAR(startMenuOpen), false];
 
 (_display displayCtrl IDC_MMC_LOGIN_USERNAME) ctrlSetText GVAR(profileLoginName);
 (_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlSetText "";
+(_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE) ctrlSetText "";
+(_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE) ctrlShow false;
+(_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlShow true;
+(_display displayCtrl IDC_MMC_LOGIN_PASSWORD_TOGGLE) ctrlSetText "Show";
+_display setVariable [QGVAR(passwordVisible), false];
 (_display displayCtrl IDC_MMC_LOGIN_ERROR) ctrlSetStructuredText parseText "";
 ctrlSetFocus (_display displayCtrl IDC_MMC_LOGIN_USERNAME);

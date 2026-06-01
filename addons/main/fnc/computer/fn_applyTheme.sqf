@@ -117,6 +117,8 @@ switch (_theme) do {
 (_display displayCtrl IDC_MMC_LOGIN_USERNAME) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_LOGIN_ERROR) ctrlSetTextColor [1, 0.25, 0.25, 1];
 
 {
@@ -142,6 +144,7 @@ switch (_theme) do {
 	IDC_MMC_START_BOOT,
 	IDC_MMC_START_LOGOUT,
 	IDC_MMC_START_SHUTDOWN,
+	IDC_MMC_LOGIN_PASSWORD_TOGGLE,
 	IDC_MMC_LOGIN_BUTTON
 ];
 
@@ -171,6 +174,8 @@ private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0
 	IDC_MMC_LOGIN_PANEL,
 	IDC_MMC_LOGIN_USERNAME,
 	IDC_MMC_LOGIN_PASSWORD,
+	IDC_MMC_LOGIN_PASSWORD_VISIBLE,
+	IDC_MMC_LOGIN_PASSWORD_TOGGLE,
 	IDC_MMC_LOGIN_BUTTON
 ];
 
@@ -194,5 +199,6 @@ private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0
 	IDC_MMC_FRAME_LOGIN_PANEL,
 	IDC_MMC_FRAME_LOGIN_USERNAME,
 	IDC_MMC_FRAME_LOGIN_PASSWORD,
+	IDC_MMC_FRAME_LOGIN_PASSWORD_TOGGLE,
 	IDC_MMC_FRAME_LOGIN_BUTTON
 ];

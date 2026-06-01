@@ -8,9 +8,9 @@ class RscPicture;
 class GVAR(RscComputerButton): RscButton {
 	shadow = 0;
 	colorShadow[] = {0, 0, 0, 0};
-	colorFocused[] = {0, 0, 0, 0};
-	colorBackground2[] = {0, 0, 0, 0};
-	colorBackgroundActive[] = {1, 1, 1, 0.16};
+	colorFocused[] = {0.07, 0.078, 0.096, 0.98};
+	colorBackground2[] = {0.07, 0.078, 0.096, 0.98};
+	colorBackgroundActive[] = {0.07, 0.078, 0.096, 0.98};
 	colorDisabled[] = {1, 1, 1, 0.35};
 	borderSize = 0.0012;
 	colorBorder[] = {0, 0, 0, 0.8};
@@ -18,6 +18,8 @@ class GVAR(RscComputerButton): RscButton {
 	offsetY = 0;
 	offsetPressedX = 0;
 	offsetPressedY = 0;
+	onMouseEnter = "_this params ['_ctrl']; [_ctrl, true] call MMC_fnc_setButtonHover";
+	onMouseExit = "_this params ['_ctrl']; [_ctrl, false] call MMC_fnc_setButtonHover";
 };
 
 class GVAR(RscComputerFrame): RscText {
@@ -189,9 +191,9 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_START_MENU;
 			shadow = 0;
 			x = "safeZoneX + 0.012";
-			y = "safeZoneY + safeZoneH - 0.144";
+			y = "safeZoneY + safeZoneH - 0.153";
 			w = 0.19;
-			h = 0.089;
+			h = 0.098;
 			colorBackground[] = {0.018, 0.022, 0.03, 0.98};
 		};
 
@@ -199,7 +201,7 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_START_BOOT;
 			text = "Turn On";
 			x = "safeZoneX + 0.022";
-			y = "safeZoneY + safeZoneH - 0.091";
+			y = "safeZoneY + safeZoneH - 0.1";
 			w = 0.17;
 			h = 0.04;
 			action = "call MMC_fnc_startup";
@@ -209,7 +211,7 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_START_LOGOUT;
 			text = "Log Out";
 			x = "safeZoneX + 0.022";
-			y = "safeZoneY + safeZoneH - 0.136";
+			y = "safeZoneY + safeZoneH - 0.145";
 			w = 0.17;
 			h = 0.04;
 			action = "call MMC_fnc_logoutCurrent";
@@ -218,7 +220,7 @@ class GVAR(RscComputer) {
 		class StartShutdown: StartLogout {
 			idc = IDC_MMC_START_SHUTDOWN;
 			text = "Shut Down";
-			y = "safeZoneY + safeZoneH - 0.091";
+			y = "safeZoneY + safeZoneH - 0.1";
 			action = "call MMC_fnc_shutdown";
 		};
 
@@ -295,9 +297,9 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_LOGIN_PANEL;
 			shadow = 0;
 			x = "safeZoneX + safeZoneW * 0.36";
-			y = "safeZoneY + safeZoneH * 0.31";
+			y = "safeZoneY + safeZoneH * 0.315";
 			w = "safeZoneW * 0.28";
-			h = "safeZoneH * 0.285";
+			h = "safeZoneH * 0.265";
 			colorBackground[] = {0.02, 0.025, 0.035, 0.96};
 		};
 
@@ -306,7 +308,7 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			text = "Sign in";
 			x = "safeZoneX + safeZoneW * 0.38";
-			y = "safeZoneY + safeZoneH * 0.328";
+			y = "safeZoneY + safeZoneH * 0.331";
 			w = "safeZoneW * 0.24";
 			h = 0.052;
 			sizeEx = 0.052;
@@ -319,7 +321,7 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			text = "Username";
 			x = "safeZoneX + safeZoneW * 0.39";
-			y = "safeZoneY + safeZoneH * 0.395";
+			y = "safeZoneY + safeZoneH * 0.392";
 			w = "safeZoneW * 0.22";
 			h = 0.03;
 			colorBackground[] = {0, 0, 0, 0};
@@ -329,7 +331,7 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_LOGIN_USERNAME;
 			shadow = 0;
 			x = "safeZoneX + safeZoneW * 0.39";
-			y = "safeZoneY + safeZoneH * 0.425";
+			y = "safeZoneY + safeZoneH * 0.416";
 			w = "safeZoneW * 0.22";
 			h = 0.04;
 			colorBackground[] = {1, 1, 1, 0.08};
@@ -338,12 +340,31 @@ class GVAR(RscComputer) {
 		class LoginPasswordLabel: LoginUsernameLabel {
 			idc = IDC_MMC_LOGIN_PASSWORD_LABEL;
 			text = "Password";
-			y = "safeZoneY + safeZoneH * 0.475";
+			y = "safeZoneY + safeZoneH * 0.458";
 		};
 
 		class LoginPassword: LoginUsername {
 			idc = IDC_MMC_LOGIN_PASSWORD;
-			y = "safeZoneY + safeZoneH * 0.505";
+			y = "safeZoneY + safeZoneH * 0.482";
+			w = "safeZoneW * 0.184";
+			style = 32;
+		};
+
+		class LoginPasswordVisible: LoginPassword {
+			idc = IDC_MMC_LOGIN_PASSWORD_VISIBLE;
+			style = 0;
+		};
+
+		class LoginPasswordToggle: GVAR(RscComputerButton) {
+			idc = IDC_MMC_LOGIN_PASSWORD_TOGGLE;
+			text = "Show";
+			tooltip = "Show or hide the password.";
+			x = "safeZoneX + safeZoneW * 0.579";
+			y = "safeZoneY + safeZoneH * 0.482";
+			w = "safeZoneW * 0.031";
+			h = 0.04;
+			sizeEx = 0.022;
+			action = "call MMC_fnc_togglePasswordVisibility";
 		};
 
 		class LoginButton: GVAR(RscComputerButton) {
@@ -361,9 +382,9 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			text = "";
 			x = "safeZoneX + safeZoneW * 0.39";
-			y = "safeZoneY + safeZoneH * 0.603";
+			y = "safeZoneY + safeZoneH * 0.525";
 			w = "safeZoneW * 0.22";
-			h = 0.036;
+			h = 0.028;
 			size = 0.032;
 			style = 2;
 			colorBackground[] = {0, 0, 0, 0};
@@ -444,47 +465,57 @@ class GVAR(RscComputer) {
 		class FrameStartMenu: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_START_MENU;
 			x = "safeZoneX + 0.012";
-			y = "safeZoneY + safeZoneH - 0.144";
+			y = "safeZoneY + safeZoneH - 0.153";
 			w = 0.19;
-			h = 0.089;
+			h = 0.098;
 		};
 
 		class FrameStartBoot: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_START_BOOT;
 			x = "safeZoneX + 0.022";
-			y = "safeZoneY + safeZoneH - 0.091";
+			y = "safeZoneY + safeZoneH - 0.1";
 			w = 0.17;
 			h = 0.04;
 		};
 
 		class FrameStartLogout: FrameStartBoot {
 			idc = IDC_MMC_FRAME_START_LOGOUT;
+			y = "safeZoneY + safeZoneH - 0.145";
 		};
 
 		class FrameStartShutdown: FrameStartBoot {
 			idc = IDC_MMC_FRAME_START_SHUTDOWN;
-			y = "safeZoneY + safeZoneH - 0.091";
+			y = "safeZoneY + safeZoneH - 0.1";
 		};
 
 		class FrameLoginPanel: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_LOGIN_PANEL;
 			x = "safeZoneX + safeZoneW * 0.36";
-			y = "safeZoneY + safeZoneH * 0.31";
+			y = "safeZoneY + safeZoneH * 0.315";
 			w = "safeZoneW * 0.28";
-			h = "safeZoneH * 0.285";
+			h = "safeZoneH * 0.265";
 		};
 
 		class FrameLoginUsername: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_LOGIN_USERNAME;
 			x = "safeZoneX + safeZoneW * 0.39";
-			y = "safeZoneY + safeZoneH * 0.425";
+			y = "safeZoneY + safeZoneH * 0.416";
 			w = "safeZoneW * 0.22";
 			h = 0.04;
 		};
 
 		class FrameLoginPassword: FrameLoginUsername {
 			idc = IDC_MMC_FRAME_LOGIN_PASSWORD;
-			y = "safeZoneY + safeZoneH * 0.505";
+			y = "safeZoneY + safeZoneH * 0.482";
+			w = "safeZoneW * 0.184";
+		};
+
+		class FrameLoginPasswordToggle: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_LOGIN_PASSWORD_TOGGLE;
+			x = "safeZoneX + safeZoneW * 0.579";
+			y = "safeZoneY + safeZoneH * 0.482";
+			w = "safeZoneW * 0.031";
+			h = 0.04;
 		};
 
 		class FrameLoginButton: GVAR(RscComputerFrame) {
