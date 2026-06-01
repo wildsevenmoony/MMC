@@ -23,6 +23,13 @@ private _computer = _display getVariable [QGVAR(computer), objNull];
 [_computer] call FUNC(stopAudio);
 
 missionNamespace setVariable [QGVAR(videoSkip), false];
-[_videoPath, [safeZoneX + 0.43, safeZoneY + 0.135, safeZoneW - 0.61, safeZoneH - 0.315], [1, 1, 1, 1], QGVAR(videoSkip), [0, 0, 0, 1], true] spawn BIS_fnc_playVideo;
+[
+	_videoPath,
+	[safeZoneX + 0.485, safeZoneY + 0.19, safeZoneW - 0.72, safeZoneH - 0.455],
+	[1, 1, 1, 1],
+	QGVAR(videoSkip),
+	[0, 0, 0, 1],
+	true
+] spawn BIS_fnc_playVideo;
 
 true

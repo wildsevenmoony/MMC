@@ -25,6 +25,8 @@ private _activeUser = [_computer] call FUNC(getActiveUser);
 private _title = _display displayCtrl IDC_MMC_APP_TITLE;
 private _list = _display displayCtrl IDC_MMC_APP_LIST;
 private _body = _display displayCtrl IDC_MMC_APP_BODY;
+private _previewImage = _display displayCtrl IDC_MMC_FILE_PREVIEW_IMAGE;
+private _previewFrame = _display displayCtrl IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
 private _mediaControls = [
 	IDC_MMC_MEDIA_BAR,
 	IDC_MMC_MEDIA_PREV,
@@ -42,6 +44,9 @@ private _mediaControls = [
 {
 	(_display displayCtrl _x) ctrlShow false;
 } forEach _mediaControls;
+_previewImage ctrlShow false;
+_previewFrame ctrlShow false;
+_previewImage ctrlSetText "";
 
 if (!_poweredOn) exitWith {
 	[_display, true, ["MMC", "System powered off", ""], -1] call FUNC(setSystemOverlay);
@@ -79,13 +84,13 @@ switch (_app) do {
 	case "files": {
 		_title ctrlSetText "Files";
 		private _files = (_data getOrDefault ["files", []]) + (_activeUser getOrDefault ["files", []]);
+		private _statusText = _display getVariable [QGVAR(mediaStatusText), "Selected: No Audio File Selected"];
 		{
 			(_display displayCtrl _x) ctrlShow true;
 			(_display displayCtrl _x) ctrlSetFade 0;
 			(_display displayCtrl _x) ctrlCommit 0;
 		} forEach _mediaControls;
-		(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText "Selected: No Audio File Selected";
-		_display setVariable [QGVAR(selectedMediaFile), createHashMap];
+		(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText _statusText;
 
 		if (_files isEqualTo []) exitWith {
 			[_noContent] call _setBody;
@@ -124,7 +129,7 @@ switch (_app) do {
 			_display setVariable [QGVAR(fileListRows), _rows];
 			["<t size='1.25'>Folders</t><br/><br/>Select a folder to view files from the computer and the active user account."] call _setBody;
 		} else {
-			private _backRow = _list lbAdd "↩ Back";
+			private _backRow = _list lbAdd "<- Back";
 			_list lbSetTooltip [_backRow, "Return to file folders."];
 			_rows pushBack createHashMapFromArray [["action", "back"]];
 
@@ -155,19 +160,31 @@ switch (_app) do {
 			private _type = _file getOrDefault ["type", "file"];
 			if (_type in ["audio", "video"]) then {
 				_display setVariable [QGVAR(selectedMediaFile), _file];
-				(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText format ["Selected: %1", _file getOrDefault ["name", "media"]];
+				_statusText = format ["Selected: %1", _file getOrDefault ["name", "media"]];
+				(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText _statusText;
+				_display setVariable [QGVAR(mediaStatusText), _statusText];
 			};
 			private _mediaHint = ["", "<br/><br/><t color='#9fb6d8'>Use the media controls below to play this file.</t>"] select (_type in ["audio", "video"]);
 			private _assetInfo = switch (_type) do {
-				case "picture": {format ["<br/><br/><t color='#9fb6d8'>Texture: %1</t>", _file getOrDefault ["texture", ""]]};
-				case "video": {format ["<br/><br/><t color='#9fb6d8'>Video: %1</t>", _file getOrDefault ["videoPath", ""]]};
+				case "picture": {
+					_previewImage ctrlSetText (_file getOrDefault ["texture", ""]);
+					_previewImage ctrlShow true;
+					_previewFrame ctrlShow true;
+					""
+				};
+				case "video": {""};
 				default {""};
 			};
+			private _content = if (_type isEqualTo "picture") then {
+				format ["<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><t align='center'>%1</t>", _file getOrDefault ["content", ""]]
+			} else {
+				format ["<br/><br/>%1", _file getOrDefault ["content", ""]]
+			};
 			[format [
-				"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t><br/><br/>%3%4%5",
+				"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t>%3%4%5",
 				_file getOrDefault ["name", "No file selected"],
 				_file getOrDefault ["path", ""],
-				_file getOrDefault ["content", ""],
+				_content,
 				_assetInfo,
 				_mediaHint
 			]] call _setBody;

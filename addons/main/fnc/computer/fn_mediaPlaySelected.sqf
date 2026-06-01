@@ -13,7 +13,8 @@ private _file = _display getVariable [QGVAR(selectedMediaFile), createHashMap];
 private _type = _file getOrDefault ["type", ""];
 
 if !(_type in ["audio", "video"]) exitWith {
-	(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText "Selected: No Audio File Selected";
+	_display setVariable [QGVAR(mediaStatusText), "Selected: No Audio File Selected"];
+	(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText (_display getVariable [QGVAR(mediaStatusText), "Selected: No Audio File Selected"]);
 	false
 };
 
@@ -32,5 +33,7 @@ if (_type isEqualTo "audio") then {
 	[_file] call FUNC(playVideo);
 };
 
-(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText format ["Playing: %1", _file getOrDefault ["name", "Media"]];
+private _statusText = format ["Playing: %1", _file getOrDefault ["name", "Media"]];
+_display setVariable [QGVAR(mediaStatusText), _statusText];
+(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText _statusText;
 true

@@ -155,6 +155,16 @@ class GVAR(RscComputer) {
 			colorBackground[] = {0.03, 0.035, 0.045, 0.9};
 		};
 
+		class FilePreviewImage: RscPicture {
+			idc = IDC_MMC_FILE_PREVIEW_IMAGE;
+			text = "";
+			x = "safeZoneX + 0.51";
+			y = "safeZoneY + 0.19";
+			w = "safeZoneW - 0.77";
+			h = "safeZoneH - 0.44";
+			colorText[] = {1, 1, 1, 1};
+		};
+
 		class MediaBar: RscText {
 			idc = IDC_MMC_MEDIA_BAR;
 			shadow = 0;
@@ -430,9 +440,9 @@ class GVAR(RscComputer) {
 		class LoginButton: GVAR(RscComputerButton) {
 			idc = IDC_MMC_LOGIN_BUTTON;
 			text = "Login";
-			x = "safeZoneX + safeZoneW * 0.456";
+			x = "safeZoneX + safeZoneW * 0.448";
 			y = "safeZoneY + safeZoneH * 0.545";
-			w = "safeZoneW * 0.088";
+			w = "safeZoneW * 0.068";
 			h = 0.052;
 			sizeEx = 0.029;
 			action = "call MMC_fnc_login";
@@ -442,11 +452,11 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_LOGIN_SHUTDOWN;
 			text = "Shut Down";
 			tooltip = "Power off this computer.";
-			x = "safeZoneX + safeZoneW * 0.545";
+			x = "safeZoneX + safeZoneW * 0.548";
 			y = "safeZoneY + safeZoneH * 0.545";
-			w = "safeZoneW * 0.075";
+			w = "safeZoneW * 0.072";
 			h = 0.052;
-			sizeEx = 0.024;
+			sizeEx = 0.027;
 			action = "call MMC_fnc_shutdown";
 		};
 
@@ -525,6 +535,14 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + 0.135";
 			w = "safeZoneW - 0.61";
 			h = "safeZoneH - 0.315";
+		};
+
+		class FrameFilePreviewImage: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
+			x = "safeZoneX + 0.51";
+			y = "safeZoneY + 0.19";
+			w = "safeZoneW - 0.77";
+			h = "safeZoneH - 0.44";
 		};
 
 		class FrameMediaBar: GVAR(RscComputerFrame) {
@@ -625,17 +643,17 @@ class GVAR(RscComputer) {
 
 		class FrameLoginButton: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_LOGIN_BUTTON;
-			x = "safeZoneX + safeZoneW * 0.456";
+			x = "safeZoneX + safeZoneW * 0.448";
 			y = "safeZoneY + safeZoneH * 0.545";
-			w = "safeZoneW * 0.088";
+			w = "safeZoneW * 0.068";
 			h = 0.052;
 		};
 
 		class FrameLoginShutdown: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_LOGIN_SHUTDOWN;
-			x = "safeZoneX + safeZoneW * 0.545";
+			x = "safeZoneX + safeZoneW * 0.548";
 			y = "safeZoneY + safeZoneH * 0.545";
-			w = "safeZoneW * 0.075";
+			w = "safeZoneW * 0.072";
 			h = 0.052;
 		};
 	};
