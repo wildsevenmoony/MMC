@@ -31,6 +31,8 @@ private _panelStrong = [0.015, 0.018, 0.024, 0.98];
 private _text = [0.92, 0.94, 0.97, 1];
 private _tint = [0, 0, 0, 0];
 private _button = [0.028, 0.032, 0.042, 0.98];
+private _buttonText = _text;
+private _bootAccent = [0.13, 0.54, 0.21, 0.95];
 
 if (_isLight) then {
 	_desktop = [0.9, 0.92, 0.94, 1];
@@ -39,6 +41,8 @@ if (_isLight) then {
 	_text = [0.035, 0.04, 0.05, 1];
 	_tint = [0, 0, 0, 0];
 	_button = [0.88, 0.895, 0.91, 0.98];
+	_buttonText = [0.035, 0.04, 0.05, 1];
+	_bootAccent = [0.42, 0.48, 0.56, 0.95];
 };
 
 if (_isUser) then {
@@ -48,6 +52,39 @@ if (_isUser) then {
 	_text = [0.92, 0.94, 0.97, 1];
 	_tint = [0, 0, 0, 0];
 	_button = _accent;
+	_buttonText = [1, 1, 1, 1];
+	_bootAccent = _accent;
+};
+
+switch (_theme) do {
+	case "blufor": {
+		_desktop = [0.004, 0.02, 0.045, 1];
+		_panel = [0.006, 0.03, 0.07, 0.94];
+		_panelStrong = [0, 0.267, 0.6, 0.98];
+		_button = [0, 0.333, 0.706, 0.98];
+		_bootAccent = [0, 0.333, 0.706, 0.95];
+	};
+	case "opfor": {
+		_desktop = [0.045, 0.004, 0.004, 1];
+		_panel = [0.07, 0.01, 0.01, 0.94];
+		_panelStrong = [0.576, 0, 0, 0.98];
+		_button = [0.886, 0, 0, 0.98];
+		_bootAccent = [0.886, 0, 0, 0.95];
+	};
+	case "independent": {
+		_desktop = [0.004, 0.04, 0.004, 1];
+		_panel = [0.008, 0.06, 0.008, 0.94];
+		_panelStrong = [0, 0.42, 0, 0.98];
+		_button = [0, 0.561, 0, 0.98];
+		_bootAccent = [0, 0.561, 0, 0.95];
+	};
+	case "civilian": {
+		_desktop = [0.04, 0.004, 0.05, 1];
+		_panel = [0.06, 0.008, 0.07, 0.94];
+		_panelStrong = [0.518, 0, 0.576, 0.98];
+		_button = [0.631, 0, 0.706, 0.98];
+		_bootAccent = [0.631, 0, 0.706, 0.95];
+	};
 };
 
 (_display displayCtrl IDC_MMC_DESKTOP_BG) ctrlSetBackgroundColor _desktop;
@@ -66,7 +103,7 @@ if (_isUser) then {
 {
 	private _ctrl = _display displayCtrl _x;
 	_ctrl ctrlSetBackgroundColor _button;
-	_ctrl ctrlSetTextColor _text;
+	_ctrl ctrlSetTextColor _buttonText;
 } forEach [
 	IDC_MMC_BTN_FILES,
 	IDC_MMC_BTN_MAIL,
@@ -80,3 +117,4 @@ if (_isUser) then {
 
 private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0, 0, 0, 0.96]};
 (_display displayCtrl IDC_MMC_POWER_SCREEN) ctrlSetBackgroundColor _powerBackground;
+(_display displayCtrl IDC_MMC_BOOT_BAR_FILL) ctrlSetBackgroundColor _bootAccent;

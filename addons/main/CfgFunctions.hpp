@@ -24,6 +24,7 @@ class CfgFunctions {
 			class registerObject {};
 			class renderApp {};
 			class setPowerState {};
+			class setSystemOverlay {};
 			class shutdown {};
 			class startComputer {};
 			class startup {};

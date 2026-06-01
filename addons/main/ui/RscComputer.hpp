@@ -8,8 +8,10 @@ class GVAR(RscComputerButton): RscButton {
 	shadow = 0;
 	colorShadow[] = {0, 0, 0, 0};
 	colorFocused[] = {0, 0, 0, 0};
-	colorBackgroundActive[] = {1, 1, 1, 0.08};
+	colorBackground2[] = {0, 0, 0, 0};
+	colorBackgroundActive[] = {1, 1, 1, 0.16};
 	colorDisabled[] = {1, 1, 1, 0.35};
+	colorBorder[] = {0, 0, 0, 0};
 	offsetX = 0;
 	offsetY = 0;
 	offsetPressedX = 0;
@@ -176,9 +178,9 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_START_MENU;
 			shadow = 0;
 			x = "safeZoneX + 0.012";
-			y = "safeZoneY + safeZoneH - 0.153";
+			y = "safeZoneY + safeZoneH - 0.144";
 			w = 0.19;
-			h = 0.064;
+			h = 0.089;
 			colorBackground[] = {0.018, 0.022, 0.03, 0.98};
 		};
 
@@ -211,6 +213,25 @@ class GVAR(RscComputer) {
 			h = "safeZoneH";
 			colorBackground[] = {0, 0, 0, 0.96};
 		};
+
+		class BootBarBackground: RscText {
+			idc = IDC_MMC_BOOT_BAR_BG;
+			shadow = 0;
+			x = "safeZoneX + safeZoneW * 0.35";
+			y = "safeZoneY + safeZoneH * 0.58";
+			w = "safeZoneW * 0.3";
+			h = 0.018;
+			colorBackground[] = {1, 1, 1, 0.14};
+		};
+
+		class BootBarFill: RscText {
+			idc = IDC_MMC_BOOT_BAR_FILL;
+			shadow = 0;
+			x = "safeZoneX + safeZoneW * 0.35";
+			y = "safeZoneY + safeZoneH * 0.58";
+			w = 0;
+			h = 0.018;
+			colorBackground[] = {0.13, 0.54, 0.21, 0.95};
+		};
 	};
 };
-

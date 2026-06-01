@@ -31,8 +31,8 @@ GVAR(registeredComputers) = [];
 	["Theme", "Client-side MMC desktop theme."],
 	["Moony's Magnificent Computers", "Player Profile"],
 	[
-		["dark", "light", "user"],
-		["Dark", "Light", "User"],
+		["dark", "light", "user", "blufor", "opfor", "independent", "civilian"],
+		["Dark", "Light", "User", "BLUFOR", "OPFOR", "Independent", "Civilian"],
 		0
 	],
 	0

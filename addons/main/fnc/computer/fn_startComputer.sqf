@@ -36,13 +36,43 @@ _object setVariable [QGVAR(booting), true, true];
 		createDialog QGVAR(RscComputer);
 		private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 		if (!isNull _display) then {
-			private _powerScreen = _display displayCtrl IDC_MMC_POWER_SCREEN;
-			_powerScreen ctrlShow true;
-			_powerScreen ctrlSetStructuredText parseText "<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>Starting system...</t>";
+			[
+				_display,
+				true,
+				"<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>Starting system...</t><br/><t align='center' size='0.9'>Powering hardware interfaces</t>",
+				0.08
+			] call FUNC(setSystemOverlay);
 		};
 	};
 
-	sleep 3.5;
+	if (_openAfterBoot && {hasInterface}) then {
+		private _steps = [
+			[0.22, "Initializing file system..."],
+			[0.42, "Loading user profile..."],
+			[0.64, "Starting desktop services..."],
+			[0.82, "Mounting applications..."],
+			[1.0, "Finalizing session..."]
+		];
+
+		{
+			uiSleep 0.65;
+			private _display = uiNamespace getVariable [QGVAR(display), displayNull];
+			if (!isNull _display) then {
+				_x params ["_progress", "_message"];
+				[
+					_display,
+					true,
+					format [
+						"<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>Starting system...</t><br/><t align='center' size='0.9'>%1</t>",
+						_message
+					],
+					_progress
+				] call FUNC(setSystemOverlay);
+			};
+		} forEach _steps;
+	} else {
+		sleep 3.5;
+	};
 
 	if (isNull _object) exitWith {};
 

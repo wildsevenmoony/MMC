@@ -24,17 +24,15 @@ private _poweredOn = _computer getVariable [QGVAR(poweredOn), true];
 private _title = _display displayCtrl IDC_MMC_APP_TITLE;
 private _list = _display displayCtrl IDC_MMC_APP_LIST;
 private _body = _display displayCtrl IDC_MMC_APP_BODY;
-private _powerScreen = _display displayCtrl IDC_MMC_POWER_SCREEN;
 
 if (!_poweredOn) exitWith {
-	_powerScreen ctrlShow true;
-	_powerScreen ctrlSetStructuredText parseText "<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>System powered off</t>";
+	[_display, true, "<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>System powered off</t>", -1] call FUNC(setSystemOverlay);
 	_title ctrlSetText "";
 	lbClear _list;
 	_body ctrlSetStructuredText parseText "";
 };
 
-_powerScreen ctrlShow false;
+[_display, false] call FUNC(setSystemOverlay);
 
 if (_app isEqualTo "select") then {
 	_app = _display getVariable [QGVAR(currentApp), "desktop"];
