@@ -28,7 +28,16 @@ Moony's Magnificent Computer, or MMC, is planned as an Arma 3 framework for inte
 
 ## Current State
 
-This repository currently contains the initial HEMTT/Git scaffold and a minimal `main` addon. The first implementation pass should focus on the core data model and a simple openable desktop dialog before adding individual apps.
+This repository currently contains the initial HEMTT/Git scaffold and the first functional `main` addon slice:
+
+- Objects can be registered as MMC computers through script or the `Register Computer` module.
+- Registered computers get an ACE interaction to open the PC screen.
+- The PC screen has a desktop shell, taskbar, start menu, clock/date, power on/off state, and app buttons.
+- Files, Mail, Messenger, and Notes render from the computer data model.
+- Eden/Zeus modules can inject text files and emails into synced computers.
+- CBA player profile settings exist for login name, password placeholder, and preferred background texture.
+
+The next implementation pass should focus on login flow, a richer file explorer/folder model, editable notes, and multiplayer-safe mail/message sending.
 
 ## Requirements
 

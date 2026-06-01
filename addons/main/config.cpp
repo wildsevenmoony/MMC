@@ -6,6 +6,8 @@
 #include "script_component.hpp"
 
 #include "CfgEventhandlers.hpp"
+#include "CfgFactionClasses.hpp"
 #include "CfgFunctions.hpp"
 #include "CfgPatches.hpp"
 #include "CfgVehicles.hpp"
+#include "ui\RscComputer.hpp"

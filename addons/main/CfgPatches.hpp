@@ -15,8 +15,12 @@ class CfgPatches {
 			"cba_settings",
 			"cba_ui"
 		};
-		requiredVersion = 1.56;
-		units[] = {};
+		requiredVersion = 2.14;
+		units[] = {
+			QGVAR(registerComputer),
+			QGVAR(addTextFile),
+			QGVAR(addMail)
+		};
 		weapons[] = {};
 	};
 };

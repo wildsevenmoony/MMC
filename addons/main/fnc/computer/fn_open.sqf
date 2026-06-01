@@ -18,9 +18,11 @@ if !([_object] call FUNC(canOpen)) exitWith {false};
 private _poweredOn = _object getVariable [QGVAR(poweredOn), true];
 
 if (!_poweredOn) exitWith {
-	hint "The computer is powered off.";
-	false
+	GVAR(activeComputer) = _object;
+	createDialog QGVAR(RscComputer);
+	true
 };
 
-hint "MMC computer UI placeholder.";
+GVAR(activeComputer) = _object;
+createDialog QGVAR(RscComputer);
 true

@@ -1,0 +1,125 @@
+#include "..\..\script_component.hpp"
+
+/*
+ * Author: Moony
+ * Renders one of the desktop applications.
+ *
+ * Arguments:
+ * 0: App id or "select" <STRING>
+ * 1: Selection event data <ARRAY, optional>
+ */
+
+params [
+	["_app", "desktop", [""]],
+	["_event", [], [[]]]
+];
+
+private _display = uiNamespace getVariable [QGVAR(display), displayNull];
+if (isNull _display) exitWith {};
+
+private _computer = _display getVariable [QGVAR(computer), objNull];
+private _data = _display getVariable [QGVAR(data), createHashMap];
+private _poweredOn = _computer getVariable [QGVAR(poweredOn), true];
+
+private _title = _display displayCtrl IDC_MMC_APP_TITLE;
+private _list = _display displayCtrl IDC_MMC_APP_LIST;
+private _body = _display displayCtrl IDC_MMC_APP_BODY;
+private _powerScreen = _display displayCtrl IDC_MMC_POWER_SCREEN;
+
+if (!_poweredOn) exitWith {
+	_powerScreen ctrlShow true;
+	_powerScreen ctrlSetStructuredText parseText "<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>System powered off</t>";
+	_title ctrlSetText "";
+	lbClear _list;
+	_body ctrlSetStructuredText parseText "";
+};
+
+_powerScreen ctrlShow false;
+
+if (_app isEqualTo "select") then {
+	_app = _display getVariable [QGVAR(currentApp), "desktop"];
+} else {
+	_display setVariable [QGVAR(currentApp), _app];
+};
+
+private _index = if (_event isEqualTo []) then {lbCurSel _list} else {_event select 1};
+lbClear _list;
+
+private _setBody = {
+	params ["_text"];
+	_body ctrlSetStructuredText parseText _text;
+};
+
+switch (_app) do {
+	case "files": {
+		_title ctrlSetText "Files";
+		private _files = _data getOrDefault ["files", []];
+		{
+			_list lbAdd format ["%1  (%2)", _x getOrDefault ["name", "Untitled"], _x getOrDefault ["type", "file"]];
+		} forEach _files;
+		if (_index < 0) then {_index = 0};
+		_list lbSetCurSel _index;
+		private _file = _files param [_index, createHashMap];
+		[format [
+			"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t><br/><br/>%3",
+			_file getOrDefault ["name", "No file selected"],
+			_file getOrDefault ["path", ""],
+			_file getOrDefault ["content", ""]
+		]] call _setBody;
+	};
+	case "mail": {
+		_title ctrlSetText "Mail";
+		private _mail = _data getOrDefault ["mail", []];
+		{
+			_list lbAdd format ["%1 - %2", _x getOrDefault ["from", "Unknown"], _x getOrDefault ["subject", "No subject"]];
+		} forEach _mail;
+		if (_index < 0) then {_index = 0};
+		_list lbSetCurSel _index;
+		private _message = _mail param [_index, createHashMap];
+		[format [
+			"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>From: %2<br/>To: %3<br/>Date: %4</t><br/><br/>%5",
+			_message getOrDefault ["subject", "No subject"],
+			_message getOrDefault ["from", "Unknown"],
+			_message getOrDefault ["to", ""],
+			_message getOrDefault ["date", ""],
+			_message getOrDefault ["body", ""]
+		]] call _setBody;
+	};
+	case "messages": {
+		_title ctrlSetText "Messenger";
+		private _messages = _data getOrDefault ["messages", []];
+		{
+			_list lbAdd format ["%1  %2", _x getOrDefault ["date", ""], _x getOrDefault ["from", "Unknown"]];
+		} forEach _messages;
+		if (_index < 0) then {_index = 0};
+		_list lbSetCurSel _index;
+		private _threadText = _messages apply {
+			format [
+				"<t color='#9fb6d8'>[%1] %2</t><br/>%3",
+				_x getOrDefault ["date", ""],
+				_x getOrDefault ["from", "Unknown"],
+				_x getOrDefault ["body", ""]
+			]
+		};
+		[_threadText joinString "<br/><br/>"] call _setBody;
+	};
+	case "notes": {
+		_title ctrlSetText "Notes";
+		private _notes = _data getOrDefault ["notes", []];
+		{
+			_list lbAdd (_x getOrDefault ["title", "Untitled note"]);
+		} forEach _notes;
+		if (_index < 0) then {_index = 0};
+		_list lbSetCurSel _index;
+		private _note = _notes param [_index, createHashMap];
+		[format [
+			"<t size='1.25'>%1</t><br/><br/>%2",
+			_note getOrDefault ["title", "No note selected"],
+			_note getOrDefault ["body", ""]
+		]] call _setBody;
+	};
+	default {
+		_title ctrlSetText "Desktop";
+		["<t size='1.35'>Welcome</t><br/><br/>Select an app on the left. Files, Mail, Messenger, and Notes are wired to the computer data model now.<br/><br/>The Start button controls power state."] call _setBody;
+	};
+};
