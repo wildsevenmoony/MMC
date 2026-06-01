@@ -79,7 +79,13 @@ _object setVariable [QGVAR(booting), true, true];
 	if (_openAfterBoot && {hasInterface}) then {
 		private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 		if (!isNull _display) then {
-			["desktop"] call FUNC(renderApp);
+			private _activeUser = [_object] call FUNC(getActiveUser);
+			if (count _activeUser == 0) then {
+				[_display] call FUNC(showLogin);
+			} else {
+				[_display] call FUNC(hideLogin);
+				["desktop"] call FUNC(renderApp);
+			};
 		} else {
 			[_object] call FUNC(open);
 		};

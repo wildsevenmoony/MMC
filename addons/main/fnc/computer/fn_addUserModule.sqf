@@ -2,7 +2,7 @@
 
 /*
  * Author: Moony
- * Registers synced objects as MMC computers from an Eden/Zeus module.
+ * Adds a configured user to synced MMC computers.
  */
 
 private _logic = objNull;
@@ -42,22 +42,18 @@ if (_objects isEqualTo []) then {
 	_objects = synchronizedObjects _logic;
 };
 
-private _background = _logic getVariable [QGVAR(background), "default_dark"];
-private _backgroundCustom = _logic getVariable [QGVAR(backgroundCustom), ""];
+private _username = _logic getVariable [QGVAR(userName), "operator"];
+private _password = _logic getVariable [QGVAR(userPassword), ""];
+private _email = _logic getVariable [QGVAR(userEmail), "operator@mccsystems.com"];
+private _background = _logic getVariable [QGVAR(userBackground), "default_dark"];
+private _backgroundCustom = _logic getVariable [QGVAR(userBackgroundCustom), ""];
 if (_backgroundCustom isNotEqualTo "") then {
 	_background = _backgroundCustom;
 };
 
-private _config = createHashMapFromArray [
-	["poweredOn", _logic getVariable [QGVAR(poweredOn), true]],
-	["background", _background],
-	["closedSystem", _logic getVariable [QGVAR(closedSystem), false]],
-	["systemName", _logic getVariable [QGVAR(systemName), "MMC Workstation"]]
-];
-
 {
 	if (!isNull _x) then {
-		[_x, _config] call FUNC(registerObject);
+		[_x, _username, _password, _email, _background] call FUNC(addUser);
 	};
 } forEach _objects;
 

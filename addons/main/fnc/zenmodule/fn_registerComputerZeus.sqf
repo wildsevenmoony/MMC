@@ -45,6 +45,12 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 		],
 		[
 			"CHECKBOX",
+			["Closed System", "Closed systems only allow users explicitly added to this computer. Open systems allow any client's CBA profile user to log in."],
+			false,
+			false
+		],
+		[
+			"CHECKBOX",
 			["Starts Powered On", "If unchecked, Zeus or ACE must start the computer before players can open it."],
 			true,
 			false
@@ -52,7 +58,7 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 	],
 	{
 		params ["_dialogValues", "_object"];
-		_dialogValues params ["_systemName", "_background", "_backgroundCustom", "_poweredOn"];
+		_dialogValues params ["_systemName", "_background", "_backgroundCustom", "_closedSystem", "_poweredOn"];
 
 		if (_backgroundCustom isNotEqualTo "") then {
 			_background = _backgroundCustom;
@@ -61,6 +67,7 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 		private _config = createHashMapFromArray [
 			["systemName", _systemName],
 			["background", _background],
+			["closedSystem", _closedSystem],
 			["poweredOn", _poweredOn]
 		];
 

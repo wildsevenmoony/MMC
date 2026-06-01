@@ -13,6 +13,7 @@ if !(isClass (configFile >> "CfgPatches" >> "zen_custom_modules")) exitWith {};
 		["Register Computer", {_this call FUNC(registerComputerZeus)}],
 		["Power On Computer", {_this call FUNC(powerOnZeus)}],
 		["Power Off Computer", {_this call FUNC(powerOffZeus)}],
+		["Add User", {_this call FUNC(addUserZeus)}],
 		["Add Text File", {_this call FUNC(addTextFileZeus)}],
 		["Add Mail", {_this call FUNC(addMailZeus)}]
 	];

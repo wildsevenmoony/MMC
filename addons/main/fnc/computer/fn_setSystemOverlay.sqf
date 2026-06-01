@@ -38,6 +38,17 @@ private _desktopControls = [
 	IDC_MMC_APP_BODY
 ];
 
+private _loginControls = [
+	IDC_MMC_LOGIN_PANEL,
+	IDC_MMC_LOGIN_TITLE,
+	IDC_MMC_LOGIN_USERNAME_LABEL,
+	IDC_MMC_LOGIN_USERNAME,
+	IDC_MMC_LOGIN_PASSWORD_LABEL,
+	IDC_MMC_LOGIN_PASSWORD,
+	IDC_MMC_LOGIN_BUTTON,
+	IDC_MMC_LOGIN_ERROR
+];
+
 {
 	(_display displayCtrl _x) ctrlShow !_show;
 } forEach _desktopControls;
@@ -45,7 +56,7 @@ private _desktopControls = [
 if (_show) then {
 	{
 		(_display displayCtrl _x) ctrlShow false;
-	} forEach [IDC_MMC_START_MENU, IDC_MMC_START_BOOT, IDC_MMC_START_SHUTDOWN];
+	} forEach ([IDC_MMC_START_MENU, IDC_MMC_START_BOOT, IDC_MMC_START_SHUTDOWN] + _loginControls);
 } else {
 	private _menuOpen = _display getVariable [QGVAR(startMenuOpen), false];
 	private _computer = _display getVariable [QGVAR(computer), objNull];

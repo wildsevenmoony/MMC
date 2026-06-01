@@ -25,5 +25,5 @@ switch (toLowerANSI _background) do {
 	case "csat": {PATHTOF(img\desktop_csat.paa)};
 	case "aaf": {PATHTOF(img\desktop_aaf.paa)};
 	case "fia": {PATHTOF(img\desktop_fia.paa)};
-	default {PATHTOF(img\desktop_default_dark.paa)};
+	default {_background};
 }

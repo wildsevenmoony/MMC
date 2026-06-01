@@ -20,6 +20,7 @@ if (isNull _display) exitWith {};
 private _computer = _display getVariable [QGVAR(computer), objNull];
 private _data = _display getVariable [QGVAR(data), createHashMap];
 private _poweredOn = _computer getVariable [QGVAR(poweredOn), true];
+private _activeUser = [_computer] call FUNC(getActiveUser);
 
 private _title = _display displayCtrl IDC_MMC_APP_TITLE;
 private _list = _display displayCtrl IDC_MMC_APP_LIST;
@@ -33,6 +34,10 @@ if (!_poweredOn) exitWith {
 };
 
 [_display, false] call FUNC(setSystemOverlay);
+
+if (count _activeUser == 0) exitWith {
+	[_display] call FUNC(showLogin);
+};
 
 if (_app isEqualTo "select") then {
 	_app = _display getVariable [QGVAR(currentApp), "desktop"];
@@ -73,7 +78,11 @@ switch (_app) do {
 	};
 	case "mail": {
 		_title ctrlSetText "Mail";
-		private _mail = _data getOrDefault ["mail", []];
+		private _email = toLowerANSI (_activeUser getOrDefault ["email", ""]);
+		private _mail = (_data getOrDefault ["mail", []]) select {
+			private _to = toLowerANSI (_x getOrDefault ["to", ""]);
+			_to in ["", "*"] || {_to isEqualTo _email}
+		};
 		{
 			private _row = _list lbAdd format ["%1 - %2", _x getOrDefault ["from", "Unknown"], _x getOrDefault ["subject", "No subject"]];
 			_list lbSetTooltip [_row, format [
@@ -98,7 +107,12 @@ switch (_app) do {
 	};
 	case "messages": {
 		_title ctrlSetText "Messenger";
-		private _messages = _data getOrDefault ["messages", []];
+		private _email = toLowerANSI (_activeUser getOrDefault ["email", ""]);
+		private _username = toLowerANSI (_activeUser getOrDefault ["username", ""]);
+		private _messages = (_data getOrDefault ["messages", []]) select {
+			private _to = toLowerANSI (_x getOrDefault ["to", ""]);
+			_to in ["", "*"] || {_to in [_email, _username]}
+		};
 		{
 			_list lbAdd format ["%1  %2", _x getOrDefault ["date", ""], _x getOrDefault ["from", "Unknown"]];
 		} forEach _messages;

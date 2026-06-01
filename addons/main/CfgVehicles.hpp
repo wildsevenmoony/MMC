@@ -62,6 +62,15 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(closedSystem): Checkbox {
+				property = QGVAR(closedSystem);
+				displayName = "Closed System";
+				tooltip = "Closed systems only allow users explicitly added to this computer. Open systems allow any client's CBA profile user to log in.";
+				typeName = "BOOL";
+				defaultValue = "false";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class GVAR(systemName): Edit {
 				property = QGVAR(systemName);
 				displayName = "System Name";
@@ -79,6 +88,89 @@ class CfgVehicles {
 
 			class LocationArea_F {
 				description[] = {"Synchronise any laptop, PC, or object to this module."};
+				position = 0;
+				direction = 0;
+				optional = 0;
+				duplicate = 1;
+				synced[] = {"AnyStaticObject", "AnyVehicle"};
+			};
+		};
+	};
+
+	class GVAR(addUser): Module_F {
+		category = QGVAR(Modules);
+		displayName = "Computer: Add User";
+		function = QFUNC(addUserModule);
+		functionPriority = 10;
+		isDisposable = 0;
+		is3DEN = 1;
+		isGlobal = 0;
+		isTriggerActivated = 0;
+		scope = 2;
+
+		class Attributes: AttributesBase {
+			class GVAR(userName): Edit {
+				property = QGVAR(userName);
+				displayName = "Username";
+				typeName = "STRING";
+				defaultValue = "'operator'";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(userPassword): Edit {
+				property = QGVAR(userPassword);
+				displayName = "Password";
+				tooltip = "Leave empty to allow login with an empty password field.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(userEmail): Edit {
+				property = QGVAR(userEmail);
+				displayName = "E-Mail Address";
+				tooltip = "Mail addressed to this value appears in this user's inbox.";
+				typeName = "STRING";
+				defaultValue = "'operator@mccsystems.com'";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(userBackground): Combo {
+				property = QGVAR(userBackground);
+				displayName = "Background";
+				tooltip = "Preset desktop background for this user. Ignored if Custom Background Texture is filled.";
+				typeName = "STRING";
+				defaultValue = "'default_dark'";
+				expression = "_this setVariable ['%s', _value, true];";
+
+				class Values {
+					class DefaultDark {name = "Default Dark"; value = "default_dark";};
+					class DefaultLight {name = "Default Light"; value = "default_light";};
+					class NATO {name = "NATO"; value = "nato";};
+					class CSAT {name = "CSAT"; value = "csat";};
+					class AAF {name = "AAF"; value = "aaf";};
+					class FIA {name = "FIA"; value = "fia";};
+				};
+			};
+
+			class GVAR(userBackgroundCustom): Edit {
+				property = QGVAR(userBackgroundCustom);
+				displayName = "Custom Background Texture";
+				tooltip = "Optional texture path. If filled, this overrides the Background selection above.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class ModuleDescription: ModuleDescription {};
+		};
+
+		class ModuleDescription: ModuleDescription {
+			description = "Sync an MMC computer object to add a login user to that computer.";
+			sync[] = {"LocationArea_F"};
+
+			class LocationArea_F {
+				description[] = {"Synchronise any registered MMC computer object."};
 				position = 0;
 				direction = 0;
 				optional = 0;

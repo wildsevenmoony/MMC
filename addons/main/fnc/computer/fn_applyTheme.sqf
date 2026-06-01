@@ -109,6 +109,15 @@ switch (_theme) do {
 (_display displayCtrl IDC_MMC_USER) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_CLOCK) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_START_MENU) ctrlSetBackgroundColor _panelStrong;
+(_display displayCtrl IDC_MMC_LOGIN_PANEL) ctrlSetBackgroundColor _panelStrong;
+(_display displayCtrl IDC_MMC_LOGIN_TITLE) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_LOGIN_USERNAME_LABEL) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_LOGIN_PASSWORD_LABEL) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_LOGIN_USERNAME) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_LOGIN_USERNAME) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_LOGIN_ERROR) ctrlSetTextColor [1, 0.25, 0.25, 1];
 
 {
 	(_display displayCtrl _x) ctrlSetTextColor _text;
@@ -131,7 +140,8 @@ switch (_theme) do {
 	IDC_MMC_BTN_CLOSE_APP,
 	IDC_MMC_START_BUTTON,
 	IDC_MMC_START_BOOT,
-	IDC_MMC_START_SHUTDOWN
+	IDC_MMC_START_SHUTDOWN,
+	IDC_MMC_LOGIN_BUTTON
 ];
 
 private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0, 0, 0, 0.96]};
@@ -155,5 +165,9 @@ private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0
 	IDC_MMC_START_BUTTON,
 	IDC_MMC_START_BOOT,
 	IDC_MMC_START_SHUTDOWN,
-	IDC_MMC_BOOT_BAR_BG
+	IDC_MMC_BOOT_BAR_BG,
+	IDC_MMC_LOGIN_PANEL,
+	IDC_MMC_LOGIN_USERNAME,
+	IDC_MMC_LOGIN_PASSWORD,
+	IDC_MMC_LOGIN_BUTTON
 ];

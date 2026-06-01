@@ -10,7 +10,7 @@ GVAR(registeredComputers) = [];
 [
 	QGVAR(profileLoginName),
 	"EDITBOX",
-	["Login Name", "Default login name shown inside MMC computers."],
+	["Username", "Default MMC username. This defaults to your Arma profile name."],
 	["Moony's Magnificent Computers", "Player Profile"],
 	profileName,
 	0
@@ -19,9 +19,18 @@ GVAR(registeredComputers) = [];
 [
 	QGVAR(profilePassword),
 	"EDITBOX",
-	["Password", "Default password for future login screens. The current desktop shell does not enforce this yet."],
+	["Password", "Default MMC password. Leave empty to log in with an empty password field."],
 	["Moony's Magnificent Computers", "Player Profile"],
 	"",
+	0
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(profileEmail),
+	"EDITBOX",
+	["E-Mail Address", "Default MMC email address for your user account."],
+	["Moony's Magnificent Computers", "Player Profile"],
+	format ["%1@mccsystems.com", profileName],
 	0
 ] call CBA_fnc_addSetting;
 
@@ -35,6 +44,15 @@ GVAR(registeredComputers) = [];
 		["Dark", "Light", "User", "BLUFOR", "OPFOR", "Independent", "Civilian"],
 		0
 	],
+	0
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(logoutOnClose),
+	"CHECKBOX",
+	["Logout When Closed", "If enabled, closing the computer dialog logs the current user out of that computer."],
+	["Moony's Magnificent Computers", "Player Profile"],
+	false,
 	0
 ] call CBA_fnc_addSetting;
 

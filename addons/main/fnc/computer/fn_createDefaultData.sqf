@@ -17,6 +17,8 @@ private _data = createHashMap;
 
 _data set ["systemName", _config getOrDefault ["systemName", "MMC Workstation"]];
 _data set ["background", _config getOrDefault ["background", ""]];
+_data set ["closedSystem", _config getOrDefault ["closedSystem", false]];
+_data set ["users", _config getOrDefault ["users", []]];
 _data set ["files", _config getOrDefault ["files", [
 	createHashMapFromArray [
 		["name", "welcome.txt"],

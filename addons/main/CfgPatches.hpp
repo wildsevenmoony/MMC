@@ -20,6 +20,7 @@ class CfgPatches {
 		requiredVersion = 2.14;
 		units[] = {
 			QGVAR(registerComputer),
+			QGVAR(addUser),
 			QGVAR(addTextFile),
 			QGVAR(addMail)
 		};

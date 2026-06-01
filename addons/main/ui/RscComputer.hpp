@@ -1,6 +1,7 @@
 class RscText;
 class RscStructuredText;
 class RscButton;
+class RscEdit;
 class RscListbox;
 class RscPicture;
 
@@ -24,7 +25,7 @@ class GVAR(RscComputer) {
 	movingEnable = 0;
 	enableSimulation = 1;
 	onLoad = "_this call MMC_fnc_initDisplay";
-	onUnload = "uiNamespace setVariable ['MMC_main_display', displayNull]";
+	onUnload = "_this call MMC_fnc_handleDisplayUnload";
 
 	class ControlsBackground {
 		class DesktopBackground: RscText {
@@ -272,6 +273,85 @@ class GVAR(RscComputer) {
 			sizeEx = 0.03;
 			style = 2;
 			colorBackground[] = {0, 0, 0, 0};
+		};
+
+		class LoginPanel: RscText {
+			idc = IDC_MMC_LOGIN_PANEL;
+			shadow = 0;
+			x = "safeZoneX + safeZoneW * 0.36";
+			y = "safeZoneY + safeZoneH * 0.28";
+			w = "safeZoneW * 0.28";
+			h = "safeZoneH * 0.34";
+			colorBackground[] = {0.02, 0.025, 0.035, 0.96};
+		};
+
+		class LoginTitle: RscText {
+			idc = IDC_MMC_LOGIN_TITLE;
+			shadow = 0;
+			text = "Sign in";
+			x = "safeZoneX + safeZoneW * 0.38";
+			y = "safeZoneY + safeZoneH * 0.305";
+			w = "safeZoneW * 0.24";
+			h = 0.045;
+			sizeEx = 0.04;
+			style = 2;
+			colorBackground[] = {0, 0, 0, 0};
+		};
+
+		class LoginUsernameLabel: RscText {
+			idc = IDC_MMC_LOGIN_USERNAME_LABEL;
+			shadow = 0;
+			text = "Username";
+			x = "safeZoneX + safeZoneW * 0.39";
+			y = "safeZoneY + safeZoneH * 0.37";
+			w = "safeZoneW * 0.22";
+			h = 0.03;
+			colorBackground[] = {0, 0, 0, 0};
+		};
+
+		class LoginUsername: RscEdit {
+			idc = IDC_MMC_LOGIN_USERNAME;
+			shadow = 0;
+			x = "safeZoneX + safeZoneW * 0.39";
+			y = "safeZoneY + safeZoneH * 0.405";
+			w = "safeZoneW * 0.22";
+			h = 0.04;
+			colorBackground[] = {1, 1, 1, 0.08};
+		};
+
+		class LoginPasswordLabel: LoginUsernameLabel {
+			idc = IDC_MMC_LOGIN_PASSWORD_LABEL;
+			text = "Password";
+			y = "safeZoneY + safeZoneH * 0.46";
+		};
+
+		class LoginPassword: LoginUsername {
+			idc = IDC_MMC_LOGIN_PASSWORD;
+			y = "safeZoneY + safeZoneH * 0.495";
+		};
+
+		class LoginButton: GVAR(RscComputerButton) {
+			idc = IDC_MMC_LOGIN_BUTTON;
+			text = "Login";
+			x = "safeZoneX + safeZoneW * 0.39";
+			y = "safeZoneY + safeZoneH * 0.555";
+			w = "safeZoneW * 0.22";
+			h = 0.042;
+			action = "call MMC_fnc_login";
+		};
+
+		class LoginError: RscText {
+			idc = IDC_MMC_LOGIN_ERROR;
+			shadow = 0;
+			text = "";
+			x = "safeZoneX + safeZoneW * 0.39";
+			y = "safeZoneY + safeZoneH * 0.608";
+			w = "safeZoneW * 0.22";
+			h = 0.03;
+			sizeEx = 0.026;
+			style = 2;
+			colorBackground[] = {0, 0, 0, 0};
+			colorText[] = {1, 0.25, 0.25, 1};
 		};
 	};
 };
