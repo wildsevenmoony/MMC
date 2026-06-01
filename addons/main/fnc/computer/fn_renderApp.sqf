@@ -40,10 +40,31 @@ private _mediaControls = [
 	IDC_MMC_FRAME_MEDIA_STOP,
 	IDC_MMC_FRAME_MEDIA_NEXT
 ];
+private _mailControls = [
+	IDC_MMC_MAIL_HEADER,
+	IDC_MMC_MAIL_TABLE,
+	IDC_MMC_FRAME_MAIL_TABLE,
+	IDC_MMC_MAIL_REPLY,
+	IDC_MMC_MAIL_FORWARD,
+	IDC_MMC_MAIL_RECIPIENT_LABEL,
+	IDC_MMC_MAIL_RECIPIENT,
+	IDC_MMC_MAIL_SUBJECT_LABEL,
+	IDC_MMC_MAIL_SUBJECT,
+	IDC_MMC_MAIL_ATTACHMENT_LABEL,
+	IDC_MMC_MAIL_ATTACHMENT,
+	IDC_MMC_MAIL_BODY_LABEL,
+	IDC_MMC_MAIL_BODY,
+	IDC_MMC_MAIL_SEND,
+	IDC_MMC_MAIL_CANCEL,
+	IDC_MMC_MAIL_ERROR
+];
 
 {
 	(_display displayCtrl _x) ctrlShow false;
 } forEach _mediaControls;
+{
+	(_display displayCtrl _x) ctrlShow false;
+} forEach _mailControls;
 _previewImage ctrlShow false;
 _previewFrame ctrlShow false;
 _previewImage ctrlSetText "";
@@ -189,36 +210,7 @@ switch (_app) do {
 		};
 	};
 	case "mail": {
-		_title ctrlSetText "Mail";
-		private _email = toLowerANSI (_activeUser getOrDefault ["email", ""]);
-		private _mail = ((_data getOrDefault ["mail", []]) + (_activeUser getOrDefault ["mail", []])) select {
-			private _to = toLowerANSI (_x getOrDefault ["to", ""]);
-			_to in ["", "*"] || {_to isEqualTo _email}
-		};
-		if (_mail isEqualTo []) exitWith {
-			[_noContent] call _setBody;
-		};
-		{
-			private _row = _list lbAdd format ["%1 - %2", _x getOrDefault ["from", "Unknown"], _x getOrDefault ["subject", "No subject"]];
-			_list lbSetTooltip [_row, format [
-				"From: %1%4To: %2%4Subject: %3",
-				_x getOrDefault ["from", "Unknown"],
-				_x getOrDefault ["to", ""],
-				_x getOrDefault ["subject", "No subject"],
-				toString [10]
-			]];
-		} forEach _mail;
-		if (_index < 0) then {_index = 0};
-		_list lbSetCurSel _index;
-		private _message = _mail param [_index, createHashMap];
-		[format [
-			"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>From: %2<br/>To: %3<br/>Date: %4</t><br/><br/>%5",
-			_message getOrDefault ["subject", "No subject"],
-			_message getOrDefault ["from", "Unknown"],
-			_message getOrDefault ["to", ""],
-			_message getOrDefault ["date", ""],
-			_message getOrDefault ["body", ""]
-		]] call _setBody;
+		["select", _index, _isSelect] call FUNC(renderMail);
 	};
 	case "messages": {
 		_title ctrlSetText "Messenger";

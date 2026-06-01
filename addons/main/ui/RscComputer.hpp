@@ -158,11 +158,143 @@ class GVAR(RscComputer) {
 		class FilePreviewImage: RscPicture {
 			idc = IDC_MMC_FILE_PREVIEW_IMAGE;
 			text = "";
-			x = "safeZoneX + 0.56";
+			x = "safeZoneX + 0.565";
 			y = "safeZoneY + 0.2";
-			w = "safeZoneW - 0.87";
-			h = "safeZoneH - 0.56";
+			w = 0.18;
+			h = 0.135;
 			colorText[] = {1, 1, 1, 1};
+		};
+
+		class MailHeader: RscText {
+			idc = IDC_MMC_MAIL_HEADER;
+			shadow = 0;
+			text = "";
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + 0.148";
+			w = "safeZoneW - 0.64";
+			h = 0.035;
+			sizeEx = 0.026;
+			colorBackground[] = {0, 0, 0, 0};
+		};
+
+		class MailTable: RscListbox {
+			idc = IDC_MMC_MAIL_TABLE;
+			shadow = 0;
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + 0.19";
+			w = "safeZoneW - 0.64";
+			h = "safeZoneH - 0.37";
+			colorBackground[] = {0.02, 0.025, 0.035, 0.72};
+			onLBSelChanged = "call MMC_fnc_mailSelect";
+		};
+
+		class MailReply: GVAR(RscComputerButton) {
+			idc = IDC_MMC_MAIL_REPLY;
+			text = "Answer";
+			tooltip = "Answer this mail.";
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + 0.148";
+			w = 0.075;
+			h = 0.035;
+			action = "['reply'] call MMC_fnc_mailCompose";
+		};
+
+		class MailForward: MailReply {
+			idc = IDC_MMC_MAIL_FORWARD;
+			text = "Forward";
+			tooltip = "Forward this mail.";
+			x = "safeZoneX + 0.525";
+			action = "['forward'] call MMC_fnc_mailCompose";
+		};
+
+		class MailRecipientLabel: RscText {
+			idc = IDC_MMC_MAIL_RECIPIENT_LABEL;
+			shadow = 0;
+			text = "Recipient";
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + 0.155";
+			w = 0.11;
+			h = 0.032;
+			colorBackground[] = {0, 0, 0, 0};
+		};
+
+		class MailRecipient: RscEdit {
+			idc = IDC_MMC_MAIL_RECIPIENT;
+			shadow = 0;
+			x = "safeZoneX + 0.56";
+			y = "safeZoneY + 0.155";
+			w = "safeZoneW - 0.755";
+			h = 0.036;
+			colorBackground[] = {1, 1, 1, 0.08};
+		};
+
+		class MailSubjectLabel: MailRecipientLabel {
+			idc = IDC_MMC_MAIL_SUBJECT_LABEL;
+			text = "Subject";
+			y = "safeZoneY + 0.197";
+		};
+
+		class MailSubject: MailRecipient {
+			idc = IDC_MMC_MAIL_SUBJECT;
+			y = "safeZoneY + 0.197";
+		};
+
+		class MailAttachmentLabel: MailRecipientLabel {
+			idc = IDC_MMC_MAIL_ATTACHMENT_LABEL;
+			text = "Attachment";
+			y = "safeZoneY + 0.239";
+		};
+
+		class MailAttachment: MailRecipient {
+			idc = IDC_MMC_MAIL_ATTACHMENT;
+			y = "safeZoneY + 0.239";
+			tooltip = "Optional picture texture path. If set, the recipient receives it as a picture file.";
+		};
+
+		class MailBodyLabel: MailRecipientLabel {
+			idc = IDC_MMC_MAIL_BODY_LABEL;
+			text = "Text";
+			y = "safeZoneY + 0.281";
+		};
+
+		class MailBody: MailRecipient {
+			idc = IDC_MMC_MAIL_BODY;
+			style = 16;
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + 0.316";
+			w = "safeZoneW - 0.64";
+			h = "safeZoneH - 0.535";
+			lineSpacing = 1;
+		};
+
+		class MailSend: GVAR(RscComputerButton) {
+			idc = IDC_MMC_MAIL_SEND;
+			text = "Send";
+			x = "safeZoneX + safeZoneW - 0.325";
+			y = "safeZoneY + safeZoneH - 0.205";
+			w = 0.075;
+			h = 0.038;
+			action = "call MMC_fnc_mailSendFromComposer";
+		};
+
+		class MailCancel: MailSend {
+			idc = IDC_MMC_MAIL_CANCEL;
+			text = "Cancel";
+			x = "safeZoneX + safeZoneW - 0.245";
+			action = "['table'] call MMC_fnc_renderMail";
+		};
+
+		class MailError: RscText {
+			idc = IDC_MMC_MAIL_ERROR;
+			shadow = 0;
+			text = "";
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + safeZoneH - 0.205";
+			w = "safeZoneW - 0.79";
+			h = 0.038;
+			sizeEx = 0.026;
+			colorBackground[] = {0, 0, 0, 0};
+			colorText[] = {1, 0.25, 0.25, 1};
 		};
 
 		class MediaBar: RscText {
@@ -539,10 +671,18 @@ class GVAR(RscComputer) {
 
 		class FrameFilePreviewImage: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
-			x = "safeZoneX + 0.56";
+			x = "safeZoneX + 0.565";
 			y = "safeZoneY + 0.2";
-			w = "safeZoneW - 0.87";
-			h = "safeZoneH - 0.56";
+			w = 0.18;
+			h = 0.135;
+		};
+
+		class FrameMailTable: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_MAIL_TABLE;
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + 0.19";
+			w = "safeZoneW - 0.64";
+			h = "safeZoneH - 0.37";
 		};
 
 		class FrameMediaBar: GVAR(RscComputerFrame) {

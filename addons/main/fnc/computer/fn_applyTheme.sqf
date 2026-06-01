@@ -111,6 +111,21 @@ switch (_theme) do {
 (_display displayCtrl IDC_MMC_APP_LIST) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_APP_BODY) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_APP_BODY) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_TABLE) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_MAIL_TABLE) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_HEADER) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_RECIPIENT_LABEL) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_SUBJECT_LABEL) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_LABEL) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_BODY_LABEL) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_BODY) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_MAIL_BODY) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MEDIA_BAR) ctrlSetBackgroundColor _panelStrong;
 (_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_USER) ctrlSetTextColor _text;
@@ -151,6 +166,10 @@ switch (_theme) do {
 	IDC_MMC_MEDIA_PLAY,
 	IDC_MMC_MEDIA_STOP,
 	IDC_MMC_MEDIA_NEXT,
+	IDC_MMC_MAIL_REPLY,
+	IDC_MMC_MAIL_FORWARD,
+	IDC_MMC_MAIL_SEND,
+	IDC_MMC_MAIL_CANCEL,
 	IDC_MMC_START_BUTTON,
 	IDC_MMC_START_BOOT,
 	IDC_MMC_START_LOGOUT,
@@ -210,6 +229,7 @@ private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0
 	IDC_MMC_FRAME_APP_LIST,
 	IDC_MMC_FRAME_APP_BODY,
 	IDC_MMC_FRAME_FILE_PREVIEW_IMAGE,
+	IDC_MMC_FRAME_MAIL_TABLE,
 	IDC_MMC_FRAME_MEDIA_BAR,
 	IDC_MMC_FRAME_MEDIA_PREV,
 	IDC_MMC_FRAME_MEDIA_PLAY,

@@ -18,6 +18,8 @@ class CfgFunctions {
 			class addActions {};
 			class canOpen {};
 			class createDefaultData {};
+			class findUserByEmail {};
+			class formatMailDate {};
 			class getActiveUser {};
 			class getAudioFiles {};
 			class getRegisteredUsers {};
@@ -31,6 +33,9 @@ class CfgFunctions {
 			class login {};
 			class logoutCurrent {};
 			class logout {};
+			class mailCompose {};
+			class mailSelect {};
+			class mailSendFromComposer {};
 			class makeUniqueEmail {};
 			class mediaNavigate {};
 			class mediaPlaySelected {};
@@ -41,6 +46,8 @@ class CfgFunctions {
 			class registerComputerModule {};
 			class registerObject {};
 			class renderApp {};
+			class renderMail {};
+			class sendMail {};
 			class setScreenState {};
 			class setPowerState {};
 			class setSystemOverlay {};
