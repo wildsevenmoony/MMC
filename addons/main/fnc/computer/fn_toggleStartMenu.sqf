@@ -32,6 +32,9 @@ private _menuH = [0.053, 0.098] select _poweredOn;
 (_display displayCtrl IDC_MMC_START_SHUTDOWN) ctrlShow (_open && {_poweredOn});
 (_display displayCtrl IDC_MMC_FRAME_START_SHUTDOWN) ctrlShow (_open && {_poweredOn});
 
+// The app list frame sits just under the start menu edge; hide it while the menu is open.
+(_display displayCtrl IDC_MMC_FRAME_APP_LIST) ctrlShow !_open;
+
 {
 	if !(_open) then {
 		(_display displayCtrl _x) ctrlShow false;

@@ -55,7 +55,7 @@ if (_userModules isNotEqualTo []) then {
 		private _username = _userConfig getOrDefault ["username", ""];
 		private _targets = (synchronizedObjects _x) select {_x getVariable [QGVAR(isComputer), false]};
 		if (_targets isEqualTo []) then {
-			_targets = +GVAR(registeredComputers);
+			_targets = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
 		};
 
 		{

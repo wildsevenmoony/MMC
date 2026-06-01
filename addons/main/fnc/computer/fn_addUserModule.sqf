@@ -61,7 +61,7 @@ _logic setVariable [QGVAR(userConfig), createHashMapFromArray [
 
 private _computerObjects = _objects select {_x getVariable [QGVAR(isComputer), false]};
 if (_computerObjects isEqualTo []) then {
-	_computerObjects = +GVAR(registeredComputers);
+	_computerObjects = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
 };
 
 {
