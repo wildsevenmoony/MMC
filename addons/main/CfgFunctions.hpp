@@ -17,6 +17,8 @@ class CfgFunctions {
 			class initDisplay {};
 			class addMailModule {};
 			class addTextFileModule {};
+			class applyTheme {};
+			class getBackgroundPath {};
 			class open {};
 			class registerComputerModule {};
 			class registerObject {};

@@ -22,7 +22,7 @@ class GVAR(RscComputer) {
 		};
 
 		class DesktopTint: RscText {
-			idc = -1;
+			idc = IDC_MMC_DESKTOP_TINT;
 			x = "safeZoneX";
 			y = "safeZoneY";
 			w = "safeZoneW";
@@ -41,7 +41,7 @@ class GVAR(RscComputer) {
 		};
 
 		class Taskbar: RscText {
-			idc = -1;
+			idc = IDC_MMC_TASKBAR;
 			x = "safeZoneX";
 			y = "safeZoneY + safeZoneH - 0.055";
 			w = "safeZoneW";

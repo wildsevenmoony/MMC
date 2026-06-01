@@ -28,13 +28,10 @@ private _user = _display displayCtrl IDC_MMC_USER;
 _user ctrlSetText format ["%1  |  %2", GVAR(profileLoginName), _data getOrDefault ["systemName", "MMC Workstation"]];
 
 private _background = _data getOrDefault ["background", ""];
-if (_background isEqualTo "") then {
-	_background = GVAR(profileBackground);
-};
-if (_background isEqualTo "") then {
-	_background = PATHTOF(img\desktop_placeholder.paa);
-};
+_background = [_background] call FUNC(getBackgroundPath);
 (_display displayCtrl IDC_MMC_DESKTOP_IMAGE) ctrlSetText _background;
+
+[_display] call FUNC(applyTheme);
 
 {
 	(_display displayCtrl _x) ctrlShow false;
