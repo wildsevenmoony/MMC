@@ -123,8 +123,7 @@ switch (_app) do {
 			} forEach [
 				["Text Files", "text"],
 				["Audio Files", "audio"],
-				["Pictures", "picture"],
-				["Videos", "video"]
+				["Pictures", "picture"]
 			];
 			_display setVariable [QGVAR(fileListRows), _rows];
 			["<t size='1.25'>Folders</t><br/><br/>Select a folder to view files from the computer and the active user account."] call _setBody;
@@ -158,13 +157,13 @@ switch (_app) do {
 
 			private _file = _rowData getOrDefault ["file", createHashMap];
 			private _type = _file getOrDefault ["type", "file"];
-			if (_type in ["audio", "video"]) then {
+			if (_type isEqualTo "audio") then {
 				_display setVariable [QGVAR(selectedMediaFile), _file];
 				_statusText = format ["Selected: %1", _file getOrDefault ["name", "media"]];
 				(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText _statusText;
 				_display setVariable [QGVAR(mediaStatusText), _statusText];
 			};
-			private _mediaHint = ["", "<br/><br/><t color='#9fb6d8'>Use the media controls below to play this file.</t>"] select (_type in ["audio", "video"]);
+			private _mediaHint = ["", "<br/><br/><t color='#9fb6d8'>Use the media controls below to play this file.</t>"] select (_type isEqualTo "audio");
 			private _assetInfo = switch (_type) do {
 				case "picture": {
 					_previewImage ctrlSetText (_file getOrDefault ["texture", ""]);
@@ -172,11 +171,10 @@ switch (_app) do {
 					_previewFrame ctrlShow true;
 					""
 				};
-				case "video": {""};
 				default {""};
 			};
 			private _content = if (_type isEqualTo "picture") then {
-				format ["<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><t align='center'>%1</t>", _file getOrDefault ["content", ""]]
+				format ["<br/><br/><br/><br/><br/><br/><br/><br/><t align='center'>%1</t>", _file getOrDefault ["content", ""]]
 			} else {
 				format ["<br/><br/>%1", _file getOrDefault ["content", ""]]
 			};

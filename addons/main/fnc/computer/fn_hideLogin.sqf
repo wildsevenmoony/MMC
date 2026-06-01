@@ -37,7 +37,7 @@ private _computer = _display getVariable [QGVAR(computer), objNull];
 private _data = _display getVariable [QGVAR(data), createHashMap];
 private _activeUser = [_computer] call FUNC(getActiveUser);
 private _systemName = _data getOrDefault ["systemName", "MMC Workstation"];
-private _username = _activeUser getOrDefault ["username", GVAR(profileLoginName)];
+private _username = _activeUser getOrDefault ["username", ""];
 
 (_display displayCtrl IDC_MMC_USER) ctrlSetText format ["%1  |  %2", _username, _systemName];
 

@@ -39,13 +39,6 @@ _data set ["files", _config getOrDefault ["files", [
 		["path", "\Audio\testaudio.ogg"],
 		["content", "Test audio file."],
 		["soundClass", QGVAR(sound_testaudio)]
-	],
-	createHashMapFromArray [
-		["name", "intro_video.ogv"],
-		["type", "video"],
-		["path", "\Videos\intro_video.ogv"],
-		["content", "Video playback placeholder using a vanilla Arma 3 OGV file."],
-		["videoPath", "A3\Missions_F_EPA\video\A_in_intro.ogv"]
 	]
 ]]];
 

@@ -45,7 +45,7 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 		],
 		[
 			"CHECKBOX",
-			["Closed System", "Closed systems only allow users explicitly added to this computer. Open systems allow any client's CBA profile user to log in."],
+			["Closed System", "Closed systems only allow users explicitly added to this computer. Open systems can use globally registered mission users."],
 			false,
 			false
 		],

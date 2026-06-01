@@ -25,6 +25,14 @@ if !(_object getVariable [QGVAR(poweredOn), true]) exitWith {
 	false
 };
 
+private _ownerUid = getPlayerUID player;
+private _inUseBy = _object getVariable [QGVAR(inUseBy), ""];
+if (_inUseBy isNotEqualTo "" && {_inUseBy isNotEqualTo _ownerUid}) exitWith {
+	["This computer is already in use.", 1.5, player, 12] call ace_common_fnc_displayTextStructured;
+	false
+};
+
+_object setVariable [QGVAR(inUseBy), _ownerUid, true];
 GVAR(activeComputer) = _object;
 createDialog QGVAR(RscComputer);
 true

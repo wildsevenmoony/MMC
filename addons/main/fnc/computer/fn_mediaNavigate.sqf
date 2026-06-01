@@ -14,8 +14,8 @@ private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (isNull _display) exitWith {false};
 
 private _computer = _display getVariable [QGVAR(computer), objNull];
-private _mediaFiles = [_computer] call FUNC(getMediaFiles);
-if (_mediaFiles isEqualTo []) exitWith {
+private _audioFiles = [_computer] call FUNC(getAudioFiles);
+if (_audioFiles isEqualTo []) exitWith {
 	_display setVariable [QGVAR(mediaStatusText), "Selected: No Audio File Selected"];
 	(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText (_display getVariable [QGVAR(mediaStatusText), "Selected: No Audio File Selected"]);
 	false
@@ -27,22 +27,15 @@ if (_index < 0) then {
 } else {
 	_index = _index + _direction;
 	if (_index < 0) then {
-		_index = (count _mediaFiles) - 1;
+		_index = (count _audioFiles) - 1;
 	};
-	if (_index >= count _mediaFiles) then {
+	if (_index >= count _audioFiles) then {
 		_index = 0;
 	};
 };
 
-private _file = _mediaFiles param [_index, createHashMap];
-private _type = _file getOrDefault ["type", ""];
-if (_type isEqualTo "audio") then {
-	[] call FUNC(stopVideo);
-	[_computer, _file, _index] call FUNC(playAudio);
-} else {
-	[_file] call FUNC(playVideo);
-	_computer setVariable [QGVAR(audioIndex), _index, true];
-};
+private _file = _audioFiles param [_index, createHashMap];
+[_computer, _file, _index] call FUNC(playAudio);
 
 private _statusText = format ["Playing: %1", _file getOrDefault ["name", "Media"]];
 _display setVariable [QGVAR(mediaStatusText), _statusText];

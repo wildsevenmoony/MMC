@@ -66,7 +66,7 @@ class CfgVehicles {
 			class GVAR(closedSystem): Checkbox {
 				property = QGVAR(closedSystem);
 				displayName = "Closed System";
-				tooltip = "Closed systems only allow users explicitly added to this computer. Open systems allow any client's CBA profile user to log in.";
+				tooltip = "Closed systems only allow users explicitly added to this computer. Open systems can use globally registered mission users.";
 				typeName = "BOOL";
 				defaultValue = "false";
 				expression = "_this setVariable ['%s', _value, true];";

@@ -158,10 +158,10 @@ class GVAR(RscComputer) {
 		class FilePreviewImage: RscPicture {
 			idc = IDC_MMC_FILE_PREVIEW_IMAGE;
 			text = "";
-			x = "safeZoneX + 0.51";
-			y = "safeZoneY + 0.19";
-			w = "safeZoneW - 0.77";
-			h = "safeZoneH - 0.44";
+			x = "safeZoneX + 0.56";
+			y = "safeZoneY + 0.2";
+			w = "safeZoneW - 0.87";
+			h = "safeZoneH - 0.56";
 			colorText[] = {1, 1, 1, 1};
 		};
 
@@ -189,7 +189,7 @@ class GVAR(RscComputer) {
 		class MediaPlay: MediaPrevious {
 			idc = IDC_MMC_MEDIA_PLAY;
 			text = "Play";
-			tooltip = "Play selected audio or video.";
+			tooltip = "Play selected audio.";
 			x = "safeZoneX + 0.487";
 			w = 0.055;
 			action = "call MMC_fnc_mediaPlaySelected";
@@ -539,10 +539,10 @@ class GVAR(RscComputer) {
 
 		class FrameFilePreviewImage: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
-			x = "safeZoneX + 0.51";
-			y = "safeZoneY + 0.19";
-			w = "safeZoneW - 0.77";
-			h = "safeZoneH - 0.44";
+			x = "safeZoneX + 0.56";
+			y = "safeZoneY + 0.2";
+			w = "safeZoneW - 0.87";
+			h = "safeZoneH - 0.56";
 		};
 
 		class FrameMediaBar: GVAR(RscComputerFrame) {

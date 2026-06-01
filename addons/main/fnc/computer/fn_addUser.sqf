@@ -20,6 +20,7 @@ if (_username isEqualTo "") exitWith {false};
 if (_email isEqualTo "") then {
 	_email = format ["%1@mccsystems.com", _username];
 };
+_email = [_email, _username] call FUNC(makeUniqueEmail);
 
 private _data = _object getVariable [QGVAR(data), [createHashMap] call FUNC(createDefaultData)];
 private _users = _data getOrDefault ["users", []];

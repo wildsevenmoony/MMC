@@ -85,7 +85,7 @@ private _computer = _display getVariable [QGVAR(computer), objNull];
 	IDC_MMC_FRAME_LOGIN_USERNAME
 ];
 
-(_display displayCtrl IDC_MMC_LOGIN_USERNAME) ctrlSetText GVAR(profileLoginName);
+(_display displayCtrl IDC_MMC_LOGIN_USERNAME) ctrlSetText "";
 (_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlSetText "";
 (_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE) ctrlSetText "";
 (_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE) ctrlShow false;

@@ -33,6 +33,13 @@ _object setVariable [QGVAR(booting), true, true];
 	params ["_object", "_openAfterBoot"];
 
 	if (_openAfterBoot && {hasInterface}) then {
+		private _ownerUid = getPlayerUID player;
+		private _inUseBy = _object getVariable [QGVAR(inUseBy), ""];
+		if (_inUseBy isNotEqualTo "" && {_inUseBy isNotEqualTo _ownerUid}) exitWith {
+			_object setVariable [QGVAR(booting), false, true];
+			["This computer is already in use.", 1.5, player, 12] call ace_common_fnc_displayTextStructured;
+		};
+		_object setVariable [QGVAR(inUseBy), _ownerUid, true];
 		GVAR(activeComputer) = _object;
 		createDialog QGVAR(RscComputer);
 		private _display = uiNamespace getVariable [QGVAR(display), displayNull];

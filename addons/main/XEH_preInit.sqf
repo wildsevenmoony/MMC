@@ -9,47 +9,11 @@ GVAR(registeredComputers) = [];
 GVAR(registeredUsers) = [];
 
 [
-	QGVAR(profileLoginName),
-	"EDITBOX",
-	["Username", "Default MMC username. This defaults to your Arma profile name."],
-	["Moony's Magnificent Computers", "Player Profile"],
-	profileName,
-	0
-] call CBA_fnc_addSetting;
-
-[
-	QGVAR(profilePassword),
-	"EDITBOX",
-	["Password", "Default MMC password. Leave empty to log in with an empty password field."],
-	["Moony's Magnificent Computers", "Player Profile"],
-	"",
-	0
-] call CBA_fnc_addSetting;
-
-[
-	QGVAR(profileEmail),
-	"EDITBOX",
-	["E-Mail Address", "Default MMC email address for your user account."],
-	["Moony's Magnificent Computers", "Player Profile"],
-	format ["%1@mccsystems.com", profileName],
-	0
-] call CBA_fnc_addSetting;
-
-[
 	QGVAR(logoutOnClose),
 	"CHECKBOX",
 	["Logout When Closed", "If enabled, closing the computer dialog logs the current user out of that computer."],
 	["Moony's Magnificent Computers", "Player Profile"],
 	false,
-	0
-] call CBA_fnc_addSetting;
-
-[
-	QGVAR(allowPersonalAccounts),
-	"CHECKBOX",
-	["Allow Personal Accounts", "If disabled, players cannot log in with their personal CBA profile account. Only mission-defined users are allowed."],
-	["Moony's Magnificent Computers", "Player Profile"],
-	true,
 	0
 ] call CBA_fnc_addSetting;
 

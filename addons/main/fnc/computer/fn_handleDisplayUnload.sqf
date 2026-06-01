@@ -15,4 +15,11 @@ if (!isNull _display && {GVAR(logoutOnClose)}) then {
 	[_computer] call FUNC(logout);
 };
 
+if (!isNull _display) then {
+	private _computer = _display getVariable [QGVAR(computer), objNull];
+	if (!isNull _computer && {(_computer getVariable [QGVAR(inUseBy), ""]) isEqualTo getPlayerUID player}) then {
+		_computer setVariable [QGVAR(inUseBy), "", true];
+	};
+};
+
 uiNamespace setVariable [QGVAR(display), displayNull];
