@@ -74,5 +74,6 @@ _display setVariable [QGVAR(startMenuOpen), false];
 (_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlShow true;
 (_display displayCtrl IDC_MMC_LOGIN_PASSWORD_TOGGLE) ctrlSetText "Show";
 _display setVariable [QGVAR(passwordVisible), false];
+_display setVariable [QGVAR(loginPassword), ""];
 (_display displayCtrl IDC_MMC_LOGIN_ERROR) ctrlSetStructuredText parseText "";
 ctrlSetFocus (_display displayCtrl IDC_MMC_LOGIN_USERNAME);

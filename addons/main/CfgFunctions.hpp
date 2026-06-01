@@ -44,6 +44,7 @@ class CfgFunctions {
 			class toggleStartMenu {};
 			class togglePasswordVisibility {};
 			class setButtonHover {};
+			class updatePasswordInput {};
 			class updateClock {};
 		};
 
@@ -53,6 +54,10 @@ class CfgFunctions {
 			class addMailZeus {};
 			class addTextFileZeus {};
 			class addUserZeus {};
+			class confirmAddMailDialog {};
+			class confirmAddTextFileDialog {};
+			class guiAddMailDialog {};
+			class guiAddTextFileDialog {};
 			class powerOffZeus {};
 			class powerOnZeus {};
 			class registerComputerZeus {};

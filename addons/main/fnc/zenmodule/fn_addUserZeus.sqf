@@ -10,8 +10,8 @@ params [
 	["_objectUnderCursor", objNull, [objNull]]
 ];
 
-if (isNull _objectUnderCursor || {!(_objectUnderCursor getVariable [QGVAR(isComputer), false])}) exitWith {
-	[objNull, "PLACE ON AN MMC COMPUTER"] call BIS_fnc_showCuratorFeedbackMessage;
+if (!isNull _objectUnderCursor && {!(_objectUnderCursor getVariable [QGVAR(isComputer), false])}) exitWith {
+	[objNull, "PLACE ON AN MMC COMPUTER OR EMPTY GROUND"] call BIS_fnc_showCuratorFeedbackMessage;
 };
 
 [
@@ -40,7 +40,15 @@ if (isNull _objectUnderCursor || {!(_objectUnderCursor getVariable [QGVAR(isComp
 			_background = _backgroundCustom;
 		};
 
-		[_object, _username, _password, _email, _background] remoteExecCall [QFUNC(addUser), 0, true];
+		private _targets = if (isNull _object) then {
+			if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]}
+		} else {
+			[_object]
+		};
+
+		{
+			[_x, _username, _password, _email, _background] remoteExecCall [QFUNC(addUser), 0, true];
+		} forEach _targets;
 		[objNull, "USER ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
 	},
 	{},

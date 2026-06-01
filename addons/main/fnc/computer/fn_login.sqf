@@ -16,7 +16,7 @@ private _username = ctrlText (_display displayCtrl IDC_MMC_LOGIN_USERNAME);
 private _password = if (_display getVariable [QGVAR(passwordVisible), false]) then {
 	ctrlText (_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE)
 } else {
-	ctrlText (_display displayCtrl IDC_MMC_LOGIN_PASSWORD)
+	_display getVariable [QGVAR(loginPassword), ""]
 };
 private _error = _display displayCtrl IDC_MMC_LOGIN_ERROR;
 private _setError = {

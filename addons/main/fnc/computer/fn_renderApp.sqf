@@ -52,11 +52,15 @@ private _setBody = {
 	params ["_text"];
 	_body ctrlSetStructuredText parseText _text;
 };
+private _noContent = "<t size='1.25'>No Content available</t>";
 
 switch (_app) do {
 	case "files": {
 		_title ctrlSetText "Files";
 		private _files = (_data getOrDefault ["files", []]) + (_activeUser getOrDefault ["files", []]);
+		if (_files isEqualTo []) exitWith {
+			[_noContent] call _setBody;
+		};
 		{
 			private _row = _list lbAdd format ["%1  (%2)", _x getOrDefault ["name", "Untitled"], _x getOrDefault ["type", "file"]];
 			_list lbSetTooltip [_row, format [
@@ -82,6 +86,9 @@ switch (_app) do {
 		private _mail = ((_data getOrDefault ["mail", []]) + (_activeUser getOrDefault ["mail", []])) select {
 			private _to = toLowerANSI (_x getOrDefault ["to", ""]);
 			_to in ["", "*"] || {_to isEqualTo _email}
+		};
+		if (_mail isEqualTo []) exitWith {
+			[_noContent] call _setBody;
 		};
 		{
 			private _row = _list lbAdd format ["%1 - %2", _x getOrDefault ["from", "Unknown"], _x getOrDefault ["subject", "No subject"]];
@@ -113,6 +120,9 @@ switch (_app) do {
 			private _to = toLowerANSI (_x getOrDefault ["to", ""]);
 			_to in ["", "*"] || {_to in [_email, _username]}
 		};
+		if (_messages isEqualTo []) exitWith {
+			[_noContent] call _setBody;
+		};
 		{
 			_list lbAdd format ["%1  %2", _x getOrDefault ["date", ""], _x getOrDefault ["from", "Unknown"]];
 		} forEach _messages;
@@ -131,6 +141,9 @@ switch (_app) do {
 	case "notes": {
 		_title ctrlSetText "Notes";
 		private _notes = _data getOrDefault ["notes", []];
+		if (_notes isEqualTo []) exitWith {
+			[_noContent] call _setBody;
+		};
 		{
 			_list lbAdd (_x getOrDefault ["title", "Untitled note"]);
 		} forEach _notes;

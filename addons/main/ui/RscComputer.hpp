@@ -4,6 +4,7 @@ class RscButton;
 class RscEdit;
 class RscListbox;
 class RscPicture;
+class MMB_main_RscBaseDisplay;
 
 class GVAR(RscComputerButton): RscButton {
 	shadow = 0;
@@ -347,7 +348,7 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_LOGIN_PASSWORD;
 			y = "safeZoneY + safeZoneH * 0.482";
 			w = "safeZoneW * 0.184";
-			style = 32;
+			onKeyUp = "call MMC_fnc_updatePasswordInput";
 		};
 
 		class LoginPasswordVisible: LoginPassword {
@@ -526,4 +527,12 @@ class GVAR(RscComputer) {
 			h = 0.042;
 		};
 	};
+};
+
+class GVAR(RscAddTextFileDialog): MMB_main_RscBaseDisplay {
+	onLoad = "(_this select 0) setVariable ['MMB_main_populateFunction', 'MMC_fnc_guiAddTextFileDialog']; call MMB_fnc_initDisplay";
+};
+
+class GVAR(RscAddMailDialog): MMB_main_RscBaseDisplay {
+	onLoad = "(_this select 0) setVariable ['MMB_main_populateFunction', 'MMC_fnc_guiAddMailDialog']; call MMB_fnc_initDisplay";
 };

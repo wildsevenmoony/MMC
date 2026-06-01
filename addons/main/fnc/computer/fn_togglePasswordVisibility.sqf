@@ -11,11 +11,18 @@ if (isNull _display) exitWith {};
 private _hidden = _display displayCtrl IDC_MMC_LOGIN_PASSWORD;
 private _visible = _display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE;
 private _showVisible = !(_display getVariable [QGVAR(passwordVisible), false]);
+private _password = _display getVariable [QGVAR(loginPassword), ""];
 
 if (_showVisible) then {
-	_visible ctrlSetText ctrlText _hidden;
+	_visible ctrlSetText _password;
 } else {
-	_hidden ctrlSetText ctrlText _visible;
+	_password = ctrlText _visible;
+	_display setVariable [QGVAR(loginPassword), _password];
+	private _masked = "";
+	for "_i" from 1 to (count toArray _password) do {
+		_masked = _masked + "*";
+	};
+	_hidden ctrlSetText _masked;
 };
 
 _display setVariable [QGVAR(passwordVisible), _showVisible];
