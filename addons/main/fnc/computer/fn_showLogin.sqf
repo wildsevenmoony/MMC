@@ -12,6 +12,9 @@ if (isNull _display) exitWith {};
 [_display, false] call FUNC(setSystemOverlay);
 _display setVariable [QGVAR(startMenuOpen), false];
 
+private _computer = _display getVariable [QGVAR(computer), objNull];
+[_computer, "login"] call FUNC(setScreenState);
+
 {
 	(_display displayCtrl _x) ctrlShow false;
 } forEach [
@@ -27,6 +30,12 @@ _display setVariable [QGVAR(startMenuOpen), false];
 	IDC_MMC_BTN_CLOSE_APP,
 	IDC_MMC_APP_LIST,
 	IDC_MMC_APP_BODY,
+	IDC_MMC_MEDIA_BAR,
+	IDC_MMC_MEDIA_PREV,
+	IDC_MMC_MEDIA_PLAY,
+	IDC_MMC_MEDIA_STOP,
+	IDC_MMC_MEDIA_NEXT,
+	IDC_MMC_MEDIA_STATUS,
 	IDC_MMC_START_MENU,
 	IDC_MMC_FRAME_START_MENU,
 	IDC_MMC_START_BOOT,
@@ -44,6 +53,11 @@ _display setVariable [QGVAR(startMenuOpen), false];
 	IDC_MMC_FRAME_CLOSE_APP,
 	IDC_MMC_FRAME_APP_LIST,
 	IDC_MMC_FRAME_APP_BODY,
+	IDC_MMC_FRAME_MEDIA_BAR,
+	IDC_MMC_FRAME_MEDIA_PREV,
+	IDC_MMC_FRAME_MEDIA_PLAY,
+	IDC_MMC_FRAME_MEDIA_STOP,
+	IDC_MMC_FRAME_MEDIA_NEXT,
 	IDC_MMC_FRAME_START_BUTTON
 ];
 

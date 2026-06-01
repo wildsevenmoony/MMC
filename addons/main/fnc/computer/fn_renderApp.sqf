@@ -25,6 +25,23 @@ private _activeUser = [_computer] call FUNC(getActiveUser);
 private _title = _display displayCtrl IDC_MMC_APP_TITLE;
 private _list = _display displayCtrl IDC_MMC_APP_LIST;
 private _body = _display displayCtrl IDC_MMC_APP_BODY;
+private _mediaControls = [
+	IDC_MMC_MEDIA_BAR,
+	IDC_MMC_MEDIA_PREV,
+	IDC_MMC_MEDIA_PLAY,
+	IDC_MMC_MEDIA_STOP,
+	IDC_MMC_MEDIA_NEXT,
+	IDC_MMC_MEDIA_STATUS,
+	IDC_MMC_FRAME_MEDIA_BAR,
+	IDC_MMC_FRAME_MEDIA_PREV,
+	IDC_MMC_FRAME_MEDIA_PLAY,
+	IDC_MMC_FRAME_MEDIA_STOP,
+	IDC_MMC_FRAME_MEDIA_NEXT
+];
+
+{
+	(_display displayCtrl _x) ctrlShow false;
+} forEach _mediaControls;
 
 if (!_poweredOn) exitWith {
 	[_display, true, ["MMC", "System powered off", ""], -1] call FUNC(setSystemOverlay);
@@ -73,11 +90,20 @@ switch (_app) do {
 		if (_index < 0) then {_index = 0};
 		_list lbSetCurSel _index;
 		private _file = _files param [_index, createHashMap];
+		private _type = _file getOrDefault ["type", "file"];
+		if (_type isEqualTo "audio") then {
+			{
+				(_display displayCtrl _x) ctrlShow true;
+			} forEach _mediaControls;
+			(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText format ["Selected: %1", _file getOrDefault ["name", "audio"]];
+		};
+		private _mediaHint = ["", "<br/><br/><t color='#9fb6d8'>Use the media controls below to play this file from the computer object.</t>"] select (_type isEqualTo "audio");
 		[format [
-			"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t><br/><br/>%3",
+			"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t><br/><br/>%3%4",
 			_file getOrDefault ["name", "No file selected"],
 			_file getOrDefault ["path", ""],
-			_file getOrDefault ["content", ""]
+			_file getOrDefault ["content", ""],
+			_mediaHint
 		]] call _setBody;
 	};
 	case "mail": {

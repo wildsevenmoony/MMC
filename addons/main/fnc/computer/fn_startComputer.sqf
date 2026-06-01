@@ -27,6 +27,7 @@ if (_object getVariable [QGVAR(poweredOn), true]) exitWith {
 if (_object getVariable [QGVAR(booting), false]) exitWith {false};
 
 _object setVariable [QGVAR(booting), true, true];
+[_object, "startup"] call FUNC(setScreenState);
 
 [_object, _openAfterBoot] spawn {
 	params ["_object", "_openAfterBoot"];
@@ -89,6 +90,8 @@ _object setVariable [QGVAR(booting), true, true];
 		} else {
 			[_object] call FUNC(open);
 		};
+	} else {
+		[_object, ["desktop", "login"] select (count ([_object] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);
 	};
 };
 

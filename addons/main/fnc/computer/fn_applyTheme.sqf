@@ -111,6 +111,8 @@ switch (_theme) do {
 (_display displayCtrl IDC_MMC_APP_LIST) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_APP_BODY) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_APP_BODY) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MEDIA_BAR) ctrlSetBackgroundColor _panelStrong;
+(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_USER) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_CLOCK) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_START_MENU) ctrlSetBackgroundColor _panelStrong;
@@ -145,6 +147,10 @@ switch (_theme) do {
 	IDC_MMC_BTN_MESSAGES,
 	IDC_MMC_BTN_NOTES,
 	IDC_MMC_BTN_CLOSE_APP,
+	IDC_MMC_MEDIA_PREV,
+	IDC_MMC_MEDIA_PLAY,
+	IDC_MMC_MEDIA_STOP,
+	IDC_MMC_MEDIA_NEXT,
 	IDC_MMC_START_BUTTON,
 	IDC_MMC_START_BOOT,
 	IDC_MMC_START_LOGOUT,
@@ -165,6 +171,11 @@ private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0
 	IDC_MMC_APP_TITLE,
 	IDC_MMC_APP_LIST,
 	IDC_MMC_APP_BODY,
+	IDC_MMC_MEDIA_BAR,
+	IDC_MMC_MEDIA_PREV,
+	IDC_MMC_MEDIA_PLAY,
+	IDC_MMC_MEDIA_STOP,
+	IDC_MMC_MEDIA_NEXT,
 	IDC_MMC_START_MENU,
 	IDC_MMC_BTN_FILES,
 	IDC_MMC_BTN_MAIL,
@@ -196,6 +207,11 @@ private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0
 	IDC_MMC_FRAME_CLOSE_APP,
 	IDC_MMC_FRAME_APP_LIST,
 	IDC_MMC_FRAME_APP_BODY,
+	IDC_MMC_FRAME_MEDIA_BAR,
+	IDC_MMC_FRAME_MEDIA_PREV,
+	IDC_MMC_FRAME_MEDIA_PLAY,
+	IDC_MMC_FRAME_MEDIA_STOP,
+	IDC_MMC_FRAME_MEDIA_NEXT,
 	IDC_MMC_FRAME_START_BUTTON,
 	IDC_MMC_FRAME_START_MENU,
 	IDC_MMC_FRAME_START_BOOT,

@@ -323,4 +323,8 @@ class CfgVehicles {
 			};
 		};
 	};
+
+	class GVAR(sound_testaudio) {
+		sound = QGVAR(testaudio);
+	};
 };

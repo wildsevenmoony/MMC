@@ -25,6 +25,7 @@ _object setVariable [QGVAR(poweredOn), _config getOrDefault ["poweredOn", true],
 _object setVariable [QGVAR(booting), false, true];
 _object setVariable [QGVAR(activeUser), createHashMap, true];
 _object setVariable [QGVAR(data), _config getOrDefault ["data", [_config] call FUNC(createDefaultData)], true];
+[_object, ["powered_off", "login"] select (_object getVariable [QGVAR(poweredOn), true])] call FUNC(setScreenState);
 
 if !(GVAR(registeredComputers) isEqualType []) then {
 	GVAR(registeredComputers) = [];

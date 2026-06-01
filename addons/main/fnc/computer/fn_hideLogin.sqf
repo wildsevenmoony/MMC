@@ -30,6 +30,8 @@ if (isNull _display) exitWith {};
 ];
 
 private _computer = _display getVariable [QGVAR(computer), objNull];
+[_computer, "desktop"] call FUNC(setScreenState);
+
 private _data = _display getVariable [QGVAR(data), createHashMap];
 private _activeUser = [_computer] call FUNC(getActiveUser);
 private _systemName = _data getOrDefault ["systemName", "MMC Workstation"];

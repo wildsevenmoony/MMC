@@ -27,16 +27,18 @@ _data set ["files", _config getOrDefault ["files", [
 		["content", "Welcome to Moony's Magnificent Computers.\n\nThis is placeholder intel content. Mission makers will be able to inject files, pictures, audio, mail, messages, and notes through modules and scripts."]
 	],
 	createHashMapFromArray [
-		["name", "photo_placeholder.jpg"],
+		["name", "testpicture.jpg"],
 		["type", "picture"],
-		["path", "\Pictures\photo_placeholder.jpg"],
-		["content", "Picture placeholder. Texture-backed previews will be added in a later UI pass."]
+		["path", "\Pictures\testpicture.jpg"],
+		["content", "Test picture file."],
+		["texture", PATHTOF(img\testpicture.jpg)]
 	],
 	createHashMapFromArray [
-		["name", "audio_placeholder.ogg"],
+		["name", "testaudio.ogg"],
 		["type", "audio"],
-		["path", "\Audio\audio_placeholder.ogg"],
-		["content", "Audio placeholder. Playback hooks will use configured CfgSounds entries."]
+		["path", "\Audio\testaudio.ogg"],
+		["content", "Test audio file."],
+		["soundClass", QGVAR(sound_testaudio)]
 	]
 ]]];
 

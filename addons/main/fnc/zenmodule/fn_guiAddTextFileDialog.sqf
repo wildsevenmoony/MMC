@@ -67,6 +67,9 @@ private _label = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], "User"] c
 _label ctrlSetTooltip "Select the Users to add the file to.";
 
 private _groupH = _rowH * 3;
+private _selectionBackground = ["RscText", -1, [_fieldX, _y, _rowWField, _groupH], ""] call _addControl;
+_selectionBackground ctrlSetBackgroundColor [0.32, 0.32, 0.32, 0.62];
+
 private _group = _display ctrlCreate ["RscControlsGroup", -1, _content];
 _group ctrlSetPosition [_fieldX, _y, _rowWField, _groupH];
 _group ctrlCommit 0;

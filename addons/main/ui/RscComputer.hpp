@@ -155,6 +155,64 @@ class GVAR(RscComputer) {
 			colorBackground[] = {0.03, 0.035, 0.045, 0.9};
 		};
 
+		class MediaBar: RscText {
+			idc = IDC_MMC_MEDIA_BAR;
+			shadow = 0;
+			x = "safeZoneX + 0.45";
+			y = "safeZoneY + safeZoneH - 0.155";
+			w = "safeZoneW - 0.65";
+			h = 0.055;
+			colorBackground[] = {0.02, 0.025, 0.035, 0.96};
+		};
+
+		class MediaPrevious: GVAR(RscComputerButton) {
+			idc = IDC_MMC_MEDIA_PREV;
+			text = "<";
+			tooltip = "Play previous audio file.";
+			x = "safeZoneX + 0.462";
+			y = "safeZoneY + safeZoneH - 0.146";
+			w = 0.04;
+			h = 0.037;
+			action = "[-1] call MMC_fnc_mediaNavigate";
+		};
+
+		class MediaPlay: MediaPrevious {
+			idc = IDC_MMC_MEDIA_PLAY;
+			text = "Play";
+			tooltip = "Play selected audio from this computer.";
+			x = "safeZoneX + 0.507";
+			w = 0.055;
+			action = "call MMC_fnc_mediaPlaySelected";
+		};
+
+		class MediaStop: MediaPlay {
+			idc = IDC_MMC_MEDIA_STOP;
+			text = "Stop";
+			tooltip = "Stop audio playing from this computer.";
+			x = "safeZoneX + 0.567";
+			action = "call MMC_fnc_mediaStop";
+		};
+
+		class MediaNext: MediaPrevious {
+			idc = IDC_MMC_MEDIA_NEXT;
+			text = ">";
+			tooltip = "Play next audio file.";
+			x = "safeZoneX + 0.627";
+			action = "[1] call MMC_fnc_mediaNavigate";
+		};
+
+		class MediaStatus: RscText {
+			idc = IDC_MMC_MEDIA_STATUS;
+			shadow = 0;
+			text = "";
+			x = "safeZoneX + 0.68";
+			y = "safeZoneY + safeZoneH - 0.146";
+			w = "safeZoneW - 0.88";
+			h = 0.037;
+			sizeEx = 0.026;
+			colorBackground[] = {0, 0, 0, 0};
+		};
+
 		class StartButton: GVAR(RscComputerButton) {
 			idc = IDC_MMC_START_BUTTON;
 			text = "Start";
@@ -454,6 +512,38 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + 0.135";
 			w = "safeZoneW - 0.61";
 			h = "safeZoneH - 0.245";
+		};
+
+		class FrameMediaBar: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_MEDIA_BAR;
+			x = "safeZoneX + 0.45";
+			y = "safeZoneY + safeZoneH - 0.155";
+			w = "safeZoneW - 0.65";
+			h = 0.055;
+		};
+
+		class FrameMediaPrevious: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_MEDIA_PREV;
+			x = "safeZoneX + 0.462";
+			y = "safeZoneY + safeZoneH - 0.146";
+			w = 0.04;
+			h = 0.037;
+		};
+
+		class FrameMediaPlay: FrameMediaPrevious {
+			idc = IDC_MMC_FRAME_MEDIA_PLAY;
+			x = "safeZoneX + 0.507";
+			w = 0.055;
+		};
+
+		class FrameMediaStop: FrameMediaPlay {
+			idc = IDC_MMC_FRAME_MEDIA_STOP;
+			x = "safeZoneX + 0.567";
+		};
+
+		class FrameMediaNext: FrameMediaPrevious {
+			idc = IDC_MMC_FRAME_MEDIA_NEXT;
+			x = "safeZoneX + 0.627";
 		};
 
 		class FrameStartButton: GVAR(RscComputerFrame) {
