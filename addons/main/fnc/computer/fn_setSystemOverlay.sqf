@@ -33,19 +33,33 @@ private _desktopControls = [
 	IDC_MMC_BTN_MESSAGES,
 	IDC_MMC_BTN_NOTES,
 	IDC_MMC_APP_TITLE,
+	IDC_MMC_FRAME_APP_TITLE,
 	IDC_MMC_BTN_CLOSE_APP,
+	IDC_MMC_FRAME_CLOSE_APP,
 	IDC_MMC_APP_LIST,
-	IDC_MMC_APP_BODY
+	IDC_MMC_FRAME_APP_LIST,
+	IDC_MMC_APP_BODY,
+	IDC_MMC_FRAME_APP_BODY,
+	IDC_MMC_FRAME_TASKBAR,
+	IDC_MMC_FRAME_START_BUTTON,
+	IDC_MMC_FRAME_BTN_FILES,
+	IDC_MMC_FRAME_BTN_MAIL,
+	IDC_MMC_FRAME_BTN_MESSAGES,
+	IDC_MMC_FRAME_BTN_NOTES
 ];
 
 private _loginControls = [
 	IDC_MMC_LOGIN_PANEL,
+	IDC_MMC_FRAME_LOGIN_PANEL,
 	IDC_MMC_LOGIN_TITLE,
 	IDC_MMC_LOGIN_USERNAME_LABEL,
 	IDC_MMC_LOGIN_USERNAME,
+	IDC_MMC_FRAME_LOGIN_USERNAME,
 	IDC_MMC_LOGIN_PASSWORD_LABEL,
 	IDC_MMC_LOGIN_PASSWORD,
+	IDC_MMC_FRAME_LOGIN_PASSWORD,
 	IDC_MMC_LOGIN_BUTTON,
+	IDC_MMC_FRAME_LOGIN_BUTTON,
 	IDC_MMC_LOGIN_ERROR
 ];
 
@@ -56,7 +70,7 @@ private _loginControls = [
 if (_show) then {
 	{
 		(_display displayCtrl _x) ctrlShow false;
-	} forEach ([IDC_MMC_START_MENU, IDC_MMC_START_BOOT, IDC_MMC_START_SHUTDOWN] + _loginControls);
+	} forEach ([IDC_MMC_START_MENU, IDC_MMC_FRAME_START_MENU, IDC_MMC_START_BOOT, IDC_MMC_FRAME_START_BOOT, IDC_MMC_START_LOGOUT, IDC_MMC_FRAME_START_LOGOUT, IDC_MMC_START_SHUTDOWN, IDC_MMC_FRAME_START_SHUTDOWN] + _loginControls);
 } else {
 	private _menuOpen = _display getVariable [QGVAR(startMenuOpen), false];
 	private _computer = _display getVariable [QGVAR(computer), objNull];
@@ -64,8 +78,13 @@ if (_show) then {
 	private _booting = _computer getVariable [QGVAR(booting), false];
 
 	(_display displayCtrl IDC_MMC_START_MENU) ctrlShow _menuOpen;
+	(_display displayCtrl IDC_MMC_FRAME_START_MENU) ctrlShow _menuOpen;
 	(_display displayCtrl IDC_MMC_START_BOOT) ctrlShow (_menuOpen && {!_poweredOn} && {!_booting});
+	(_display displayCtrl IDC_MMC_FRAME_START_BOOT) ctrlShow (_menuOpen && {!_poweredOn} && {!_booting});
+	(_display displayCtrl IDC_MMC_START_LOGOUT) ctrlShow (_menuOpen && {_poweredOn});
+	(_display displayCtrl IDC_MMC_FRAME_START_LOGOUT) ctrlShow (_menuOpen && {_poweredOn});
 	(_display displayCtrl IDC_MMC_START_SHUTDOWN) ctrlShow (_menuOpen && {_poweredOn});
+	(_display displayCtrl IDC_MMC_FRAME_START_SHUTDOWN) ctrlShow (_menuOpen && {_poweredOn});
 };
 
 private _powerScreen = _display displayCtrl IDC_MMC_POWER_SCREEN;

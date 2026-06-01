@@ -26,6 +26,7 @@ class CfgFunctions {
 			class getBackgroundPath {};
 			class hideLogin {};
 			class login {};
+			class logoutCurrent {};
 			class logout {};
 			class open {};
 			class registerComputerModule {};

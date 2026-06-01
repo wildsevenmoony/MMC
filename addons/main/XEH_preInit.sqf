@@ -35,6 +35,15 @@ GVAR(registeredComputers) = [];
 ] call CBA_fnc_addSetting;
 
 [
+	QGVAR(logoutOnClose),
+	"CHECKBOX",
+	["Logout When Closed", "If enabled, closing the computer dialog logs the current user out of that computer."],
+	["Moony's Magnificent Computers", "Player Profile"],
+	false,
+	0
+] call CBA_fnc_addSetting;
+
+[
 	QGVAR(profileTheme),
 	"LIST",
 	["Theme", "Client-side MMC desktop theme."],
@@ -44,15 +53,6 @@ GVAR(registeredComputers) = [];
 		["Dark", "Light", "User", "BLUFOR", "OPFOR", "Independent", "Civilian"],
 		0
 	],
-	0
-] call CBA_fnc_addSetting;
-
-[
-	QGVAR(logoutOnClose),
-	"CHECKBOX",
-	["Logout When Closed", "If enabled, closing the computer dialog logs the current user out of that computer."],
-	["Moony's Magnificent Computers", "Player Profile"],
-	false,
 	0
 ] call CBA_fnc_addSetting;
 

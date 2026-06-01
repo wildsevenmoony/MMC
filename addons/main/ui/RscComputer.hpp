@@ -20,6 +20,14 @@ class GVAR(RscComputerButton): RscButton {
 	offsetPressedY = 0;
 };
 
+class GVAR(RscComputerFrame): RscText {
+	shadow = 0;
+	style = 64;
+	text = "";
+	colorText[] = {0, 0, 0, 0.85};
+	colorBackground[] = {0, 0, 0, 0};
+};
+
 class GVAR(RscComputer) {
 	idd = IDD_MMC_COMPUTER;
 	movingEnable = 0;
@@ -159,8 +167,9 @@ class GVAR(RscComputer) {
 			text = "";
 			x = "safeZoneX + 0.105";
 			y = "safeZoneY + safeZoneH - 0.046";
-			w = 0.35;
+			w = "safeZoneW - 0.35";
 			h = 0.037;
+			sizeEx = 0.027;
 			colorBackground[] = {0, 0, 0, 0};
 		};
 
@@ -190,19 +199,26 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_START_BOOT;
 			text = "Turn On";
 			x = "safeZoneX + 0.022";
-			y = "safeZoneY + safeZoneH - 0.136";
+			y = "safeZoneY + safeZoneH - 0.091";
 			w = 0.17;
 			h = 0.04;
 			action = "call MMC_fnc_startup";
 		};
 
-		class StartShutdown: GVAR(RscComputerButton) {
-			idc = IDC_MMC_START_SHUTDOWN;
-			text = "Shut Down";
+		class StartLogout: GVAR(RscComputerButton) {
+			idc = IDC_MMC_START_LOGOUT;
+			text = "Log Out";
 			x = "safeZoneX + 0.022";
 			y = "safeZoneY + safeZoneH - 0.136";
 			w = 0.17;
 			h = 0.04;
+			action = "call MMC_fnc_logoutCurrent";
+		};
+
+		class StartShutdown: StartLogout {
+			idc = IDC_MMC_START_SHUTDOWN;
+			text = "Shut Down";
+			y = "safeZoneY + safeZoneH - 0.091";
 			action = "call MMC_fnc_shutdown";
 		};
 
@@ -254,7 +270,7 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			text = "";
 			x = "safeZoneX";
-			y = "safeZoneY + safeZoneH * 0.46";
+			y = "safeZoneY + safeZoneH * 0.445";
 			w = "safeZoneW";
 			h = 0.045;
 			sizeEx = 0.037;
@@ -267,7 +283,7 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			text = "";
 			x = "safeZoneX";
-			y = "safeZoneY + safeZoneH * 0.61";
+			y = "safeZoneY + safeZoneH * 0.595";
 			w = "safeZoneW";
 			h = 0.04;
 			sizeEx = 0.03;
@@ -279,9 +295,9 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_LOGIN_PANEL;
 			shadow = 0;
 			x = "safeZoneX + safeZoneW * 0.36";
-			y = "safeZoneY + safeZoneH * 0.28";
+			y = "safeZoneY + safeZoneH * 0.31";
 			w = "safeZoneW * 0.28";
-			h = "safeZoneH * 0.34";
+			h = "safeZoneH * 0.285";
 			colorBackground[] = {0.02, 0.025, 0.035, 0.96};
 		};
 
@@ -290,10 +306,10 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			text = "Sign in";
 			x = "safeZoneX + safeZoneW * 0.38";
-			y = "safeZoneY + safeZoneH * 0.305";
+			y = "safeZoneY + safeZoneH * 0.328";
 			w = "safeZoneW * 0.24";
-			h = 0.045;
-			sizeEx = 0.04;
+			h = 0.052;
+			sizeEx = 0.052;
 			style = 2;
 			colorBackground[] = {0, 0, 0, 0};
 		};
@@ -303,7 +319,7 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			text = "Username";
 			x = "safeZoneX + safeZoneW * 0.39";
-			y = "safeZoneY + safeZoneH * 0.37";
+			y = "safeZoneY + safeZoneH * 0.395";
 			w = "safeZoneW * 0.22";
 			h = 0.03;
 			colorBackground[] = {0, 0, 0, 0};
@@ -313,7 +329,7 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_LOGIN_USERNAME;
 			shadow = 0;
 			x = "safeZoneX + safeZoneW * 0.39";
-			y = "safeZoneY + safeZoneH * 0.405";
+			y = "safeZoneY + safeZoneH * 0.425";
 			w = "safeZoneW * 0.22";
 			h = 0.04;
 			colorBackground[] = {1, 1, 1, 0.08};
@@ -322,12 +338,12 @@ class GVAR(RscComputer) {
 		class LoginPasswordLabel: LoginUsernameLabel {
 			idc = IDC_MMC_LOGIN_PASSWORD_LABEL;
 			text = "Password";
-			y = "safeZoneY + safeZoneH * 0.46";
+			y = "safeZoneY + safeZoneH * 0.475";
 		};
 
 		class LoginPassword: LoginUsername {
 			idc = IDC_MMC_LOGIN_PASSWORD;
-			y = "safeZoneY + safeZoneH * 0.495";
+			y = "safeZoneY + safeZoneH * 0.505";
 		};
 
 		class LoginButton: GVAR(RscComputerButton) {
@@ -340,18 +356,143 @@ class GVAR(RscComputer) {
 			action = "call MMC_fnc_login";
 		};
 
-		class LoginError: RscText {
+		class LoginError: RscStructuredText {
 			idc = IDC_MMC_LOGIN_ERROR;
 			shadow = 0;
 			text = "";
 			x = "safeZoneX + safeZoneW * 0.39";
-			y = "safeZoneY + safeZoneH * 0.608";
+			y = "safeZoneY + safeZoneH * 0.603";
 			w = "safeZoneW * 0.22";
-			h = 0.03;
-			sizeEx = 0.026;
+			h = 0.036;
+			size = 0.032;
 			style = 2;
 			colorBackground[] = {0, 0, 0, 0};
 			colorText[] = {1, 0.25, 0.25, 1};
+		};
+
+		class FrameTaskbar: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_TASKBAR;
+			x = "safeZoneX";
+			y = "safeZoneY + safeZoneH - 0.055";
+			w = "safeZoneW";
+			h = 0.055;
+		};
+
+		class FrameFilesButton: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_BTN_FILES;
+			x = "safeZoneX + 0.035";
+			y = "safeZoneY + 0.09";
+			w = 0.105;
+			h = 0.05;
+		};
+
+		class FrameMailButton: FrameFilesButton {
+			idc = IDC_MMC_FRAME_BTN_MAIL;
+			y = "safeZoneY + 0.145";
+		};
+
+		class FrameMessagesButton: FrameFilesButton {
+			idc = IDC_MMC_FRAME_BTN_MESSAGES;
+			y = "safeZoneY + 0.2";
+		};
+
+		class FrameNotesButton: FrameFilesButton {
+			idc = IDC_MMC_FRAME_BTN_NOTES;
+			y = "safeZoneY + 0.255";
+		};
+
+		class FrameAppTitle: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_APP_TITLE;
+			x = "safeZoneX + 0.18";
+			y = "safeZoneY + 0.09";
+			w = "safeZoneW - 0.36";
+			h = 0.04;
+		};
+
+		class FrameCloseApp: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_CLOSE_APP;
+			x = "safeZoneX + safeZoneW - 0.222";
+			y = "safeZoneY + 0.09";
+			w = 0.042;
+			h = 0.04;
+		};
+
+		class FrameAppList: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_APP_LIST;
+			x = "safeZoneX + 0.18";
+			y = "safeZoneY + 0.135";
+			w = 0.24;
+			h = "safeZoneH - 0.245";
+		};
+
+		class FrameAppBody: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_APP_BODY;
+			x = "safeZoneX + 0.43";
+			y = "safeZoneY + 0.135";
+			w = "safeZoneW - 0.61";
+			h = "safeZoneH - 0.245";
+		};
+
+		class FrameStartButton: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_START_BUTTON;
+			x = "safeZoneX + 0.012";
+			y = "safeZoneY + safeZoneH - 0.046";
+			w = 0.08;
+			h = 0.037;
+		};
+
+		class FrameStartMenu: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_START_MENU;
+			x = "safeZoneX + 0.012";
+			y = "safeZoneY + safeZoneH - 0.144";
+			w = 0.19;
+			h = 0.089;
+		};
+
+		class FrameStartBoot: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_START_BOOT;
+			x = "safeZoneX + 0.022";
+			y = "safeZoneY + safeZoneH - 0.091";
+			w = 0.17;
+			h = 0.04;
+		};
+
+		class FrameStartLogout: FrameStartBoot {
+			idc = IDC_MMC_FRAME_START_LOGOUT;
+		};
+
+		class FrameStartShutdown: FrameStartBoot {
+			idc = IDC_MMC_FRAME_START_SHUTDOWN;
+			y = "safeZoneY + safeZoneH - 0.091";
+		};
+
+		class FrameLoginPanel: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_LOGIN_PANEL;
+			x = "safeZoneX + safeZoneW * 0.36";
+			y = "safeZoneY + safeZoneH * 0.31";
+			w = "safeZoneW * 0.28";
+			h = "safeZoneH * 0.285";
+		};
+
+		class FrameLoginUsername: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_LOGIN_USERNAME;
+			x = "safeZoneX + safeZoneW * 0.39";
+			y = "safeZoneY + safeZoneH * 0.425";
+			w = "safeZoneW * 0.22";
+			h = 0.04;
+		};
+
+		class FrameLoginPassword: FrameLoginUsername {
+			idc = IDC_MMC_FRAME_LOGIN_PASSWORD;
+			y = "safeZoneY + safeZoneH * 0.505";
+		};
+
+		class FrameLoginButton: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_LOGIN_BUTTON;
+			x = "safeZoneX + safeZoneW * 0.39";
+			y = "safeZoneY + safeZoneH * 0.555";
+			w = "safeZoneW * 0.22";
+			h = 0.042;
 		};
 	};
 };

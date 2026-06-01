@@ -15,9 +15,13 @@ if (isNull _computer || {!(_computer getVariable [QGVAR(poweredOn), true])}) exi
 private _username = ctrlText (_display displayCtrl IDC_MMC_LOGIN_USERNAME);
 private _password = ctrlText (_display displayCtrl IDC_MMC_LOGIN_PASSWORD);
 private _error = _display displayCtrl IDC_MMC_LOGIN_ERROR;
+private _setError = {
+	params ["_text"];
+	_error ctrlSetStructuredText parseText format ["<t align='center' size='1.08' font='RobotoCondensedBold'>%1</t>", _text];
+};
 
 if (_username isEqualTo "") exitWith {
-	_error ctrlSetText "Enter a username.";
+	["Enter a username."] call _setError;
 };
 
 private _users = _data getOrDefault ["users", []];
@@ -36,11 +40,11 @@ if (_knownIndex >= 0) then {
 };
 
 if (count _user == 0) exitWith {
-	_error ctrlSetText (["Unknown user.", "Unknown user on closed system."] select _closedSystem);
+	[["Unknown user.", "Unknown user on closed system."] select _closedSystem] call _setError;
 };
 
 if ((_user getOrDefault ["password", ""]) isNotEqualTo _password) exitWith {
-	_error ctrlSetText "Invalid password.";
+	["Invalid password."] call _setError;
 };
 
 _computer setVariable [QGVAR(activeUser), _user, true];

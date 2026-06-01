@@ -20,6 +20,7 @@ if (_background isEqualTo "") then {
 if ((toArray _background) param [0, -1] isEqualTo 92) exitWith {_background};
 
 switch (toLowerANSI _background) do {
+	case "default_dark": {PATHTOF(img\desktop_default_dark.paa)};
 	case "default_light": {PATHTOF(img\desktop_default_light.paa)};
 	case "nato": {PATHTOF(img\desktop_nato.paa)};
 	case "csat": {PATHTOF(img\desktop_csat.paa)};
