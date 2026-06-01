@@ -205,7 +205,7 @@ class GVAR(RscComputer) {
 			action = "call MMC_fnc_shutdown";
 		};
 
-		class PowerScreen: RscStructuredText {
+		class PowerScreen: RscText {
 			idc = IDC_MMC_POWER_SCREEN;
 			shadow = 0;
 			x = "safeZoneX";
