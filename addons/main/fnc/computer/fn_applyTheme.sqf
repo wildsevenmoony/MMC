@@ -33,6 +33,8 @@ private _tint = [0, 0, 0, 0];
 private _button = [0.028, 0.032, 0.042, 0.98];
 private _buttonText = _text;
 private _bootAccent = [0.13, 0.54, 0.21, 0.95];
+private _border = [0, 0, 0, 0.85];
+private _bootBarBg = [1, 1, 1, 0.22];
 
 if (_isLight) then {
 	_desktop = [0.9, 0.92, 0.94, 1];
@@ -42,7 +44,9 @@ if (_isLight) then {
 	_tint = [0, 0, 0, 0];
 	_button = [0.88, 0.895, 0.91, 0.98];
 	_buttonText = [0.035, 0.04, 0.05, 1];
-	_bootAccent = [0.42, 0.48, 0.56, 0.95];
+	_bootAccent = [0.18, 0.24, 0.32, 0.98];
+	_border = [0.1, 0.12, 0.14, 0.75];
+	_bootBarBg = [0.08, 0.1, 0.12, 0.18];
 };
 
 if (_isUser) then {
@@ -54,6 +58,8 @@ if (_isUser) then {
 	_button = _accent;
 	_buttonText = [1, 1, 1, 1];
 	_bootAccent = _accent;
+	_border = [0, 0, 0, 0.85];
+	_bootBarBg = [1, 1, 1, 0.22];
 };
 
 switch (_theme) do {
@@ -63,6 +69,7 @@ switch (_theme) do {
 		_panelStrong = [0, 0.267, 0.6, 0.98];
 		_button = [0, 0.333, 0.706, 0.98];
 		_bootAccent = [0, 0.333, 0.706, 0.95];
+		_border = [0, 0, 0.08, 0.9];
 	};
 	case "opfor": {
 		_desktop = [0.045, 0.004, 0.004, 1];
@@ -70,6 +77,7 @@ switch (_theme) do {
 		_panelStrong = [0.576, 0, 0, 0.98];
 		_button = [0.886, 0, 0, 0.98];
 		_bootAccent = [0.886, 0, 0, 0.95];
+		_border = [0.12, 0, 0, 0.9];
 	};
 	case "independent": {
 		_desktop = [0.004, 0.04, 0.004, 1];
@@ -77,6 +85,7 @@ switch (_theme) do {
 		_panelStrong = [0, 0.42, 0, 0.98];
 		_button = [0, 0.561, 0, 0.98];
 		_bootAccent = [0, 0.561, 0, 0.95];
+		_border = [0, 0.1, 0, 0.9];
 	};
 	case "civilian": {
 		_desktop = [0.04, 0.004, 0.05, 1];
@@ -84,6 +93,7 @@ switch (_theme) do {
 		_panelStrong = [0.518, 0, 0.576, 0.98];
 		_button = [0.631, 0, 0.706, 0.98];
 		_bootAccent = [0.631, 0, 0.706, 0.95];
+		_border = [0.1, 0, 0.12, 0.9];
 	};
 };
 
@@ -101,9 +111,18 @@ switch (_theme) do {
 (_display displayCtrl IDC_MMC_START_MENU) ctrlSetBackgroundColor _panelStrong;
 
 {
+	(_display displayCtrl _x) ctrlSetTextColor _text;
+} forEach [
+	IDC_MMC_BOOT_TITLE,
+	IDC_MMC_BOOT_STATUS,
+	IDC_MMC_BOOT_STAGE
+];
+
+{
 	private _ctrl = _display displayCtrl _x;
 	_ctrl ctrlSetBackgroundColor _button;
 	_ctrl ctrlSetTextColor _buttonText;
+	_ctrl ctrlSetActiveColor _buttonText;
 } forEach [
 	IDC_MMC_BTN_FILES,
 	IDC_MMC_BTN_MAIL,
@@ -117,4 +136,24 @@ switch (_theme) do {
 
 private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0, 0, 0, 0.96]};
 (_display displayCtrl IDC_MMC_POWER_SCREEN) ctrlSetBackgroundColor _powerBackground;
+(_display displayCtrl IDC_MMC_BOOT_BAR_BG) ctrlSetBackgroundColor _bootBarBg;
 (_display displayCtrl IDC_MMC_BOOT_BAR_FILL) ctrlSetBackgroundColor _bootAccent;
+
+{
+	(_display displayCtrl _x) ctrlSetForegroundColor _border;
+} forEach [
+	IDC_MMC_TASKBAR,
+	IDC_MMC_APP_TITLE,
+	IDC_MMC_APP_LIST,
+	IDC_MMC_APP_BODY,
+	IDC_MMC_START_MENU,
+	IDC_MMC_BTN_FILES,
+	IDC_MMC_BTN_MAIL,
+	IDC_MMC_BTN_MESSAGES,
+	IDC_MMC_BTN_NOTES,
+	IDC_MMC_BTN_CLOSE_APP,
+	IDC_MMC_START_BUTTON,
+	IDC_MMC_START_BOOT,
+	IDC_MMC_START_SHUTDOWN,
+	IDC_MMC_BOOT_BAR_BG
+];

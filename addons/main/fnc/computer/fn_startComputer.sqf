@@ -39,7 +39,7 @@ _object setVariable [QGVAR(booting), true, true];
 			[
 				_display,
 				true,
-				"<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>Starting system...</t><br/><t align='center' size='0.9'>Powering hardware interfaces</t>",
+				["MMC", "Starting system...", "Powering hardware interfaces"],
 				0.08
 			] call FUNC(setSystemOverlay);
 		};
@@ -55,23 +55,20 @@ _object setVariable [QGVAR(booting), true, true];
 		];
 
 		{
-			uiSleep 0.65;
+			uiSleep (0.45 + random 0.85);
 			private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 			if (!isNull _display) then {
 				_x params ["_progress", "_message"];
 				[
 					_display,
 					true,
-					format [
-						"<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>Starting system...</t><br/><t align='center' size='0.9'>%1</t>",
-						_message
-					],
+					["MMC", "Starting system...", _message],
 					_progress
 				] call FUNC(setSystemOverlay);
 			};
 		} forEach _steps;
 	} else {
-		sleep 3.5;
+		sleep (2.8 + random 2.4);
 	};
 
 	if (isNull _object) exitWith {};

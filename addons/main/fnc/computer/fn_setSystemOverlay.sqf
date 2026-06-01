@@ -7,7 +7,7 @@
  * Arguments:
  * 0: Display <DISPLAY>
  * 1: Show overlay <BOOL>
- * 2: Overlay text <STRING, default: "">
+ * 2: Overlay text data <STRING or ARRAY [title,status,stage], default: "">
  * 3: Progress value 0..1, negative hides boot bar <NUMBER, default: -1>
  *
  * Return Value:
@@ -17,7 +17,7 @@
 params [
 	["_display", displayNull, [displayNull]],
 	["_show", false, [false]],
-	["_text", "", [""]],
+	["_text", "", ["", []]],
 	["_progress", -1, [0]]
 ];
 
@@ -60,17 +60,42 @@ if (_show) then {
 private _powerScreen = _display displayCtrl IDC_MMC_POWER_SCREEN;
 private _barBg = _display displayCtrl IDC_MMC_BOOT_BAR_BG;
 private _barFill = _display displayCtrl IDC_MMC_BOOT_BAR_FILL;
+private _title = _display displayCtrl IDC_MMC_BOOT_TITLE;
+private _status = _display displayCtrl IDC_MMC_BOOT_STATUS;
+private _stage = _display displayCtrl IDC_MMC_BOOT_STAGE;
 
 _powerScreen ctrlShow _show;
 _barBg ctrlShow (_show && {_progress >= 0});
 _barFill ctrlShow (_show && {_progress >= 0});
+_title ctrlShow _show;
+_status ctrlShow _show;
+_stage ctrlShow _show;
 
 if (_show) then {
-	_powerScreen ctrlSetStructuredText parseText _text;
+	private _titleText = "MMC";
+	private _statusText = "";
+	private _stageText = "";
+
+	if (_text isEqualType []) then {
+		_titleText = _text param [0, "MMC", [""]];
+		_statusText = _text param [1, "", [""]];
+		_stageText = _text param [2, "", [""]];
+	} else {
+		_statusText = _text;
+	};
+
+	_powerScreen ctrlSetStructuredText parseText "";
+	_title ctrlSetText _titleText;
+	_status ctrlSetText _statusText;
+	_stage ctrlSetText _stageText;
 
 	if (_progress >= 0) then {
 		private _safeProgress = 0 max _progress min 1;
 		_barFill ctrlSetPositionW (safeZoneW * 0.3 * _safeProgress);
 		_barFill ctrlCommit 0.15;
 	};
+} else {
+	_title ctrlSetText "";
+	_status ctrlSetText "";
+	_stage ctrlSetText "";
 };

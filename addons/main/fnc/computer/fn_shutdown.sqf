@@ -14,13 +14,13 @@ _display setVariable [QGVAR(startMenuOpen), false];
 [
 	_display,
 	true,
-	"<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>Saving session...</t><br/><t align='center' size='0.9'>Powering down</t>",
+	["MMC", "Saving session...", "Powering down"],
 	-1
 ] call FUNC(setSystemOverlay);
 
 [_display] spawn {
 	params ["_display"];
-	uiSleep 1.8;
+	uiSleep (1.2 + random 1.2);
 	if (!isNull _display) then {
 		_display closeDisplay 1;
 	};

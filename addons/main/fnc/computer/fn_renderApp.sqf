@@ -26,7 +26,7 @@ private _list = _display displayCtrl IDC_MMC_APP_LIST;
 private _body = _display displayCtrl IDC_MMC_APP_BODY;
 
 if (!_poweredOn) exitWith {
-	[_display, true, "<t align='center' size='2.4'><br/><br/><br/><br/>MMC</t><br/><t align='center' size='1.1'>System powered off</t>", -1] call FUNC(setSystemOverlay);
+	[_display, true, ["MMC", "System powered off", ""], -1] call FUNC(setSystemOverlay);
 	_title ctrlSetText "";
 	lbClear _list;
 	_body ctrlSetStructuredText parseText "";

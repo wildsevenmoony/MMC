@@ -11,7 +11,8 @@ class GVAR(RscComputerButton): RscButton {
 	colorBackground2[] = {0, 0, 0, 0};
 	colorBackgroundActive[] = {1, 1, 1, 0.16};
 	colorDisabled[] = {1, 1, 1, 0.35};
-	colorBorder[] = {0, 0, 0, 0};
+	borderSize = 0.0012;
+	colorBorder[] = {0, 0, 0, 0.8};
 	offsetX = 0;
 	offsetY = 0;
 	offsetPressedX = 0;
@@ -218,20 +219,59 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_BOOT_BAR_BG;
 			shadow = 0;
 			x = "safeZoneX + safeZoneW * 0.35";
-			y = "safeZoneY + safeZoneH * 0.58";
+			y = "safeZoneY + safeZoneH * 0.57";
 			w = "safeZoneW * 0.3";
-			h = 0.018;
-			colorBackground[] = {1, 1, 1, 0.14};
+			h = 0.02;
+			colorBackground[] = {1, 1, 1, 0.22};
 		};
 
 		class BootBarFill: RscText {
 			idc = IDC_MMC_BOOT_BAR_FILL;
 			shadow = 0;
 			x = "safeZoneX + safeZoneW * 0.35";
-			y = "safeZoneY + safeZoneH * 0.58";
+			y = "safeZoneY + safeZoneH * 0.57";
 			w = 0;
-			h = 0.018;
+			h = 0.02;
 			colorBackground[] = {0.13, 0.54, 0.21, 0.95};
+		};
+
+		class BootTitle: RscText {
+			idc = IDC_MMC_BOOT_TITLE;
+			shadow = 0;
+			text = "";
+			x = "safeZoneX";
+			y = "safeZoneY + safeZoneH * 0.36";
+			w = "safeZoneW";
+			h = 0.08;
+			sizeEx = 0.068;
+			style = 2;
+			colorBackground[] = {0, 0, 0, 0};
+		};
+
+		class BootStatus: RscText {
+			idc = IDC_MMC_BOOT_STATUS;
+			shadow = 0;
+			text = "";
+			x = "safeZoneX";
+			y = "safeZoneY + safeZoneH * 0.46";
+			w = "safeZoneW";
+			h = 0.045;
+			sizeEx = 0.037;
+			style = 2;
+			colorBackground[] = {0, 0, 0, 0};
+		};
+
+		class BootStage: RscText {
+			idc = IDC_MMC_BOOT_STAGE;
+			shadow = 0;
+			text = "";
+			x = "safeZoneX";
+			y = "safeZoneY + safeZoneH * 0.61";
+			w = "safeZoneW";
+			h = 0.04;
+			sizeEx = 0.03;
+			style = 2;
+			colorBackground[] = {0, 0, 0, 0};
 		};
 	};
 };
