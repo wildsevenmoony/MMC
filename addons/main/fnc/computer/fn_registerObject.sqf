@@ -19,7 +19,6 @@ params [
 
 if (isNull _object) exitWith {objNull};
 
-_object enableSimulationGlobal true;
 _object setVariable [QGVAR(isComputer), true, true];
 _object setVariable [QGVAR(config), _config, true];
 _object setVariable [QGVAR(poweredOn), _config getOrDefault ["poweredOn", true], true];
