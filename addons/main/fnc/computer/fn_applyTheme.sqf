@@ -111,6 +111,7 @@ switch (_theme) do {
 (_display displayCtrl IDC_MMC_APP_LIST) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_APP_BODY) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_APP_BODY) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_DESKTOP_CONTENT_BODY) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_FILE_DESCRIPTION_BODY) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_TABLE) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_MAIL_TABLE) ctrlSetTextColor _text;

@@ -43,6 +43,7 @@ if (_objects isEqualTo []) then {
 
 private _title = _logic getVariable [QGVAR(desktopTitle), "Welcome"];
 private _content = _logic getVariable [QGVAR(desktopContent), "Select an app on the left."];
+private _align = _logic getVariable [QGVAR(desktopAlign), "left"];
 private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), false]};
 
 if (_userModules isNotEqualTo []) then {
@@ -54,13 +55,13 @@ if (_userModules isNotEqualTo []) then {
 			_targets = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
 		};
 		{
-			[_x, _username, _title, _content] call FUNC(modifyDesktop);
+			[_x, _username, _title, _content, _align] call FUNC(modifyDesktop);
 		} forEach _targets;
 	} forEach _userModules;
 } else {
 	{
 		if (!isNull _x) then {
-			[_x, "", _title, _content] call FUNC(modifyDesktop);
+			[_x, "", _title, _content, _align] call FUNC(modifyDesktop);
 		};
 	} forEach (_objects select {_x getVariable [QGVAR(isComputer), false]});
 };

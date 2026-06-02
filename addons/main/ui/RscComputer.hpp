@@ -158,6 +158,32 @@ class GVAR(RscComputer) {
 			colorBackground[] = {0.03, 0.035, 0.045, 0.9};
 		};
 
+		class DesktopContentGroup: RscControlsGroup {
+			idc = IDC_MMC_DESKTOP_CONTENT_GROUP;
+			x = "safeZoneX + 0.455";
+			y = "safeZoneY + 0.16";
+			w = "safeZoneW - 0.66";
+			h = "safeZoneH - 0.365";
+			class VScrollbar {
+				width = 0.012;
+				autoScrollEnabled = 0;
+			};
+			class HScrollbar {
+				height = 0;
+			};
+			class Controls {
+				class DesktopContentBody: RscStructuredText {
+					idc = IDC_MMC_DESKTOP_CONTENT_BODY;
+					shadow = 0;
+					x = 0;
+					y = 0;
+					w = "safeZoneW - 0.685";
+					h = 0.5;
+					colorBackground[] = {0, 0, 0, 0};
+				};
+			};
+		};
+
 		class FilePreviewImage: RscPicture {
 			idc = IDC_MMC_FILE_PREVIEW_IMAGE;
 			text = "";

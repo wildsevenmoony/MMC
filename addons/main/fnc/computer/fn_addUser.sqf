@@ -45,6 +45,7 @@ if (_index < 0) then {
 	_user set ["mail", _existing getOrDefault ["mail", []]];
 	_user set ["desktopTitle", _existing getOrDefault ["desktopTitle", _user getOrDefault ["desktopTitle", ""]]];
 	_user set ["desktopContent", _existing getOrDefault ["desktopContent", _user getOrDefault ["desktopContent", ""]]];
+	_user set ["desktopAlign", _existing getOrDefault ["desktopAlign", _user getOrDefault ["desktopAlign", "left"]]];
 	_users set [_index, _user];
 };
 

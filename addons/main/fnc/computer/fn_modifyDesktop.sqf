@@ -9,7 +9,8 @@ params [
 	["_object", objNull, [objNull]],
 	["_username", "", [""]],
 	["_title", "Welcome", [""]],
-	["_content", "Select an app on the left.", [""]]
+	["_content", "Select an app on the left.", [""]],
+	["_align", "left", [""]]
 ];
 
 if (isNull _object) exitWith {false};
@@ -19,6 +20,7 @@ private _data = _object getVariable [QGVAR(data), [createHashMap] call FUNC(crea
 if (_username isEqualTo "") exitWith {
 	_data set ["desktopTitle", _title];
 	_data set ["desktopContent", _content];
+	_data set ["desktopAlign", _align];
 	_object setVariable [QGVAR(data), _data, true];
 	true
 };
@@ -31,6 +33,7 @@ if (_index < 0) exitWith {false};
 private _user = _users select _index;
 _user set ["desktopTitle", _title];
 _user set ["desktopContent", _content];
+_user set ["desktopAlign", _align];
 _users set [_index, _user];
 _data set ["users", _users];
 _object setVariable [QGVAR(data), _data, true];

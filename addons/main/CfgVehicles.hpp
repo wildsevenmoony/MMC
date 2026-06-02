@@ -418,8 +418,31 @@ class CfgVehicles {
 			class GVAR(desktopContent): Edit {
 				property = QGVAR(desktopContent);
 				displayName = "Desktop Text";
+				tooltip = "Structured text is supported, including tags such as <br/> and image tags.";
 				typeName = "STRING";
 				defaultValue = "'Select an app on the left.'";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(desktopAlign): Combo {
+				property = QGVAR(desktopAlign);
+				displayName = "Text Alignment";
+				typeName = "STRING";
+				defaultValue = "'left'";
+				class Values {
+					class Left {
+						name = "Left";
+						value = "left";
+					};
+					class Center {
+						name = "Center";
+						value = "center";
+					};
+					class Right {
+						name = "Right";
+						value = "right";
+					};
+				};
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 

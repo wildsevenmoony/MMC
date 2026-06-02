@@ -26,6 +26,8 @@ private _title = _display displayCtrl IDC_MMC_APP_TITLE;
 private _list = _display displayCtrl IDC_MMC_APP_LIST;
 private _body = _display displayCtrl IDC_MMC_APP_BODY;
 _body ctrlEnable false;
+private _desktopGroup = _display displayCtrl IDC_MMC_DESKTOP_CONTENT_GROUP;
+private _desktopBody = _display displayCtrl IDC_MMC_DESKTOP_CONTENT_BODY;
 private _previewImage = _display displayCtrl IDC_MMC_FILE_PREVIEW_IMAGE;
 private _previewFrame = _display displayCtrl IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
 private _descriptionGroup = _display displayCtrl IDC_MMC_FILE_DESCRIPTION_GROUP;
@@ -77,6 +79,8 @@ private _mailControls = [
 {
 	(_display displayCtrl _x) ctrlShow false;
 } forEach _mailControls;
+_desktopGroup ctrlShow false;
+_desktopBody ctrlSetStructuredText parseText "";
 _previewImage ctrlShow false;
 _previewFrame ctrlShow false;
 _descriptionGroup ctrlShow false;
@@ -247,6 +251,17 @@ switch (_app) do {
 		_title ctrlSetText "Desktop";
 		private _desktopTitle = _activeUser getOrDefault ["desktopTitle", _data getOrDefault ["desktopTitle", "Welcome"]];
 		private _desktopContent = _activeUser getOrDefault ["desktopContent", _data getOrDefault ["desktopContent", "Select an app on the left. Files, Mail, Messenger, and Notes are wired to the computer data model now.<br/><br/>The Start button controls power state."]];
-		[format ["<t size='1.35'>%1</t><br/><br/>%2", _desktopTitle, _desktopContent]] call _setBody;
+		private _desktopAlign = toLowerANSI (_activeUser getOrDefault ["desktopAlign", _data getOrDefault ["desktopAlign", "left"]]);
+		if !(_desktopAlign in ["left", "center", "right"]) then {
+			_desktopAlign = "left";
+		};
+		_body ctrlSetStructuredText parseText "";
+		_desktopBody ctrlSetStructuredText parseText format ["<t align='%1'><t size='1.35'>%2</t><br/><br/>%3</t>", _desktopAlign, _desktopTitle, _desktopContent];
+		private _desktopHeight = 0.2 max ((ctrlTextHeight _desktopBody) + 0.03);
+		private _desktopPos = ctrlPosition _desktopBody;
+		_desktopPos set [3, _desktopHeight];
+		_desktopBody ctrlSetPosition _desktopPos;
+		_desktopBody ctrlCommit 0;
+		_desktopGroup ctrlShow true;
 	};
 };
