@@ -1,10 +1,12 @@
-Moony's Magnificent Computers adds interactive computer systems for Arma 3 missions.
+[h1]Moony's Magnificent Computers[/h1]
+
+[b]Moony's Magnificent Computers[/b], or [b]MMC[/b], adds interactive computer systems for Arma 3 missions.
 
 It lets mission makers turn laptops, PCs, or other objects into usable in-game computers with a desktop, login screen, file browser, pictures, mail accounts, startup/shutdown sequences, and a bit of mission-intel nonsense on top.
 
 This is mainly built for my friends and me, so expect the usual: useful, probably weird in places, and definitely still growing.
 
-[h1]What it does[/h1]
+[b]Features[/b]
 
 [list]
 [*]Register objects as computers in Eden, Zeus, or script.
@@ -17,7 +19,7 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [*]Customize the look with dark, light, profile-color, BLUFOR, OPFOR, Independent, and Civilian layouts.
 [/list]
 
-[h1]Mission Maker Notes[/h1]
+[b]Mission Maker Notes[/b]
 
 [list]
 [*]The Register Computer module makes synced objects usable as MMC computers.
@@ -27,7 +29,7 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [*]Video support is not included for now because it is not reliable enough inside the dialog.
 [/list]
 
-[h1]Requirements[/h1]
+[b]Requirements[/b]
 
 [list]
 [*]CBA_A3

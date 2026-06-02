@@ -7,6 +7,16 @@
 *.jpeg
 *.wav
 *.mp3
+*.rpt
+*.log
+*.tmp
+*.bak
+*.bisign
+*.bikey
+*.zip
+*.7z
+*.rar
+keys/
 releases/
 include/
 .hemtt/*
