@@ -39,7 +39,7 @@ class GVAR(RscComputer) {
 	enableSimulation = 1;
 	onLoad = "_this call MMC_fnc_initDisplay";
 	onUnload = "_this call MMC_fnc_handleDisplayUnload";
-	onKeyDown = "if ((_this select 1) in [28, 156]) then {call MMC_fnc_login; true} else {false}";
+	onKeyDown = "if ((_this select 1) in [28, 156] && {ctrlShown ((_this select 0) displayCtrl IDC_MMC_LOGIN_PANEL)}) then {call MMC_fnc_login; true} else {false}";
 
 	class ControlsBackground {
 		class DesktopBackground: RscText {
@@ -310,16 +310,16 @@ class GVAR(RscComputer) {
 			x = "safeZoneX + 0.445";
 			y = "safeZoneY + 0.195";
 			w = "safeZoneW - 0.64";
-			h = 0.115;
+			h = 0.145;
 			colorBackground[] = {0, 0, 0, 0};
 		};
 
 		class MailReadGroup: RscControlsGroup {
 			idc = IDC_MMC_MAIL_READ_GROUP;
 			x = "safeZoneX + 0.445";
-			y = "safeZoneY + 0.318";
+			y = "safeZoneY + 0.35";
 			w = "safeZoneW - 0.64";
-			h = "safeZoneH - 0.508";
+			h = "safeZoneH - 0.54";
 			class VScrollbar {
 				width = 0.012;
 				autoScrollEnabled = 0;
