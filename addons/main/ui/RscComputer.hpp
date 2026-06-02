@@ -39,7 +39,7 @@ class GVAR(RscComputer) {
 	enableSimulation = 1;
 	onLoad = "_this call MMC_fnc_initDisplay";
 	onUnload = "_this call MMC_fnc_handleDisplayUnload";
-	onKeyDown = "if ((_this select 1) in [28, 156] && {ctrlShown ((_this select 0) displayCtrl IDC_MMC_LOGIN_PANEL)}) then {call MMC_fnc_login; true} else {false}";
+	onKeyDown = "false";
 
 	class ControlsBackground {
 		class DesktopBackground: RscText {
@@ -161,10 +161,10 @@ class GVAR(RscComputer) {
 		class FilePreviewImage: RscPicture {
 			idc = IDC_MMC_FILE_PREVIEW_IMAGE;
 			text = "";
-			x = "safeZoneX + 0.565";
-			y = "safeZoneY + 0.2";
-			w = 0.18;
-			h = 0.135;
+			x = "safeZoneX + 0.43 + ((safeZoneW - 0.61) - 0.54) / 2";
+			y = "safeZoneY + 0.19";
+			w = 0.54;
+			h = 0.405;
 			colorText[] = {1, 1, 1, 1};
 		};
 
@@ -626,6 +626,7 @@ class GVAR(RscComputer) {
 			w = "safeZoneW * 0.22";
 			h = 0.04;
 			colorBackground[] = {1, 1, 1, 0.08};
+			onKeyDown = "if ((_this select 1) in [28, 156]) then {call MMC_fnc_login; true} else {false}";
 		};
 
 		class LoginPasswordLabel: LoginUsernameLabel {
@@ -760,10 +761,10 @@ class GVAR(RscComputer) {
 
 		class FrameFilePreviewImage: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
-			x = "safeZoneX + 0.565";
-			y = "safeZoneY + 0.2";
-			w = 0.18;
-			h = 0.135;
+			x = "safeZoneX + 0.43 + ((safeZoneW - 0.61) - 0.54) / 2";
+			y = "safeZoneY + 0.19";
+			w = 0.54;
+			h = 0.405;
 		};
 
 		class FrameMailTable: GVAR(RscComputerFrame) {

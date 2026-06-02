@@ -201,7 +201,7 @@ switch (_app) do {
 				default {""};
 			};
 			private _content = if (_type isEqualTo "picture") then {
-				format ["<br/><br/><br/><br/><br/><br/><br/><br/><t align='center'>%1</t>", _file getOrDefault ["content", ""]]
+				format ["<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><t align='center'>%1</t>", _file getOrDefault ["content", ""]]
 			} else {
 				format ["<br/><br/>%1", _file getOrDefault ["content", ""]]
 			};

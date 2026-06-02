@@ -19,6 +19,11 @@ private _toUser = [_toEmail] call FUNC(findUserByEmail);
 if (count _fromUser == 0 || {count _toUser == 0}) exitWith {false};
 
 (call FUNC(formatMailDate)) params ["_date", "_time"];
+private _attachmentName = "";
+if (_attachment isNotEqualTo "") then {
+	private _parts = _attachment splitString "\/";
+	_attachmentName = _parts param [((count _parts) - 1) max 0, "attachment.paa"];
+};
 private _message = createHashMapFromArray [
 	["from", _fromEmail],
 	["to", _toEmail],
@@ -59,9 +64,9 @@ private _ccNames = [];
 			if (_attachment isNotEqualTo "") then {
 				private _files = _user getOrDefault ["files", []];
 				_files pushBack createHashMapFromArray [
-					["name", format ["%1 attachment.jpg", _subject]],
+					["name", _attachmentName],
 					["type", "picture"],
-					["path", format ["\Pictures\%1 attachment.jpg", _subject]],
+					["path", format ["\Pictures\%1", _attachmentName]],
 					["content", format ["Attachment from: %1", _subject]],
 					["texture", _attachment]
 				];

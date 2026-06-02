@@ -15,4 +15,4 @@ if !(_key in [28, 156]) exitWith {false};
 
 _ctrl ctrlSetText ((ctrlText _ctrl) + toString [10]);
 call FUNC(resizeMailBody);
-true
+false
