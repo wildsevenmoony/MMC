@@ -11,6 +11,9 @@ if (count _mail == 0) exitWith {false};
 
 _display setVariable [QGVAR(selectedMail), _mail];
 _display setVariable [QGVAR(selectedMailFolder), _display getVariable [QGVAR(mailFolder), "inbox"]];
+if ((_display getVariable [QGVAR(mailFolder), "inbox"]) isEqualTo "inbox") then {
+	[_mail] call FUNC(markMailRead);
+};
 _display setVariable [QGVAR(mailMode), "read"];
 ["read"] call FUNC(renderMail);
 true

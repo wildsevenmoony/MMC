@@ -36,6 +36,7 @@ class CfgFunctions {
 			class mailCompose {};
 			class mailSelect {};
 			class mailSendFromComposer {};
+			class markMailRead {};
 			class makeUniqueEmail {};
 			class mediaNavigate {};
 			class mediaPlaySelected {};

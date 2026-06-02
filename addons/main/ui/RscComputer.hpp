@@ -174,6 +174,7 @@ class GVAR(RscComputer) {
 			w = "safeZoneW - 0.64";
 			h = 0.035;
 			sizeEx = 0.026;
+			font = "EtelkaMonospacePro";
 			colorBackground[] = {0, 0, 0, 0};
 		};
 
@@ -184,6 +185,7 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + 0.19";
 			w = "safeZoneW - 0.64";
 			h = "safeZoneH - 0.37";
+			font = "EtelkaMonospacePro";
 			colorBackground[] = {0.02, 0.025, 0.035, 0.72};
 			onLBSelChanged = "call MMC_fnc_mailSelect";
 		};
@@ -223,7 +225,7 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			x = "safeZoneX + 0.56";
 			y = "safeZoneY + 0.155";
-			w = "safeZoneW - 0.755";
+			w = "safeZoneW - 0.835";
 			h = 0.036;
 			colorBackground[] = {1, 1, 1, 0.08};
 		};
@@ -242,45 +244,47 @@ class GVAR(RscComputer) {
 		class MailAttachmentLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_ATTACHMENT_LABEL;
 			text = "Attachment";
-			y = "safeZoneY + 0.239";
+			y = "safeZoneY + safeZoneH - 0.207";
 		};
 
 		class MailAttachment: MailRecipient {
 			idc = IDC_MMC_MAIL_ATTACHMENT;
-			y = "safeZoneY + 0.239";
-			tooltip = "Optional picture texture path. If set, the recipient receives it as a picture file.";
+			x = "safeZoneX + 0.56";
+			y = "safeZoneY + safeZoneH - 0.207";
+			w = "safeZoneW - 0.835";
+			tooltip = "Optional picture texture path, e.g. mission folder path or mod texture path. If set, the recipient receives it as a picture file.";
 		};
 
 		class MailBodyLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_BODY_LABEL;
 			text = "Text";
-			y = "safeZoneY + 0.281";
+			y = "safeZoneY + 0.239";
 		};
 
 		class MailBody: MailRecipient {
 			idc = IDC_MMC_MAIL_BODY;
 			style = 16;
 			x = "safeZoneX + 0.445";
-			y = "safeZoneY + 0.316";
+			y = "safeZoneY + 0.274";
 			w = "safeZoneW - 0.64";
-			h = "safeZoneH - 0.535";
+			h = "safeZoneH - 0.49";
 			lineSpacing = 1;
 		};
 
 		class MailSend: GVAR(RscComputerButton) {
 			idc = IDC_MMC_MAIL_SEND;
 			text = "Send";
-			x = "safeZoneX + safeZoneW - 0.325";
-			y = "safeZoneY + safeZoneH - 0.205";
-			w = 0.075;
-			h = 0.038;
+			x = "safeZoneX + safeZoneW - 0.34";
+			y = "safeZoneY + 0.153";
+			w = 0.06;
+			h = 0.036;
 			action = "call MMC_fnc_mailSendFromComposer";
 		};
 
 		class MailCancel: MailSend {
 			idc = IDC_MMC_MAIL_CANCEL;
 			text = "Cancel";
-			x = "safeZoneX + safeZoneW - 0.245";
+			x = "safeZoneX + safeZoneW - 0.275";
 			action = "['table'] call MMC_fnc_renderMail";
 		};
 
@@ -289,9 +293,9 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			text = "";
 			x = "safeZoneX + 0.445";
-			y = "safeZoneY + safeZoneH - 0.205";
-			w = "safeZoneW - 0.79";
-			h = 0.038;
+			y = "safeZoneY + safeZoneH - 0.16";
+			w = "safeZoneW - 0.64";
+			h = 0.032;
 			sizeEx = 0.026;
 			colorBackground[] = {0, 0, 0, 0};
 			colorText[] = {1, 0.25, 0.25, 1};

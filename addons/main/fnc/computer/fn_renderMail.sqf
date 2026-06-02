@@ -81,7 +81,9 @@ private _folder = _display getVariable [QGVAR(mailFolder), "inbox"];
 private _email = _activeUser getOrDefault ["email", ""];
 
 if (_mode isEqualTo "compose") exitWith {
-	_body ctrlSetStructuredText parseText "<t size='1.25'>New E-Mail</t>";
+	_body ctrlSetStructuredText parseText "";
+	(_display displayCtrl IDC_MMC_MAIL_HEADER) ctrlShow true;
+	(_display displayCtrl IDC_MMC_MAIL_HEADER) ctrlSetText "New E-Mail";
 	{
 		(_display displayCtrl _x) ctrlShow true;
 	} forEach [
@@ -133,24 +135,47 @@ _body ctrlSetStructuredText parseText "";
 _header ctrlShow true;
 _table ctrlShow true;
 (_display displayCtrl IDC_MMC_FRAME_MAIL_TABLE) ctrlShow true;
-_header ctrlSetText (["Date        Time   Subject                         Author", "Date        Time   Subject                         Recipient"] select (_folder isEqualTo "outbox"));
+_header ctrlSetText (["     Date        Time   Subject                              Author                    Attachment", "     Date        Time   Subject                              Recipient                 Attachment"] select (_folder isEqualTo "outbox"));
 lbClear _table;
+
+private _fit = {
+	params ["_text", "_width"];
+	private _value = str _text;
+	if (count _value > _width) exitWith {(_value select [0, _width - 1]) + "~"};
+	for "_i" from 1 to (_width - count _value) do {
+		_value = _value + " ";
+	};
+	_value
+};
+
+private _theme = GVAR(profileTheme);
+private _isLight = _theme isEqualTo "light";
+private _readIcon = [PATHTOF(img\mail_read_white.paa), PATHTOF(img\mail_read_black.paa)] select _isLight;
+private _unreadIcon = [PATHTOF(img\mail_unread_white.paa), PATHTOF(img\mail_unread_black.paa)] select _isLight;
+private _unreadColor = [[1, 1, 1, 1], [0, 0, 0, 1]] select _isLight;
 
 {
 	private _who = [_x getOrDefault ["from", ""], _x getOrDefault ["to", ""]] select (_folder isEqualTo "outbox");
+	private _attachment = _x getOrDefault ["attachment", ""];
+	private _attachmentName = if (_attachment isEqualTo "") then {""} else {
+		private _parts = _attachment splitString "\/";
+		_parts select ((count _parts - 1) max 0)
+	};
+	private _isRead = (_x getOrDefault ["read", true]) || {_folder isEqualTo "outbox"};
 	private _row = _table lbAdd format [
-		"%1  %2  %3  %4",
-		_x getOrDefault ["date", ""],
-		_x getOrDefault ["time", ""],
-		_x getOrDefault ["subject", "No subject"],
-		_who
+		"     %1 %2 %3 %4 %5",
+		[_x getOrDefault ["date", ""], 10] call _fit,
+		[_x getOrDefault ["time", ""], 5] call _fit,
+		[_x getOrDefault ["subject", "No subject"], 36] call _fit,
+		[_who, 24] call _fit,
+		[_attachmentName, 18] call _fit
 	];
+	_table lbSetPicture [_row, [_unreadIcon, _readIcon] select _isRead];
+	if (!_isRead) then {
+		_table lbSetColor [_row, _unreadColor];
+	};
 	_table lbSetTooltip [_row, format ["%1%2%3", _x getOrDefault ["subject", "No subject"], toString [10], _who]];
 } forEach _mail;
 
 _display setVariable [QGVAR(mailRows), _mail];
 _display setVariable [QGVAR(mailFolder), _folder];
-
-if (_mail isEqualTo []) then {
-	_body ctrlSetStructuredText parseText "<t size='1.25'>No Content available</t>";
-};

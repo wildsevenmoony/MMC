@@ -25,7 +25,8 @@ private _message = createHashMapFromArray [
 	["body", _body],
 	["date", _date],
 	["time", _time],
-	["attachment", _attachment]
+	["attachment", _attachment],
+	["read", false]
 ];
 
 private _fromName = _fromUser getOrDefault ["username", ""];
