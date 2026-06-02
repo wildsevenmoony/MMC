@@ -28,6 +28,8 @@ class CfgFunctions {
 			class addMailModule {};
 			class addPictureModule {};
 			class addTextFileModule {};
+			class modifyDesktop {};
+			class modifyDesktopModule {};
 			class applyTheme {};
 			class getBackgroundPath {};
 			class hideLogin {};
@@ -37,7 +39,6 @@ class CfgFunctions {
 			class mailCompose {};
 			class mailSelect {};
 			class mailSendFromComposer {};
-			class mailBodyKeyDown {};
 			class markMailRead {};
 			class makeUniqueEmail {};
 			class mediaNavigate {};
@@ -75,11 +76,14 @@ class CfgFunctions {
 			class addPictureZeus {};
 			class addTextFileZeus {};
 			class addUserZeus {};
+			class modifyDesktopZeus {};
 			class confirmAddMailDialog {};
 			class confirmAddPictureDialog {};
+			class confirmModifyDesktopDialog {};
 			class confirmAddTextFileDialog {};
 			class guiAddMailDialog {};
 			class guiAddPictureDialog {};
+			class guiModifyDesktopDialog {};
 			class guiAddTextFileDialog {};
 			class powerOffZeus {};
 			class powerOnZeus {};

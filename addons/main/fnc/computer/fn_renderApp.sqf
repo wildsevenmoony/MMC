@@ -61,6 +61,7 @@ private _mailControls = [
 	IDC_MMC_MAIL_ATTACHMENT_DESC_LABEL,
 	IDC_MMC_MAIL_ATTACHMENT_DESC,
 	IDC_MMC_MAIL_BODY_LABEL,
+	IDC_MMC_MAIL_BODY_HINT,
 	IDC_MMC_MAIL_BODY_GROUP,
 	IDC_MMC_MAIL_BODY,
 	IDC_MMC_MAIL_READ_META,
@@ -244,6 +245,8 @@ switch (_app) do {
 	};
 	default {
 		_title ctrlSetText "Desktop";
-		["<t size='1.35'>Welcome</t><br/><br/>Select an app on the left. Files, Mail, Messenger, and Notes are wired to the computer data model now.<br/><br/>The Start button controls power state."] call _setBody;
+		private _desktopTitle = _activeUser getOrDefault ["desktopTitle", _data getOrDefault ["desktopTitle", "Welcome"]];
+		private _desktopContent = _activeUser getOrDefault ["desktopContent", _data getOrDefault ["desktopContent", "Select an app on the left. Files, Mail, Messenger, and Notes are wired to the computer data model now.<br/><br/>The Start button controls power state."]];
+		[format ["<t size='1.35'>%1</t><br/><br/>%2", _desktopTitle, _desktopContent]] call _setBody;
 	};
 };

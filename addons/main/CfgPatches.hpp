@@ -24,6 +24,7 @@ class CfgPatches {
 			QGVAR(addUser),
 			QGVAR(addTextFile),
 			QGVAR(addPicture),
+			QGVAR(modifyDesktop),
 			QGVAR(addMail)
 		};
 		weapons[] = {};

@@ -394,4 +394,50 @@ class CfgVehicles {
 		side = -1;
 		sound = QGVAR(testaudio);
 	};
+
+	class GVAR(modifyDesktop): Module_F {
+		category = QGVAR(Modules);
+		displayName = "Computer: Modify Desktop";
+		function = QFUNC(modifyDesktopModule);
+		functionPriority = 30;
+		isDisposable = 0;
+		is3DEN = 1;
+		isGlobal = 0;
+		isTriggerActivated = 0;
+		scope = 2;
+
+		class Attributes: AttributesBase {
+			class GVAR(desktopTitle): Edit {
+				property = QGVAR(desktopTitle);
+				displayName = "Desktop Title";
+				typeName = "STRING";
+				defaultValue = "'Welcome'";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(desktopContent): Edit {
+				property = QGVAR(desktopContent);
+				displayName = "Desktop Text";
+				typeName = "STRING";
+				defaultValue = "'Select an app on the left.'";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class ModuleDescription: ModuleDescription {};
+		};
+
+		class ModuleDescription: ModuleDescription {
+			description = "Sync Add User modules to set that user's Desktop text. If synced to a computer, this changes the computer default Desktop text.";
+			sync[] = {"LocationArea_F"};
+
+			class LocationArea_F {
+				description[] = {"Synchronise any Add User module or registered MMC computer object."};
+				position = 0;
+				direction = 0;
+				optional = 0;
+				duplicate = 1;
+				synced[] = {"AnyStaticObject", "AnyVehicle", QGVAR(addUser)};
+			};
+		};
+	};
 };
