@@ -195,7 +195,7 @@ for "_column" from 0 to 5 do {
 		private _parts = _attachment splitString "\/";
 		_parts select ((count _parts - 1) max 0)
 	};
-	private _isRead = (_x getOrDefault ["read", true]) || {_folder isEqualTo "outbox"};
+	private _isRead = _x getOrDefault ["read", true];
 	private _row = _table lnbAddRow [
 		"",
 		_x getOrDefault ["date", ""],

@@ -23,6 +23,9 @@ private _date = ["date", ""] call _getValue;
 private _time = ["time", ""] call _getValue;
 private _attachment = ["attachment", ""] call _getValue;
 private _attachmentDescription = ["attachmentDescription", ""] call _getValue;
+private _recipientRead = ["recipientRead", false] call _getValue;
+private _senderRead = ["senderRead", true] call _getValue;
+private _ccRead = ["ccRead", false] call _getValue;
 private _selected = (_display getVariable [QGVAR(userCheckboxes), []]) select {cbChecked (_x select 1)};
 
 if (_selected isEqualTo []) exitWith {
@@ -38,7 +41,7 @@ if (_attachment isNotEqualTo "" && {!fileExists _attachment}) exitWith {
 {
 	private _computer = _x;
 	{
-		[_computer, _x select 0, _direction, _counterpart, _cc, _subject, _body, _date, _time, _attachment, _attachmentDescription] remoteExecCall [QFUNC(seedMail), 0, true];
+		[_computer, _x select 0, _direction, _counterpart, _cc, _subject, _body, _date, _time, _attachment, _attachmentDescription, _recipientRead, _senderRead, _ccRead] remoteExecCall [QFUNC(seedMail), 0, true];
 	} forEach _selected;
 } forEach GVAR(registeredComputers);
 

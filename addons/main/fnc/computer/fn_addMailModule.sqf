@@ -51,6 +51,9 @@ private _date = _logic getVariable [QGVAR(mailDate), ""];
 private _time = _logic getVariable [QGVAR(mailTime), ""];
 private _attachment = _logic getVariable [QGVAR(mailAttachment), ""];
 private _attachmentDescription = _logic getVariable [QGVAR(mailAttachmentDescription), ""];
+private _recipientRead = _logic getVariable [QGVAR(mailRecipientRead), false];
+private _senderRead = _logic getVariable [QGVAR(mailSenderRead), true];
+private _ccRead = _logic getVariable [QGVAR(mailCcRead), false];
 private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), false]};
 
 if (_userModules isNotEqualTo []) then {
@@ -63,7 +66,7 @@ if (_userModules isNotEqualTo []) then {
 		};
 
 		{
-			private _added = [_x, _username, _direction, _counterpart, _cc, _subject, _body, _date, _time, _attachment, _attachmentDescription] call FUNC(seedMail);
+			private _added = [_x, _username, _direction, _counterpart, _cc, _subject, _body, _date, _time, _attachment, _attachmentDescription, _recipientRead, _senderRead, _ccRead] call FUNC(seedMail);
 			if (!_added) then {
 				diag_log format ["[MMC] Add Mail module failed for user '%1' on %2", _username, _x];
 			};

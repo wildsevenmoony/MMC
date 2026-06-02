@@ -89,11 +89,31 @@ private _addCombo = {
 	_combo
 };
 
+private _addCheckbox = {
+	params ["_label", "_checkboxIdc", ["_default", false], ["_key", ""], ["_tooltip", ""]];
+	(call _addRowBackground) params ["_labelTextX", "_fieldX"];
+	private _labelControl = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], _label] call _addControl;
+	if (_tooltip isNotEqualTo "") then {
+		_labelControl ctrlSetTooltip _tooltip;
+	};
+	private _checkbox = ["RscCheckBox", _checkboxIdc, [_fieldX, _y + 0.004, 0.026, 0.032], ""] call _addControl;
+	_checkbox cbSetChecked _default;
+	if (_tooltip isNotEqualTo "") then {
+		_checkbox ctrlSetTooltip _tooltip;
+	};
+	_fields pushBack [_key, _checkboxIdc, "checkbox"];
+	_y = _y + _rowH + _rowGap;
+	_checkbox
+};
+
 ["Mailbox", IDC_MMC_DLG_MAIL_DIRECTION, [["Inbox", "inbox"], ["Outbox", "outbox"]], "inbox", "direction", "Inbox means the selected user received this mail. Outbox means the selected user sent this mail."] call _addCombo;
 ["Date", -1, IDC_MMC_DLG_MAIL_DATE, "", "date", "Mail date in YYYY-MM-DD format. Leave empty or enter an invalid value to use the current mission date."] call _addEdit;
 ["Time", -1, IDC_MMC_DLG_MAIL_TIME, "", "time", "Mail time in HH:MM format. Leave empty or enter an invalid value to use the current mission time."] call _addEdit;
 ["From/To", -1, IDC_MMC_DLG_MAIL_COUNTERPART, "sender@mmc.local", "counterpart", "If Mailbox is Inbox, this is the sender. If Mailbox is Outbox, this is the recipient."] call _addEdit;
 ["CC", -1, IDC_MMC_DLG_MAIL_CC, "", "cc", "Optional comma-separated CC e-mail addresses. Existing users receive inbox copies."] call _addEdit;
+["Recipient Read", IDC_MMC_DLG_MAIL_RECIPIENT_READ, false, "recipientRead", "Marks the recipient inbox copy as already read."] call _addCheckbox;
+["Sender Read", IDC_MMC_DLG_MAIL_SENDER_READ, true, "senderRead", "Marks the sender outbox copy as already read."] call _addCheckbox;
+["CC Read", IDC_MMC_DLG_MAIL_CC_READ, false, "ccRead", "Marks all matching CC inbox copies as already read."] call _addCheckbox;
 ["Subject", -1, IDC_MMC_DLG_MAIL_SUBJECT, "Mission Update", "subject", "Mail subject displayed in the inbox list."] call _addEdit;
 ["Body", -1, IDC_MMC_DLG_MAIL_BODY, "Mail body goes here.", "body", "Structured text is supported, including tags such as <br/> and image tags. Use \n for line breaks.", _rowH * 5, QGVAR(RscComputerEditMulti)] call _addEdit;
 ["Attachment Picture", -1, IDC_MMC_DLG_MAIL_ATTACHMENT, "", "attachment", "Optional picture texture path. If filled, it must exist and is added to recipient and CC file browsers."] call _addEdit;

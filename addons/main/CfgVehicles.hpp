@@ -384,6 +384,33 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(mailRecipientRead): Checkbox {
+				property = QGVAR(mailRecipientRead);
+				displayName = "Recipient Read";
+				tooltip = "Marks the recipient inbox copy as already read.";
+				typeName = "BOOL";
+				defaultValue = "false";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(mailSenderRead): Checkbox {
+				property = QGVAR(mailSenderRead);
+				displayName = "Sender Read";
+				tooltip = "Marks the sender outbox copy as already read.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(mailCcRead): Checkbox {
+				property = QGVAR(mailCcRead);
+				displayName = "CC Read";
+				tooltip = "Marks all matching CC inbox copies as already read.";
+				typeName = "BOOL";
+				defaultValue = "false";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class GVAR(mailSubject): Edit {
 				property = QGVAR(mailSubject);
 				displayName = "Subject";

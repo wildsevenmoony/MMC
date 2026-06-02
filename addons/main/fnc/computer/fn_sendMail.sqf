@@ -81,8 +81,10 @@ private _ccNames = [];
 		};
 
 		if (_username isEqualTo _fromName) then {
+			private _outboxMessage = +_message;
+			_outboxMessage set ["read", true];
 			private _outbox = _user getOrDefault ["outbox", []];
-			_outbox pushBack +_message;
+			_outbox pushBack _outboxMessage;
 			_user set ["outbox", _outbox];
 			_users set [_forEachIndex, _user];
 			_changed = true;

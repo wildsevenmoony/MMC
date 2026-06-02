@@ -17,7 +17,10 @@ params [
 	["_dateInput", "", [""]],
 	["_timeInput", "", [""]],
 	["_attachment", "", [""]],
-	["_attachmentDescription", "", [""]]
+	["_attachmentDescription", "", [""]],
+	["_recipientRead", false, [false]],
+	["_senderRead", true, [false]],
+	["_ccRead", false, [false]]
 ];
 
 if (isNull _object || {_username isEqualTo ""}) exitWith {false};
@@ -94,7 +97,7 @@ private _splitAddresses = {
 };
 
 private _ccAddresses = [_cc] call _splitAddresses;
-private _recipientAddresses = [toLowerANSI _to] + _ccAddresses;
+private _primaryRecipientAddress = toLowerANSI _to;
 private _senderAddress = toLowerANSI _from;
 private _attachmentName = "";
 if (_attachment isNotEqualTo "") then {
@@ -122,10 +125,14 @@ private _changed = false;
 	private _user = _x;
 	private _email = toLowerANSI (_user getOrDefault ["email", ""]);
 	private _isSelected = _forEachIndex isEqualTo _selectedIndex;
+	private _isPrimaryRecipient = (_isSelected && {_direction isEqualTo "inbox"}) || {_email isEqualTo _primaryRecipientAddress};
+	private _isCcRecipient = _email in _ccAddresses;
 
-	if ((_isSelected && {_direction isEqualTo "inbox"}) || {_email in _recipientAddresses}) then {
+	if (_isPrimaryRecipient || {_isCcRecipient}) then {
+		private _inboxMail = +_mail;
+		_inboxMail set ["read", [_recipientRead, _ccRead] select (!_isPrimaryRecipient && {_isCcRecipient})];
 		private _inbox = _user getOrDefault ["mail", []];
-		_inbox pushBack +_mail;
+		_inbox pushBack _inboxMail;
 		_user set ["mail", _inbox];
 		_user = [_user] call _addAttachment;
 		_users set [_forEachIndex, _user];
@@ -133,8 +140,10 @@ private _changed = false;
 	};
 
 	if ((_isSelected && {_direction isEqualTo "outbox"}) || {_email isEqualTo _senderAddress}) then {
+		private _outboxMail = +_mail;
+		_outboxMail set ["read", _senderRead];
 		private _outbox = _user getOrDefault ["outbox", []];
-		_outbox pushBack +_mail;
+		_outbox pushBack _outboxMail;
 		_user set ["outbox", _outbox];
 		_users set [_forEachIndex, _user];
 		_changed = true;
