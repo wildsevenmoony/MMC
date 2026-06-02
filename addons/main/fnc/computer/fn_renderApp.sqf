@@ -28,6 +28,9 @@ private _body = _display displayCtrl IDC_MMC_APP_BODY;
 _body ctrlEnable false;
 private _previewImage = _display displayCtrl IDC_MMC_FILE_PREVIEW_IMAGE;
 private _previewFrame = _display displayCtrl IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
+private _descriptionGroup = _display displayCtrl IDC_MMC_FILE_DESCRIPTION_GROUP;
+private _descriptionBody = _display displayCtrl IDC_MMC_FILE_DESCRIPTION_BODY;
+private _descriptionFrame = _display displayCtrl IDC_MMC_FRAME_FILE_DESCRIPTION;
 private _mediaControls = [
 	IDC_MMC_MEDIA_BAR,
 	IDC_MMC_MEDIA_PREV,
@@ -75,7 +78,10 @@ private _mailControls = [
 } forEach _mailControls;
 _previewImage ctrlShow false;
 _previewFrame ctrlShow false;
+_descriptionGroup ctrlShow false;
+_descriptionFrame ctrlShow false;
 _previewImage ctrlSetText "";
+_descriptionBody ctrlSetStructuredText parseText "";
 
 if (!_poweredOn) exitWith {
 	[_display, true, ["MMC", "System powered off", ""], -1] call FUNC(setSystemOverlay);
@@ -198,12 +204,20 @@ switch (_app) do {
 					_previewImage ctrlSetText (_file getOrDefault ["texture", ""]);
 					_previewImage ctrlShow true;
 					_previewFrame ctrlShow true;
+					_descriptionBody ctrlSetStructuredText parseText (_file getOrDefault ["content", ""]);
+					private _descriptionHeight = 0.095 max ((ctrlTextHeight _descriptionBody) + 0.02);
+					private _descriptionPos = ctrlPosition _descriptionBody;
+					_descriptionPos set [3, _descriptionHeight];
+					_descriptionBody ctrlSetPosition _descriptionPos;
+					_descriptionBody ctrlCommit 0;
+					_descriptionGroup ctrlShow true;
+					_descriptionFrame ctrlShow true;
 					""
 				};
 				default {""};
 			};
 			private _content = if (_type isEqualTo "picture") then {
-				format ["<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><t align='center'>%1</t>", _file getOrDefault ["content", ""]]
+				""
 			} else {
 				format ["<br/><br/>%1", _file getOrDefault ["content", ""]]
 			};

@@ -23,6 +23,7 @@ class CfgPatches {
 			QGVAR(registerComputer),
 			QGVAR(addUser),
 			QGVAR(addTextFile),
+			QGVAR(addPicture),
 			QGVAR(addMail)
 		};
 		weapons[] = {};

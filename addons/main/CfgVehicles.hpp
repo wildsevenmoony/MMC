@@ -237,19 +237,56 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
-			class GVAR(fileType): Edit {
-				property = QGVAR(fileType);
-				displayName = "File Type";
-				tooltip = "Use text or picture.";
+			class ModuleDescription: ModuleDescription {};
+		};
+
+		class ModuleDescription: ModuleDescription {
+			description = "Sync an MMC computer object to add a text file to its file browser.";
+			sync[] = {"LocationArea_F"};
+
+			class LocationArea_F {
+				description[] = {"Synchronise any registered MMC computer object."};
+				position = 0;
+				direction = 0;
+				optional = 0;
+				duplicate = 1;
+				synced[] = {"AnyStaticObject", "AnyVehicle"};
+			};
+		};
+	};
+
+	class GVAR(addPicture): Module_F {
+		category = QGVAR(Modules);
+		displayName = "Computer: Add Picture";
+		function = QFUNC(addPictureModule);
+		functionPriority = 30;
+		isDisposable = 0;
+		is3DEN = 1;
+		isGlobal = 0;
+		isTriggerActivated = 0;
+		scope = 2;
+
+		class Attributes: AttributesBase {
+			class GVAR(fileName): Edit {
+				property = QGVAR(fileName);
+				displayName = "Picture Name";
 				typeName = "STRING";
-				defaultValue = "'text'";
+				defaultValue = "'picture.paa'";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(filePath): Edit {
+				property = QGVAR(filePath);
+				displayName = "File Path";
+				typeName = "STRING";
+				defaultValue = "'\\Pictures\\picture.paa'";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
 			class GVAR(fileTexture): Edit {
 				property = QGVAR(fileTexture);
 				displayName = "Picture Texture";
-				tooltip = "Texture path for picture files, e.g. a mission or mod .paa.";
+				tooltip = "Texture path for the picture, e.g. a mission or mod .paa.";
 				typeName = "STRING";
 				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";
@@ -268,16 +305,16 @@ class CfgVehicles {
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync an MMC computer object to add a text file to its file browser.";
+			description = "Sync an MMC computer object or Add User module to add a picture to the file browser.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
-				description[] = {"Synchronise any registered MMC computer object."};
+				description[] = {"Synchronise any registered MMC computer object or Add User module."};
 				position = 0;
 				direction = 0;
 				optional = 0;
 				duplicate = 1;
-				synced[] = {"AnyStaticObject", "AnyVehicle"};
+				synced[] = {"AnyStaticObject", "AnyVehicle", QGVAR(addUser)};
 			};
 		};
 	};

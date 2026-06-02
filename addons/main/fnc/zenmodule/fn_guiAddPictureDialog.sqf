@@ -4,12 +4,12 @@
 
 /*
  * Author: Moony
- * Populates the MMB dynamic dialog for adding a text file to users.
+ * Populates the MMB dynamic dialog for adding a picture to users.
  */
 
 params ["_display", "_content"];
 
-(_display displayCtrl IDC_TITLE) ctrlSetText "Add Text File";
+(_display displayCtrl IDC_TITLE) ctrlSetText "Add Picture";
 
 private _controls = [];
 private _fields = [];
@@ -21,7 +21,6 @@ private _rowWField = 0.42;
 private _columnGapW = 0.012;
 private _rowH = 0.04;
 private _rowGap = 0.006;
-private _savedValues = [];
 private _y = _contentPaddingY;
 
 private _addControl = {
@@ -58,13 +57,14 @@ private _addEdit = {
 	_edit
 };
 
-["File Name", -1, IDC_MMC_DLG_FILE_NAME, "intel.txt", "fileName", "Displayed in the user's Files app."] call _addEdit;
-["File Path", -1, IDC_MMC_DLG_FILE_PATH, "\Desktop\intel.txt", "filePath", "Displayed path in the Files app."] call _addEdit;
-["Content", -1, IDC_MMC_DLG_FILE_CONTENT, "Mission intel goes here.", "content", "Text shown when the file is selected."] call _addEdit;
+["Picture Name", -1, IDC_MMC_DLG_FILE_NAME, "picture.paa", "fileName", "Displayed in the user's Files app."] call _addEdit;
+["File Path", -1, IDC_MMC_DLG_FILE_PATH, "\Pictures\picture.paa", "filePath", "Displayed path in the Files app."] call _addEdit;
+["Picture Texture", -1, IDC_MMC_DLG_FILE_TEXTURE, "", "fileTexture", "Texture path, e.g. a mission or mod .paa."] call _addEdit;
+["Description", -1, IDC_MMC_DLG_FILE_DESCRIPTION, "", "fileDescription", "Description shown under the picture in the Files app."] call _addEdit;
 
 (call _addRowBackground) params ["_labelTextX", "_fieldX"];
 private _label = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], "User"] call _addControl;
-_label ctrlSetTooltip "Select the Users to add the file to.";
+_label ctrlSetTooltip "Select the Users to add the picture to.";
 
 private _groupH = _rowH * 3;
 private _selectionBackground = ["RscText", -1, [_fieldX, _y, _rowWField, _groupH], ""] call _addControl;
@@ -94,7 +94,7 @@ private _checkboxes = [];
 _display setVariable [QGVAR(userCheckboxes), _checkboxes];
 _y = _y + _groupH + _rowGap;
 
-_display setVariable ["MMB_main_onConfirm", QFUNC(confirmAddTextFileDialog)];
+_display setVariable ["MMB_main_onConfirm", QFUNC(confirmAddPictureDialog)];
 _display setVariable ["MMB_main_controls", _controls];
 _display setVariable ["MMB_main_fields", _fields];
 _display setVariable ["MMB_main_contentHeight", _y + _contentPaddingY];

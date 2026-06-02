@@ -2,7 +2,7 @@
 
 /*
  * Author: Moony
- * Confirms the Add Text File dynamic dialog.
+ * Confirms the Add Picture dynamic dialog.
  */
 
 params ["_display", "_values", "_arguments"];
@@ -14,10 +14,15 @@ private _getValue = {
 	(_values select _index) select 3
 };
 
-private _name = ["fileName", "intel.txt"] call _getValue;
-private _path = ["filePath", "\Desktop\intel.txt"] call _getValue;
-private _content = ["content", "Mission intel goes here."] call _getValue;
+private _name = ["fileName", "picture.paa"] call _getValue;
+private _path = ["filePath", "\Pictures\picture.paa"] call _getValue;
+private _texture = ["fileTexture", ""] call _getValue;
+private _description = ["fileDescription", ""] call _getValue;
 private _selected = (_display getVariable [QGVAR(userCheckboxes), []]) select {cbChecked (_x select 1)};
+
+if (_texture isEqualTo "") then {
+	_texture = _path;
+};
 
 if (_selected isEqualTo []) exitWith {
 	[objNull, "NO USERS SELECTED"] call BIS_fnc_showCuratorFeedbackMessage;
@@ -27,9 +32,9 @@ if (_selected isEqualTo []) exitWith {
 {
 	private _computer = _x;
 	{
-		[_computer, _x select 0, _name, _content, "text", _path] remoteExecCall [QFUNC(addFileToUser), 0, true];
+		[_computer, _x select 0, _name, _description, "picture", _path, _texture] remoteExecCall [QFUNC(addFileToUser), 0, true];
 	} forEach _selected;
 } forEach GVAR(registeredComputers);
 
-[objNull, "TEXT FILE ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
+[objNull, "PICTURE ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
 true

@@ -2,7 +2,7 @@
 
 /*
  * Author: Moony
- * Adds a configured text file to synced MMC computers.
+ * Adds a configured picture to synced MMC computers or users.
  */
 
 private _logic = objNull;
@@ -42,9 +42,14 @@ if (_objects isEqualTo []) then {
 	_objects = synchronizedObjects _logic;
 };
 
-private _name = _logic getVariable [QGVAR(fileName), "intel.txt"];
-private _path = _logic getVariable [QGVAR(filePath), "\Desktop\intel.txt"];
-private _content = _logic getVariable [QGVAR(fileContent), "Mission intel goes here."];
+private _name = _logic getVariable [QGVAR(fileName), "picture.paa"];
+private _path = _logic getVariable [QGVAR(filePath), "\Pictures\picture.paa"];
+private _texture = _logic getVariable [QGVAR(fileTexture), ""];
+private _description = _logic getVariable [QGVAR(fileDescription), ""];
+if (_texture isEqualTo "") then {
+	_texture = _path;
+};
+
 private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), false]};
 
 if (_userModules isNotEqualTo []) then {
@@ -57,13 +62,13 @@ if (_userModules isNotEqualTo []) then {
 		};
 
 		{
-			[_x, _username, _name, _content, "text", _path] call FUNC(addFileToUser);
+			[_x, _username, _name, _description, "picture", _path, _texture] call FUNC(addFileToUser);
 		} forEach _targets;
 	} forEach _userModules;
 } else {
 	{
 		if (!isNull _x) then {
-			[_x, _name, _content, "text", _path] call FUNC(addFile);
+			[_x, _name, _description, "picture", _path, _texture] call FUNC(addFile);
 		};
 	} forEach (_objects select {_x getVariable [QGVAR(isComputer), false]});
 };

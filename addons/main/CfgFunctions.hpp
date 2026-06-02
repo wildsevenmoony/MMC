@@ -26,6 +26,7 @@ class CfgFunctions {
 			class initDisplay {};
 			class handleDisplayUnload {};
 			class addMailModule {};
+			class addPictureModule {};
 			class addTextFileModule {};
 			class applyTheme {};
 			class getBackgroundPath {};
@@ -71,11 +72,14 @@ class CfgFunctions {
 			file = PATHTOF(fnc\zenmodule);
 			class zenInit {postInit = 1;};
 			class addMailZeus {};
+			class addPictureZeus {};
 			class addTextFileZeus {};
 			class addUserZeus {};
 			class confirmAddMailDialog {};
+			class confirmAddPictureDialog {};
 			class confirmAddTextFileDialog {};
 			class guiAddMailDialog {};
+			class guiAddPictureDialog {};
 			class guiAddTextFileDialog {};
 			class powerOffZeus {};
 			class powerOnZeus {};

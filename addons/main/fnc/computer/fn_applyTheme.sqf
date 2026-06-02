@@ -111,6 +111,7 @@ switch (_theme) do {
 (_display displayCtrl IDC_MMC_APP_LIST) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_APP_BODY) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_APP_BODY) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_FILE_DESCRIPTION_BODY) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_TABLE) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_MAIL_TABLE) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_HEADER) ctrlSetTextColor _text;
@@ -237,6 +238,7 @@ private _powerBackground = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0
 	IDC_MMC_FRAME_APP_LIST,
 	IDC_MMC_FRAME_APP_BODY,
 	IDC_MMC_FRAME_FILE_PREVIEW_IMAGE,
+	IDC_MMC_FRAME_FILE_DESCRIPTION,
 	IDC_MMC_FRAME_MAIL_TABLE,
 	IDC_MMC_FRAME_MEDIA_BAR,
 	IDC_MMC_FRAME_MEDIA_PREV,

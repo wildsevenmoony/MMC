@@ -161,11 +161,37 @@ class GVAR(RscComputer) {
 		class FilePreviewImage: RscPicture {
 			idc = IDC_MMC_FILE_PREVIEW_IMAGE;
 			text = "";
-			x = "safeZoneX + 0.565";
-			y = "safeZoneY + 0.235";
-			w = "safeZoneW - 0.88";
-			h = "safeZoneH - 0.63";
+			x = "safeZoneX + 0.595";
+			y = "safeZoneY + 0.225";
+			w = "safeZoneW - 0.94";
+			h = "safeZoneH - 0.69";
 			colorText[] = {1, 1, 1, 1};
+		};
+
+		class FileDescriptionGroup: RscControlsGroup {
+			idc = IDC_MMC_FILE_DESCRIPTION_GROUP;
+			x = "safeZoneX + 0.47";
+			y = "safeZoneY + safeZoneH - 0.265";
+			w = "safeZoneW - 0.69";
+			h = 0.095;
+			class VScrollbar {
+				width = 0.012;
+				autoScrollEnabled = 0;
+			};
+			class HScrollbar {
+				height = 0;
+			};
+			class Controls {
+				class FileDescriptionBody: RscStructuredText {
+					idc = IDC_MMC_FILE_DESCRIPTION_BODY;
+					shadow = 0;
+					x = 0;
+					y = 0;
+					w = "safeZoneW - 0.715";
+					h = 0.14;
+					colorBackground[] = {0, 0, 0, 0};
+				};
+			};
 		};
 
 		class MailHeader: RscText {
@@ -776,10 +802,18 @@ class GVAR(RscComputer) {
 
 		class FrameFilePreviewImage: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
-			x = "safeZoneX + 0.565";
-			y = "safeZoneY + 0.235";
-			w = "safeZoneW - 0.88";
-			h = "safeZoneH - 0.63";
+			x = "safeZoneX + 0.592";
+			y = "safeZoneY + 0.222";
+			w = "safeZoneW - 0.934";
+			h = "safeZoneH - 0.684";
+		};
+
+		class FrameFileDescription: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_FILE_DESCRIPTION;
+			x = "safeZoneX + 0.47";
+			y = "safeZoneY + safeZoneH - 0.265";
+			w = "safeZoneW - 0.69";
+			h = 0.095;
 		};
 
 		class FrameMailTable: GVAR(RscComputerFrame) {
@@ -906,6 +940,10 @@ class GVAR(RscComputer) {
 
 class GVAR(RscAddTextFileDialog): MMB_main_RscBaseDisplay {
 	onLoad = "(_this select 0) setVariable ['MMB_main_populateFunction', 'MMC_fnc_guiAddTextFileDialog']; call MMB_fnc_initDisplay";
+};
+
+class GVAR(RscAddPictureDialog): MMB_main_RscBaseDisplay {
+	onLoad = "(_this select 0) setVariable ['MMB_main_populateFunction', 'MMC_fnc_guiAddPictureDialog']; call MMB_fnc_initDisplay";
 };
 
 class GVAR(RscAddMailDialog): MMB_main_RscBaseDisplay {
