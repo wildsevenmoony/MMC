@@ -9,6 +9,5 @@
 #include "CfgFactionClasses.hpp"
 #include "CfgFunctions.hpp"
 #include "CfgPatches.hpp"
-#include "CfgSFX.hpp"
 #include "CfgVehicles.hpp"
 #include "ui\RscComputer.hpp"

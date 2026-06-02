@@ -119,41 +119,6 @@ private _setBody = {
 	_body ctrlSetStructuredText parseText _text;
 };
 
-private _normalizeStructuredLineBreaks = {
-	params [["_text", "", [""]]];
-
-	private _break = toArray "<br/>";
-	private _codes = toArray _text;
-	private _out = [];
-	private _i = 0;
-	private _count = count _codes;
-
-	while {_i < _count} do {
-		private _code = _codes select _i;
-		if (_code isEqualTo 13) then {
-			_out append _break;
-			_i = _i + 1;
-			if (_i < _count && {(_codes select _i) isEqualTo 10}) then {
-				_i = _i + 1;
-			};
-		} else {
-			if (_code isEqualTo 10) then {
-				_out append _break;
-				_i = _i + 1;
-			} else {
-				if (_code isEqualTo 92 && {_i + 1 < _count && {(_codes select (_i + 1)) isEqualTo 110}}) then {
-					_out append _break;
-					_i = _i + 2;
-				} else {
-					_out pushBack _code;
-					_i = _i + 1;
-				};
-			};
-		};
-	};
-
-	toString _out
-};
 private _noContent = "<t size='1.25'>No Content available</t>";
 
 switch (_app) do {
@@ -244,7 +209,7 @@ switch (_app) do {
 				case "picture": {
 					_previewImage ctrlSetText (_file getOrDefault ["texture", ""]);
 					_previewImage ctrlShow true;
-					_descriptionBody ctrlSetStructuredText parseText (_file getOrDefault ["content", ""]);
+					_descriptionBody ctrlSetStructuredText parseText ([_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText));
 					private _descriptionHeight = 0.14 max ((ctrlTextHeight _descriptionBody) + 0.02);
 					private _descriptionPos = ctrlPosition _descriptionBody;
 					_descriptionPos set [3, _descriptionHeight];
@@ -258,7 +223,7 @@ switch (_app) do {
 			private _content = if (_type isEqualTo "picture") then {
 				""
 			} else {
-				format ["<br/><br/>%1", _file getOrDefault ["content", ""]]
+				format ["<br/><br/>%1", [_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText)]
 			};
 			[format [
 				"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t>%3%4%5",
@@ -285,7 +250,7 @@ switch (_app) do {
 		_title ctrlSetText "Desktop";
 		private _desktopTitle = _activeUser getOrDefault ["desktopTitle", _data getOrDefault ["desktopTitle", "Welcome"]];
 		private _desktopContent = _activeUser getOrDefault ["desktopContent", _data getOrDefault ["desktopContent", "Select an app on the left. Files, Mail, Messenger, and Notes are wired to the computer data model now.<br/><br/>The Start button controls power state."]];
-		_desktopContent = [_desktopContent] call _normalizeStructuredLineBreaks;
+		_desktopContent = [_desktopContent] call FUNC(normalizeStructuredText);
 		private _desktopAlign = toLowerANSI (_activeUser getOrDefault ["desktopAlign", _data getOrDefault ["desktopAlign", "left"]]);
 		if !(_desktopAlign in ["left", "center", "right"]) then {
 			_desktopAlign = "left";

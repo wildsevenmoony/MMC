@@ -5,7 +5,6 @@
 
 class CfgVehicles {
 	class Logic;
-	class Sound;
 	class Module_F: Logic {
 		class AttributesBase {
 			class Checkbox;
@@ -233,7 +232,9 @@ class CfgVehicles {
 			class GVAR(fileContent): Edit {
 				property = QGVAR(fileContent);
 				displayName = "File Content";
+				tooltip = "Structured text is supported, including tags such as <br/> and image tags. Use \\n for line breaks.";
 				typeName = "STRING";
+				control = "EditMulti5";
 				defaultValue = "'Mission intel goes here.'";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
@@ -389,12 +390,6 @@ class CfgVehicles {
 				synced[] = {"AnyStaticObject", "AnyVehicle"};
 			};
 		};
-	};
-
-	class GVAR(sound_testaudio): Sound {
-		scope = 1;
-		side = -1;
-		sound = QGVAR(testaudio);
 	};
 
 	class GVAR(modifyDesktop): Module_F {

@@ -8,6 +8,12 @@ class RscPicture;
 class RscControlsGroup;
 class MMB_main_RscBaseDisplay;
 
+class GVAR(RscComputerEditMulti): RscEdit {
+	style = 16;
+	lineSpacing = 1;
+	autoComplete = "";
+};
+
 class GVAR(RscComputerButton): RscButton {
 	shadow = 0;
 	colorShadow[] = {0, 0, 0, 0};

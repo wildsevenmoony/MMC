@@ -30,6 +30,7 @@ class CfgFunctions {
 			class addTextFileModule {};
 			class modifyDesktop {};
 			class modifyDesktopModule {};
+			class normalizeStructuredText {};
 			class applyTheme {};
 			class getBackgroundPath {};
 			class hideLogin {};

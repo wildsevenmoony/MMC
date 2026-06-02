@@ -37,30 +37,34 @@ private _addControl = {
 };
 
 private _addRowBackground = {
+	params [["_height", _rowH]];
 	private _backgroundX = _rowBackgroundX;
 	private _labelTextX = _backgroundX + 0.008;
 	private _backgroundW = (_xField - _columnGapW - _backgroundX) max 0.05;
-	private _background = ["RscText", -1, [_backgroundX, _y, _backgroundW, _rowH], ""] call _addControl;
+	private _background = ["RscText", -1, [_backgroundX, _y, _backgroundW, _height], ""] call _addControl;
 	_background ctrlSetBackgroundColor [0, 0, 0, 0.35];
 	[_labelTextX, _xField]
 };
 
 private _addEdit = {
-	params ["_label", "_labelIdc", "_editIdc", ["_default", ""], ["_key", ""], ["_tooltip", ""]];
-	(call _addRowBackground) params ["_labelTextX", "_fieldX"];
+	params ["_label", "_labelIdc", "_editIdc", ["_default", ""], ["_key", ""], ["_tooltip", ""], ["_height", _rowH], ["_class", "RscEdit"]];
+	([_height] call _addRowBackground) params ["_labelTextX", "_fieldX"];
 	private _labelControl = ["RscText", _labelIdc, [_labelTextX, _y, _rowWLabel, _rowH], _label] call _addControl;
 	if (_tooltip isNotEqualTo "") then {
 		_labelControl ctrlSetTooltip _tooltip;
 	};
-	private _edit = ["RscEdit", _editIdc, [_fieldX, _y, _rowWField, _rowH], _default] call _addControl;
+	private _edit = [_class, _editIdc, [_fieldX, _y, _rowWField, _height], _default] call _addControl;
+	if (_tooltip isNotEqualTo "") then {
+		_edit ctrlSetTooltip _tooltip;
+	};
 	_fields pushBack [_key, _editIdc, "edit"];
-	_y = _y + _rowH + _rowGap;
+	_y = _y + _height + _rowGap;
 	_edit
 };
 
 ["File Name", -1, IDC_MMC_DLG_FILE_NAME, "intel.txt", "fileName", "Displayed in the user's Files app."] call _addEdit;
 ["File Path", -1, IDC_MMC_DLG_FILE_PATH, "\Desktop\intel.txt", "filePath", "Displayed path in the Files app."] call _addEdit;
-["Content", -1, IDC_MMC_DLG_FILE_CONTENT, "Mission intel goes here.", "content", "Text shown when the file is selected."] call _addEdit;
+["Content", -1, IDC_MMC_DLG_FILE_CONTENT, "Mission intel goes here.", "content", "Structured text is supported, including tags such as <br/> and image tags. Use \n for line breaks.", _rowH * 5, QGVAR(RscComputerEditMulti)] call _addEdit;
 
 (call _addRowBackground) params ["_labelTextX", "_fieldX"];
 private _label = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], "User"] call _addControl;
