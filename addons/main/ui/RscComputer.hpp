@@ -5,6 +5,7 @@ class RscEdit;
 class RscListbox;
 class RscListNBox;
 class RscPicture;
+class RscControlsGroup;
 class MMB_main_RscBaseDisplay;
 
 class GVAR(RscComputerButton): RscButton {
@@ -141,7 +142,7 @@ class GVAR(RscComputer) {
 			x = "safeZoneX + 0.18";
 			y = "safeZoneY + 0.135";
 			w = 0.24;
-			h = "(safeZoneH - 0.245) * 0.5";
+			h = "(safeZoneH - 0.245) * 0.25";
 			colorBackground[] = {0.02, 0.025, 0.035, 0.88};
 			onLBSelChanged = "['select', _this] call MMC_fnc_renderApp";
 		};
@@ -174,7 +175,7 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + 0.148";
 			w = "safeZoneW - 0.64";
 			h = 0.035;
-			sizeEx = 0.026;
+			sizeEx = 0.032;
 			font = "EtelkaMonospacePro";
 			colorBackground[] = {0, 0, 0, 0};
 		};
@@ -193,6 +194,11 @@ class GVAR(RscComputer) {
 			idcLeft = -1;
 			idcRight = -1;
 			colorBackground[] = {0.02, 0.025, 0.035, 0.72};
+			colorSelectBackground[] = {0.86, 0.88, 0.92, 1};
+			colorSelectBackground2[] = {0.86, 0.88, 0.92, 1};
+			colorPictureSelected[] = {0, 0, 0, 1};
+			colorSelect[] = {0, 0, 0, 1};
+			colorSelect2[] = {0, 0, 0, 1};
 			onLBSelChanged = "call MMC_fnc_mailSelect";
 		};
 
@@ -232,7 +238,7 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			x = "safeZoneX + 0.56";
 			y = "safeZoneY + 0.205";
-			w = 0.24;
+			w = 0.42;
 			h = 0.036;
 			colorBackground[] = {1, 1, 1, 0.08};
 		};
@@ -251,14 +257,14 @@ class GVAR(RscComputer) {
 		class MailAttachmentLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_ATTACHMENT_LABEL;
 			text = "Attachment";
-			y = "safeZoneY + safeZoneH - 0.222";
+			y = "safeZoneY + safeZoneH - 0.224";
 		};
 
 		class MailAttachment: MailRecipient {
 			idc = IDC_MMC_MAIL_ATTACHMENT;
 			x = "safeZoneX + 0.56";
-			y = "safeZoneY + safeZoneH - 0.222";
-			w = 0.24;
+			y = "safeZoneY + safeZoneH - 0.224";
+			w = "safeZoneW - 0.74";
 			tooltip = "Optional picture texture path, e.g. mission folder path or mod texture path. If set, the recipient receives it as a picture file.";
 		};
 
@@ -274,8 +280,38 @@ class GVAR(RscComputer) {
 			x = "safeZoneX + 0.445";
 			y = "safeZoneY + 0.324";
 			w = "safeZoneW - 0.64";
-			h = "safeZoneH - 0.565";
+			h = "safeZoneH - 0.595";
 			lineSpacing = 1;
+			class VScrollbar {
+				width = 0.012;
+				autoScrollEnabled = 1;
+			};
+		};
+
+		class MailReadGroup: RscControlsGroup {
+			idc = IDC_MMC_MAIL_READ_GROUP;
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + 0.195";
+			w = "safeZoneW - 0.64";
+			h = "safeZoneH - 0.385";
+			class VScrollbar {
+				width = 0.012;
+				autoScrollEnabled = 0;
+			};
+			class HScrollbar {
+				height = 0;
+			};
+			class Controls {
+				class MailReadBody: RscStructuredText {
+					idc = IDC_MMC_MAIL_READ_BODY;
+					shadow = 0;
+					x = 0;
+					y = 0;
+					w = "safeZoneW - 0.665";
+					h = 1.2;
+					colorBackground[] = {0, 0, 0, 0};
+				};
+			};
 		};
 
 		class MailSend: GVAR(RscComputerButton) {
@@ -670,7 +706,7 @@ class GVAR(RscComputer) {
 			x = "safeZoneX + 0.18";
 			y = "safeZoneY + 0.135";
 			w = 0.24;
-			h = "(safeZoneH - 0.245) * 0.5";
+			h = "(safeZoneH - 0.245) * 0.25";
 		};
 
 		class FrameAppBody: GVAR(RscComputerFrame) {

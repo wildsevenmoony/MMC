@@ -35,6 +35,7 @@ private _allControls = [
 	IDC_MMC_MAIL_ATTACHMENT,
 	IDC_MMC_MAIL_BODY_LABEL,
 	IDC_MMC_MAIL_BODY,
+	IDC_MMC_MAIL_READ_GROUP,
 	IDC_MMC_MAIL_SEND,
 	IDC_MMC_MAIL_CANCEL,
 	IDC_MMC_MAIL_ERROR
@@ -105,12 +106,16 @@ if (_mode isEqualTo "compose") exitWith {
 if (_mode isEqualTo "read") exitWith {
 	private _mail = _display getVariable [QGVAR(selectedMail), createHashMap];
 	private _isInbox = (_display getVariable [QGVAR(selectedMailFolder), "inbox"]) isEqualTo "inbox";
+	private _readGroup = _display displayCtrl IDC_MMC_MAIL_READ_GROUP;
+	private _readBody = _display displayCtrl IDC_MMC_MAIL_READ_BODY;
 	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlShow true;
 	(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlShow _isInbox;
+	_readGroup ctrlShow true;
 	private _attachment = _mail getOrDefault ["attachment", ""];
 	private _attachmentText = ["", format ["<br/><br/><t color='#9fb6d8'>Attachment: %1</t>", _attachment]] select (_attachment isNotEqualTo "");
 	private _bodyText = ((_mail getOrDefault ["body", ""]) splitString (toString [10])) joinString "<br/>";
-	_body ctrlSetStructuredText parseText format [
+	_body ctrlSetStructuredText parseText "";
+	_readBody ctrlSetStructuredText parseText format [
 		"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>From: %2<br/>To: %3<br/>Date: %4 %5</t><br/><br/>%6%7",
 		_mail getOrDefault ["subject", "No subject"],
 		_mail getOrDefault ["from", ""],
@@ -120,6 +125,12 @@ if (_mode isEqualTo "read") exitWith {
 		_bodyText,
 		_attachmentText
 	];
+	private _lineCount = ({_x isEqualTo 10} count toArray (_mail getOrDefault ["body", ""])) + 1;
+	private _readHeight = 0.35 max (0.2 + (_lineCount * 0.036) + ((count (_mail getOrDefault ["body", ""])) / 72 * 0.028));
+	private _pos = ctrlPosition _readBody;
+	_pos set [3, _readHeight];
+	_readBody ctrlSetPosition _pos;
+	_readBody ctrlCommit 0;
 };
 
 private _mail = if (_folder isEqualTo "outbox") then {

@@ -126,6 +126,7 @@ switch (_theme) do {
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_BODY) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_MAIL_BODY) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_READ_BODY) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MEDIA_BAR) ctrlSetBackgroundColor _panelStrong;
 (_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_USER) ctrlSetTextColor _text;
