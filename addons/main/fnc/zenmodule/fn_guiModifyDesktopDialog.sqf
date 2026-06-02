@@ -58,8 +58,8 @@ private _addEdit = {
 };
 
 ["Desktop Title", -1, IDC_MMC_DLG_DESKTOP_TITLE, "Welcome", "desktopTitle", "Title shown on the user's Desktop screen."] call _addEdit;
-["Desktop Text", -1, IDC_MMC_DLG_DESKTOP_CONTENT, "Select an app on the left.", "desktopContent", "Text shown on the user's Desktop screen. Use <br/> for line breaks."] call _addEdit;
 ["Alignment", -1, IDC_MMC_DLG_DESKTOP_ALIGN, "left", "desktopAlign", "Use left, center, or right."] call _addEdit;
+["Desktop Text", -1, IDC_MMC_DLG_DESKTOP_CONTENT, "Select an app on the left.", "desktopContent", "Text shown on the user's Desktop screen. Use <br/> for line breaks."] call _addEdit;
 
 (call _addRowBackground) params ["_labelTextX", "_fieldX"];
 private _label = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], "User"] call _addControl;

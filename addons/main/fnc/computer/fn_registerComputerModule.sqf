@@ -42,7 +42,7 @@ if (_objects isEqualTo []) then {
 	_objects = synchronizedObjects _logic;
 };
 
-private _background = _logic getVariable [QGVAR(background), "default_dark"];
+private _background = _logic getVariable [QGVAR(background), ""];
 private _backgroundCustom = _logic getVariable [QGVAR(backgroundCustom), ""];
 if (_backgroundCustom isNotEqualTo "") then {
 	_background = _backgroundCustom;

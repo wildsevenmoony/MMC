@@ -41,10 +41,11 @@ class CfgVehicles {
 				displayName = "Background";
 				tooltip = "Preset desktop background. Ignored if Custom Background Texture is filled.";
 				typeName = "STRING";
-				defaultValue = "'default_dark'";
+				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";
 
 				class Values {
+					class None {name = ""; value = "";};
 					class DefaultDark {name = "Default Dark"; value = "default_dark";};
 					class DefaultLight {name = "Default Light"; value = "default_light";};
 					class NATO {name = "NATO"; value = "nato";};
@@ -278,6 +279,7 @@ class CfgVehicles {
 			class GVAR(filePath): Edit {
 				property = QGVAR(filePath);
 				displayName = "File Path";
+				tooltip = "Path shown inside the computer's file system. This is not the picture texture path from the mission folder.";
 				typeName = "STRING";
 				defaultValue = "'\\Pictures\\picture.paa'";
 				expression = "_this setVariable ['%s', _value, true];";
@@ -415,15 +417,6 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
-			class GVAR(desktopContent): Edit {
-				property = QGVAR(desktopContent);
-				displayName = "Desktop Text";
-				tooltip = "Structured text is supported, including tags such as <br/> and image tags.";
-				typeName = "STRING";
-				defaultValue = "'Select an app on the left.'";
-				expression = "_this setVariable ['%s', _value, true];";
-			};
-
 			class GVAR(desktopAlign): Combo {
 				property = QGVAR(desktopAlign);
 				displayName = "Text Alignment";
@@ -443,6 +436,16 @@ class CfgVehicles {
 						value = "right";
 					};
 				};
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(desktopContent): Edit {
+				property = QGVAR(desktopContent);
+				displayName = "Desktop Text";
+				tooltip = "Structured text is supported, including tags such as <br/> and image tags.";
+				typeName = "STRING";
+				control = "EditMulti5";
+				defaultValue = "'Select an app on the left.'";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 

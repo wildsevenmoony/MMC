@@ -188,7 +188,7 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_FILE_PREVIEW_IMAGE;
 			text = "";
 			x = "safeZoneX + 0.615";
-			y = "safeZoneY + 0.22";
+			y = "safeZoneY + 0.24";
 			w = "safeZoneW - 0.98";
 			h = "safeZoneH - 0.72";
 			colorText[] = {1, 1, 1, 1};
@@ -197,9 +197,9 @@ class GVAR(RscComputer) {
 		class FileDescriptionGroup: RscControlsGroup {
 			idc = IDC_MMC_FILE_DESCRIPTION_GROUP;
 			x = "safeZoneX + 0.615";
-			y = "safeZoneY + safeZoneH - 0.34";
+			y = "safeZoneY + safeZoneH - 0.36";
 			w = "safeZoneW - 0.98";
-			h = 0.12;
+			h = 0.14;
 			class VScrollbar {
 				width = 0.012;
 				autoScrollEnabled = 0;
@@ -363,7 +363,7 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + 0.331";
 			w = 0.225;
 			style = 1;
-			sizeEx = 0.022;
+			sizeEx = 0.028;
 		};
 
 		class MailBodyGroup: RscControlsGroup {
@@ -838,7 +838,7 @@ class GVAR(RscComputer) {
 		class FrameFilePreviewImage: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
 			x = "safeZoneX + 0.612";
-			y = "safeZoneY + 0.217";
+			y = "safeZoneY + 0.237";
 			w = "safeZoneW - 0.974";
 			h = "safeZoneH - 0.714";
 		};
@@ -846,9 +846,9 @@ class GVAR(RscComputer) {
 		class FrameFileDescription: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_FILE_DESCRIPTION;
 			x = "safeZoneX + 0.615";
-			y = "safeZoneY + safeZoneH - 0.34";
+			y = "safeZoneY + safeZoneH - 0.36";
 			w = "safeZoneW - 0.98";
-			h = 0.12;
+			h = 0.14;
 		};
 
 		class FrameMailTable: GVAR(RscComputerFrame) {

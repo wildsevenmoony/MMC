@@ -208,15 +208,13 @@ switch (_app) do {
 				case "picture": {
 					_previewImage ctrlSetText (_file getOrDefault ["texture", ""]);
 					_previewImage ctrlShow true;
-					_previewFrame ctrlShow true;
 					_descriptionBody ctrlSetStructuredText parseText (_file getOrDefault ["content", ""]);
-					private _descriptionHeight = 0.095 max ((ctrlTextHeight _descriptionBody) + 0.02);
+					private _descriptionHeight = 0.14 max ((ctrlTextHeight _descriptionBody) + 0.02);
 					private _descriptionPos = ctrlPosition _descriptionBody;
 					_descriptionPos set [3, _descriptionHeight];
 					_descriptionBody ctrlSetPosition _descriptionPos;
 					_descriptionBody ctrlCommit 0;
 					_descriptionGroup ctrlShow true;
-					_descriptionFrame ctrlShow true;
 					""
 				};
 				default {""};
@@ -265,3 +263,5 @@ switch (_app) do {
 		_desktopGroup ctrlShow true;
 	};
 };
+
+ctrlSetFocus _list;
