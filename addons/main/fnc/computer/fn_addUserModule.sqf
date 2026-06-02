@@ -44,7 +44,7 @@ if (_objects isEqualTo []) then {
 
 private _username = _logic getVariable [QGVAR(userName), "operator"];
 private _password = _logic getVariable [QGVAR(userPassword), ""];
-private _email = _logic getVariable [QGVAR(userEmail), "operator@mccsystems.com"];
+private _email = _logic getVariable [QGVAR(userEmail), "operator@mmcsystems.com"];
 private _background = _logic getVariable [QGVAR(userBackground), "default_dark"];
 private _backgroundCustom = _logic getVariable [QGVAR(userBackgroundCustom), ""];
 private _forceTheme = _logic getVariable [QGVAR(userForceTheme), ""];

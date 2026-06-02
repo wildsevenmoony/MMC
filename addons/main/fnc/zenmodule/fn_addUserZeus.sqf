@@ -19,7 +19,7 @@ if (!isNull _objectUnderCursor && {!(_objectUnderCursor getVariable [QGVAR(isCom
 	[
 		["EDIT", ["Username", "Login username for this account."], "operator", false],
 		["EDIT", ["Password", "Leave empty to allow login with an empty password field."], "", false],
-		["EDIT", ["E-Mail Address", "Mail addressed to this value appears in this user's inbox."], "operator@mccsystems.com", false],
+		["EDIT", ["E-Mail Address", "Mail addressed to this value appears in this user's inbox."], "operator@mmcsystems.com", false],
 		[
 			"COMBO",
 			["Background", "Preset desktop background for this user. Ignored if Custom Background Texture is filled."],

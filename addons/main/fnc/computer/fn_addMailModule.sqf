@@ -59,7 +59,7 @@ if (_userModules isNotEqualTo []) then {
 		};
 
 		{
-			[_x, _username, _from, _to, _subject, _body, _date] call FUNC(addMailToUser);
+			[_x, _username, _from, "", _subject, _body, _date] call FUNC(addMailToUser);
 		} forEach _targets;
 	} forEach _userModules;
 } else {

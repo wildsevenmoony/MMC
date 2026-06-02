@@ -29,12 +29,17 @@ if (_to isEqualTo "") then {
 };
 
 private _mail = _user getOrDefault ["mail", []];
+private _dateParts = _date splitString " ";
+private _dateOnly = _dateParts param [0, _date, [""]];
+private _timeOnly = _dateParts param [1, "", [""]];
 _mail pushBack (createHashMapFromArray [
 	["from", _from],
 	["to", _to],
 	["subject", _subject],
 	["body", _body],
-	["date", _date]
+	["date", _dateOnly],
+	["time", _timeOnly],
+	["read", false]
 ]);
 _user set ["mail", _mail];
 _users set [_index, _user];

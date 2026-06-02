@@ -4,7 +4,7 @@ private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (isNull _display) exitWith {false};
 
 private _table = _display displayCtrl IDC_MMC_MAIL_TABLE;
-private _index = lbCurSel _table;
+private _index = lnbCurSelRow _table;
 private _rows = _display getVariable [QGVAR(mailRows), []];
 private _mail = _rows param [_index, createHashMap];
 if (count _mail == 0) exitWith {false};

@@ -5,9 +5,10 @@
 
 class CfgPatches {
 	class ADDON {
-		name = "Moonys Magnificent Computers";
+		name = "Moony's Magnificent Computers";
 		author = "Moony";
 		requiredAddons[] = {
+			"mmb_main",
 			"ace_interact_menu",
 			"CBA_Main",
 			"cba_events",

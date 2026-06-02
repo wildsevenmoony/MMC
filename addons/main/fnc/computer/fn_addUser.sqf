@@ -18,7 +18,7 @@ if (isNull _object) exitWith {false};
 if (_username isEqualTo "") exitWith {false};
 
 if (_email isEqualTo "") then {
-	_email = format ["%1@mccsystems.com", _username];
+	_email = format ["%1@mmcsystems.com", _username];
 };
 _email = [_email, _username] call FUNC(makeUniqueEmail);
 

@@ -21,6 +21,7 @@ private _setError = {
 	params ["_text"];
 	_error ctrlSetText _text;
 };
+[""] call _setError;
 
 if (_to isEqualTo "") exitWith {["Enter a recipient address."] call _setError; false};
 if (count ([_to] call FUNC(findUserByEmail)) == 0) exitWith {["Recipient address does not exist."] call _setError; false};

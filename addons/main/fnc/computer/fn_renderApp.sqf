@@ -214,47 +214,11 @@ switch (_app) do {
 	};
 	case "messages": {
 		_title ctrlSetText "Messenger";
-		private _email = toLowerANSI (_activeUser getOrDefault ["email", ""]);
-		private _username = toLowerANSI (_activeUser getOrDefault ["username", ""]);
-		private _messages = (_data getOrDefault ["messages", []]) select {
-			private _to = toLowerANSI (_x getOrDefault ["to", ""]);
-			_to in ["", "*"] || {_to in [_email, _username]}
-		};
-		if (_messages isEqualTo []) exitWith {
-			[_noContent] call _setBody;
-		};
-		{
-			_list lbAdd format ["%1  %2", _x getOrDefault ["date", ""], _x getOrDefault ["from", "Unknown"]];
-		} forEach _messages;
-		if (_index < 0) then {_index = 0};
-		_list lbSetCurSel _index;
-		private _threadText = _messages apply {
-			format [
-				"<t color='#9fb6d8'>[%1] %2</t><br/>%3",
-				_x getOrDefault ["date", ""],
-				_x getOrDefault ["from", "Unknown"],
-				_x getOrDefault ["body", ""]
-			]
-		};
-		[_threadText joinString "<br/><br/>"] call _setBody;
+		["<t size='1.25'>Messenger</t><br/><br/>This function does not work yet."] call _setBody;
 	};
 	case "notes": {
 		_title ctrlSetText "Notes";
-		private _notes = _data getOrDefault ["notes", []];
-		if (_notes isEqualTo []) exitWith {
-			[_noContent] call _setBody;
-		};
-		{
-			_list lbAdd (_x getOrDefault ["title", "Untitled note"]);
-		} forEach _notes;
-		if (_index < 0) then {_index = 0};
-		_list lbSetCurSel _index;
-		private _note = _notes param [_index, createHashMap];
-		[format [
-			"<t size='1.25'>%1</t><br/><br/>%2",
-			_note getOrDefault ["title", "No note selected"],
-			_note getOrDefault ["body", ""]
-		]] call _setBody;
+		["<t size='1.25'>Notes</t><br/><br/>This function does not work yet."] call _setBody;
 	};
 	default {
 		_title ctrlSetText "Desktop";

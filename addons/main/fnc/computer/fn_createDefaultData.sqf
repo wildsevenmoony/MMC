@@ -52,19 +52,8 @@ _data set ["mail", _config getOrDefault ["mail", [
 	]
 ]]];
 
-_data set ["messages", _config getOrDefault ["messages", [
-	createHashMapFromArray [
-		["from", "Admin"],
-		["date", "08:02"],
-		["body", "Messenger placeholder connected."]
-	]
-]]];
+_data set ["messages", _config getOrDefault ["messages", []]];
 
-_data set ["notes", _config getOrDefault ["notes", [
-	createHashMapFromArray [
-		["title", "Mission Notes"],
-		["body", "Notes are local computer data for now. Editing and persistence come next."]
-	]
-]]];
+_data set ["notes", _config getOrDefault ["notes", []]];
 
 _data

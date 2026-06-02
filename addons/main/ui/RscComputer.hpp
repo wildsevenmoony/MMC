@@ -3,6 +3,7 @@ class RscStructuredText;
 class RscButton;
 class RscEdit;
 class RscListbox;
+class RscListNBox;
 class RscPicture;
 class MMB_main_RscBaseDisplay;
 
@@ -140,7 +141,7 @@ class GVAR(RscComputer) {
 			x = "safeZoneX + 0.18";
 			y = "safeZoneY + 0.135";
 			w = 0.24;
-			h = "safeZoneH - 0.245";
+			h = "(safeZoneH - 0.245) * 0.5";
 			colorBackground[] = {0.02, 0.025, 0.035, 0.88};
 			onLBSelChanged = "['select', _this] call MMC_fnc_renderApp";
 		};
@@ -178,7 +179,7 @@ class GVAR(RscComputer) {
 			colorBackground[] = {0, 0, 0, 0};
 		};
 
-		class MailTable: RscListbox {
+		class MailTable: RscListNBox {
 			idc = IDC_MMC_MAIL_TABLE;
 			shadow = 0;
 			x = "safeZoneX + 0.445";
@@ -186,6 +187,11 @@ class GVAR(RscComputer) {
 			w = "safeZoneW - 0.64";
 			h = "safeZoneH - 0.37";
 			font = "EtelkaMonospacePro";
+			rowHeight = 0.035;
+			columns[] = {0.04, 0.115, 0.205, 0.34, 0.68, 0.86};
+			drawSideArrows = 0;
+			idcLeft = -1;
+			idcRight = -1;
 			colorBackground[] = {0.02, 0.025, 0.035, 0.72};
 			onLBSelChanged = "call MMC_fnc_mailSelect";
 		};
@@ -194,7 +200,7 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_MAIL_REPLY;
 			text = "Answer";
 			tooltip = "Answer this mail.";
-			x = "safeZoneX + 0.445";
+			x = "safeZoneX + safeZoneW - 0.345";
 			y = "safeZoneY + 0.148";
 			w = 0.075;
 			h = 0.035;
@@ -205,7 +211,8 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_MAIL_FORWARD;
 			text = "Forward";
 			tooltip = "Forward this mail.";
-			x = "safeZoneX + 0.525";
+			x = "safeZoneX + safeZoneW - 0.265";
+			w = 0.085;
 			action = "['forward'] call MMC_fnc_mailCompose";
 		};
 
@@ -214,7 +221,7 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			text = "Recipient";
 			x = "safeZoneX + 0.445";
-			y = "safeZoneY + 0.155";
+			y = "safeZoneY + 0.205";
 			w = 0.11;
 			h = 0.032;
 			colorBackground[] = {0, 0, 0, 0};
@@ -224,8 +231,8 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_MAIL_RECIPIENT;
 			shadow = 0;
 			x = "safeZoneX + 0.56";
-			y = "safeZoneY + 0.155";
-			w = "safeZoneW - 0.835";
+			y = "safeZoneY + 0.205";
+			w = 0.24;
 			h = 0.036;
 			colorBackground[] = {1, 1, 1, 0.08};
 		};
@@ -233,41 +240,41 @@ class GVAR(RscComputer) {
 		class MailSubjectLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_SUBJECT_LABEL;
 			text = "Subject";
-			y = "safeZoneY + 0.197";
+			y = "safeZoneY + 0.247";
 		};
 
 		class MailSubject: MailRecipient {
 			idc = IDC_MMC_MAIL_SUBJECT;
-			y = "safeZoneY + 0.197";
+			y = "safeZoneY + 0.247";
 		};
 
 		class MailAttachmentLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_ATTACHMENT_LABEL;
 			text = "Attachment";
-			y = "safeZoneY + safeZoneH - 0.207";
+			y = "safeZoneY + safeZoneH - 0.222";
 		};
 
 		class MailAttachment: MailRecipient {
 			idc = IDC_MMC_MAIL_ATTACHMENT;
 			x = "safeZoneX + 0.56";
-			y = "safeZoneY + safeZoneH - 0.207";
-			w = "safeZoneW - 0.835";
+			y = "safeZoneY + safeZoneH - 0.222";
+			w = 0.24;
 			tooltip = "Optional picture texture path, e.g. mission folder path or mod texture path. If set, the recipient receives it as a picture file.";
 		};
 
 		class MailBodyLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_BODY_LABEL;
 			text = "Text";
-			y = "safeZoneY + 0.239";
+			y = "safeZoneY + 0.289";
 		};
 
 		class MailBody: MailRecipient {
 			idc = IDC_MMC_MAIL_BODY;
 			style = 16;
 			x = "safeZoneX + 0.445";
-			y = "safeZoneY + 0.274";
+			y = "safeZoneY + 0.324";
 			w = "safeZoneW - 0.64";
-			h = "safeZoneH - 0.49";
+			h = "safeZoneH - 0.565";
 			lineSpacing = 1;
 		};
 
@@ -285,6 +292,7 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_MAIL_CANCEL;
 			text = "Cancel";
 			x = "safeZoneX + safeZoneW - 0.275";
+			w = 0.075;
 			action = "['table'] call MMC_fnc_renderMail";
 		};
 
@@ -292,10 +300,10 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_MAIL_ERROR;
 			shadow = 0;
 			text = "";
-			x = "safeZoneX + 0.445";
-			y = "safeZoneY + safeZoneH - 0.16";
-			w = "safeZoneW - 0.64";
-			h = 0.032;
+			x = "safeZoneX + 0.805";
+			y = "safeZoneY + 0.205";
+			w = "safeZoneW - 0.985";
+			h = 0.036;
 			sizeEx = 0.026;
 			colorBackground[] = {0, 0, 0, 0};
 			colorText[] = {1, 0.25, 0.25, 1};
@@ -662,7 +670,7 @@ class GVAR(RscComputer) {
 			x = "safeZoneX + 0.18";
 			y = "safeZoneY + 0.135";
 			w = 0.24;
-			h = "safeZoneH - 0.245";
+			h = "(safeZoneH - 0.245) * 0.5";
 		};
 
 		class FrameAppBody: GVAR(RscComputerFrame) {

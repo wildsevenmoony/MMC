@@ -132,7 +132,7 @@ class CfgVehicles {
 				displayName = "E-Mail Address";
 				tooltip = "Mail addressed to this value appears in this user's inbox.";
 				typeName = "STRING";
-				defaultValue = "'operator@mccsystems.com'";
+				defaultValue = "'operator@mmcsystems.com'";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 

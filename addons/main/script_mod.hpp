@@ -5,4 +5,4 @@
 
 #define MAINPREFIX z
 #define PREFIX MMC
-#define PREFIX_BEAUTIFIED Moonys Magnificent Computers
+#define PREFIX_BEAUTIFIED Moony's Magnificent Computers
