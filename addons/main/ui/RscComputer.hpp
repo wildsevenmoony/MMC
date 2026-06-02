@@ -239,26 +239,40 @@ class GVAR(RscComputer) {
 			shadow = 0;
 			x = "safeZoneX + 0.56";
 			y = "safeZoneY + 0.205";
-			w = 0.42;
+			w = 0.34;
 			h = 0.036;
 			colorBackground[] = {1, 1, 1, 0.08};
+		};
+
+		class MailCCLabel: MailRecipientLabel {
+			idc = IDC_MMC_MAIL_CC_LABEL;
+			text = "CC";
+			y = "safeZoneY + 0.247";
+			tooltip = "Optional comma-separated CC addresses. Existing accounts receive a copy; unknown addresses are only recorded in the mail.";
+		};
+
+		class MailCC: MailRecipient {
+			idc = IDC_MMC_MAIL_CC;
+			y = "safeZoneY + 0.247";
+			tooltip = "Optional comma-separated CC addresses. Existing accounts receive a copy; unknown addresses are only recorded in the mail.";
 		};
 
 		class MailSubjectLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_SUBJECT_LABEL;
 			text = "Subject";
-			y = "safeZoneY + 0.247";
+			y = "safeZoneY + 0.289";
 		};
 
 		class MailSubject: MailRecipient {
 			idc = IDC_MMC_MAIL_SUBJECT;
-			y = "safeZoneY + 0.247";
+			y = "safeZoneY + 0.289";
 		};
 
 		class MailAttachmentLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_ATTACHMENT_LABEL;
 			text = "Attachment";
 			y = "safeZoneY + safeZoneH - 0.224";
+			tooltip = "Optional picture texture path, e.g. mission folder path or mod texture path. If set, the recipient receives it as a picture file.";
 		};
 
 		class MailAttachment: MailRecipient {
@@ -272,15 +286,15 @@ class GVAR(RscComputer) {
 		class MailBodyLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_BODY_LABEL;
 			text = "Text";
-			y = "safeZoneY + 0.289";
+			y = "safeZoneY + 0.331";
 		};
 
 		class MailBodyGroup: RscControlsGroup {
 			idc = IDC_MMC_MAIL_BODY_GROUP;
 			x = "safeZoneX + 0.445";
-			y = "safeZoneY + 0.324";
+			y = "safeZoneY + 0.366";
 			w = "safeZoneW - 0.64";
-			h = "safeZoneH - 0.595";
+			h = "safeZoneH - 0.637";
 			class VScrollbar {
 				width = 0.012;
 				autoScrollEnabled = 0;
@@ -299,6 +313,7 @@ class GVAR(RscComputer) {
 					h = 0.72;
 					lineSpacing = 1;
 					colorBackground[] = {1, 1, 1, 0.08};
+					onKeyDown = "_this call MMC_fnc_mailBodyKeyDown";
 					onKeyUp = "call MMC_fnc_resizeMailBody";
 				};
 			};
@@ -310,16 +325,16 @@ class GVAR(RscComputer) {
 			x = "safeZoneX + 0.445";
 			y = "safeZoneY + 0.195";
 			w = "safeZoneW - 0.64";
-			h = 0.145;
+			h = 0.22;
 			colorBackground[] = {0, 0, 0, 0};
 		};
 
 		class MailReadGroup: RscControlsGroup {
 			idc = IDC_MMC_MAIL_READ_GROUP;
 			x = "safeZoneX + 0.445";
-			y = "safeZoneY + 0.35";
+			y = "safeZoneY + 0.428";
 			w = "safeZoneW - 0.64";
-			h = "safeZoneH - 0.54";
+			h = "safeZoneH - 0.618";
 			class VScrollbar {
 				width = 0.012;
 				autoScrollEnabled = 0;
@@ -362,9 +377,9 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_MAIL_ERROR;
 			shadow = 0;
 			text = "";
-			x = "safeZoneX + 0.805";
+			x = "safeZoneX + 0.905";
 			y = "safeZoneY + 0.205";
-			w = "safeZoneW - 0.985";
+			w = "safeZoneW - 1.085";
 			h = 0.036;
 			sizeEx = 0.026;
 			colorBackground[] = {0, 0, 0, 0};

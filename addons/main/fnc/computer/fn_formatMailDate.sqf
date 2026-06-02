@@ -1,8 +1,9 @@
 #include "..\..\script_component.hpp"
 
-private _time = systemTime;
+private _time = date;
 private _pad = {
 	params ["_value"];
+	_value = floor _value;
 	private _text = str _value;
 	if (_value < 10) then {format ["0%1", _text]} else {_text}
 };

@@ -23,6 +23,7 @@ _mail pushBack (createHashMapFromArray [
 	["body", _body],
 	["date", _dateOnly],
 	["time", _timeOnly],
+	["cc", ""],
 	["read", false]
 ]);
 _data set ["mail", _mail];

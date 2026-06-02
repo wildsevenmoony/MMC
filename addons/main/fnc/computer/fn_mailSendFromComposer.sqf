@@ -12,6 +12,7 @@ private _computer = _display getVariable [QGVAR(computer), objNull];
 private _activeUser = [_computer] call FUNC(getActiveUser);
 private _from = _activeUser getOrDefault ["email", ""];
 private _to = ctrlText (_display displayCtrl IDC_MMC_MAIL_RECIPIENT);
+private _cc = ctrlText (_display displayCtrl IDC_MMC_MAIL_CC);
 private _subject = ctrlText (_display displayCtrl IDC_MMC_MAIL_SUBJECT);
 private _body = ctrlText (_display displayCtrl IDC_MMC_MAIL_BODY);
 private _attachment = ctrlText (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT);
@@ -28,7 +29,7 @@ if (count ([_to] call FUNC(findUserByEmail)) == 0) exitWith {["Recipient address
 if (_subject isEqualTo "") exitWith {["Enter a subject."] call _setError; false};
 if (_body isEqualTo "") exitWith {["Enter a message."] call _setError; false};
 
-private _sent = [_from, _to, _subject, _body, _attachment] call FUNC(sendMail);
+private _sent = [_from, _to, _subject, _body, _attachment, _cc] call FUNC(sendMail);
 if (!_sent) exitWith {["Could not send mail."] call _setError; false};
 
 _display setVariable [QGVAR(mailFolder), "outbox"];

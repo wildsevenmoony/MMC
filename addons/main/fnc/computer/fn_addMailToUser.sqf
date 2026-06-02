@@ -39,6 +39,7 @@ _mail pushBack (createHashMapFromArray [
 	["body", _body],
 	["date", _dateOnly],
 	["time", _timeOnly],
+	["cc", ""],
 	["read", false]
 ]);
 _user set ["mail", _mail];

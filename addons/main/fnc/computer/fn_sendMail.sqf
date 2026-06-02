@@ -10,7 +10,8 @@ params [
 	["_toEmail", "", [""]],
 	["_subject", "", [""]],
 	["_body", "", [""]],
-	["_attachment", "", [""]]
+	["_attachment", "", [""]],
+	["_cc", "", [""]]
 ];
 
 private _fromUser = [_fromEmail] call FUNC(findUserByEmail);
@@ -25,12 +26,21 @@ private _message = createHashMapFromArray [
 	["body", _body],
 	["date", _date],
 	["time", _time],
+	["cc", _cc],
 	["attachment", _attachment],
 	["read", false]
 ];
 
 private _fromName = _fromUser getOrDefault ["username", ""];
 private _toName = _toUser getOrDefault ["username", ""];
+private _ccNames = [];
+{
+	private _ccAddress = (_x splitString " ") joinString "";
+	private _ccUser = [_ccAddress] call FUNC(findUserByEmail);
+	if (count _ccUser > 0) then {
+		_ccNames pushBackUnique (_ccUser getOrDefault ["username", ""]);
+	};
+} forEach (_cc splitString ",");
 
 {
 	private _computer = _x;
@@ -41,7 +51,7 @@ private _toName = _toUser getOrDefault ["username", ""];
 	{
 		private _user = _x;
 		private _username = _user getOrDefault ["username", ""];
-		if (_username isEqualTo _toName) then {
+		if (_username isEqualTo _toName || {_username in _ccNames}) then {
 			private _mail = _user getOrDefault ["mail", []];
 			_mail pushBack +_message;
 			_user set ["mail", _mail];

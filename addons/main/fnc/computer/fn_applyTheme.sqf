@@ -115,11 +115,14 @@ switch (_theme) do {
 (_display displayCtrl IDC_MMC_MAIL_TABLE) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_HEADER) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_RECIPIENT_LABEL) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_CC_LABEL) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_SUBJECT_LABEL) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_LABEL) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_BODY_LABEL) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_CC) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_MAIL_CC) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetBackgroundColor _panel;

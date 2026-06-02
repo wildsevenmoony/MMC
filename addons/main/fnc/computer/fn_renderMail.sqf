@@ -29,6 +29,8 @@ private _allControls = [
 	IDC_MMC_MAIL_FORWARD,
 	IDC_MMC_MAIL_RECIPIENT_LABEL,
 	IDC_MMC_MAIL_RECIPIENT,
+	IDC_MMC_MAIL_CC_LABEL,
+	IDC_MMC_MAIL_CC,
 	IDC_MMC_MAIL_SUBJECT_LABEL,
 	IDC_MMC_MAIL_SUBJECT,
 	IDC_MMC_MAIL_ATTACHMENT_LABEL,
@@ -71,7 +73,7 @@ if (_fromNav) then {
 		_display setVariable [QGVAR(composeMode), "new"];
 		{
 			(_display displayCtrl _x) ctrlSetText "";
-		} forEach [IDC_MMC_MAIL_RECIPIENT, IDC_MMC_MAIL_SUBJECT, IDC_MMC_MAIL_ATTACHMENT, IDC_MMC_MAIL_BODY, IDC_MMC_MAIL_ERROR];
+		} forEach [IDC_MMC_MAIL_RECIPIENT, IDC_MMC_MAIL_CC, IDC_MMC_MAIL_SUBJECT, IDC_MMC_MAIL_ATTACHMENT, IDC_MMC_MAIL_BODY, IDC_MMC_MAIL_ERROR];
 	};
 };
 
@@ -93,6 +95,8 @@ if (_mode isEqualTo "compose") exitWith {
 	} forEach [
 		IDC_MMC_MAIL_RECIPIENT_LABEL,
 		IDC_MMC_MAIL_RECIPIENT,
+		IDC_MMC_MAIL_CC_LABEL,
+		IDC_MMC_MAIL_CC,
 		IDC_MMC_MAIL_SUBJECT_LABEL,
 		IDC_MMC_MAIL_SUBJECT,
 		IDC_MMC_MAIL_ATTACHMENT_LABEL,
@@ -122,16 +126,16 @@ if (_mode isEqualTo "read") exitWith {
 	private _bodyText = ((_mail getOrDefault ["body", ""]) splitString (toString [10])) joinString "<br/>";
 	_body ctrlSetStructuredText parseText "";
 	_readMeta ctrlSetStructuredText parseText format [
-		"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>From: %2<br/>To: %3<br/>Date: %4 %5</t>",
+		"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>From: %2<br/>To: %3<br/>CC: %4<br/>Date: %5 %6</t>",
 		_mail getOrDefault ["subject", "No subject"],
 		_mail getOrDefault ["from", ""],
 		_mail getOrDefault ["to", ""],
+		_mail getOrDefault ["cc", ""],
 		_mail getOrDefault ["date", ""],
 		_mail getOrDefault ["time", ""]
 	];
 	_readBody ctrlSetStructuredText parseText format ["%1%2", _bodyText, _attachmentText];
-	private _lineCount = ({_x isEqualTo 10} count toArray (_mail getOrDefault ["body", ""])) + 1;
-	private _readHeight = 0.12 max (0.04 + (_lineCount * 0.032) + ((count (_mail getOrDefault ["body", ""])) / 76 * 0.026));
+	private _readHeight = 0.12 max ((ctrlTextHeight _readBody) + 0.02);
 	private _pos = ctrlPosition _readBody;
 	_pos set [3, _readHeight];
 	_readBody ctrlSetPosition _pos;
