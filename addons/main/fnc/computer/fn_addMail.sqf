@@ -6,7 +6,10 @@ params [
 	["_to", "", [""]],
 	["_subject", "No subject", [""]],
 	["_body", "", [""]],
-	["_date", "", [""]]
+	["_date", "", [""]],
+	["_cc", "", [""]],
+	["_attachment", "", [""]],
+	["_attachmentDescription", "", [""]]
 ];
 
 if (isNull _object) exitWith {false};
@@ -23,7 +26,9 @@ _mail pushBack (createHashMapFromArray [
 	["body", _body],
 	["date", _dateOnly],
 	["time", _timeOnly],
-	["cc", ""],
+	["cc", _cc],
+	["attachment", _attachment],
+	["attachmentDescription", _attachmentDescription],
 	["read", false]
 ]);
 _data set ["mail", _mail];

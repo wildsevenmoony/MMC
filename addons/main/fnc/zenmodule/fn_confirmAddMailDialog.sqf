@@ -14,11 +14,15 @@ private _getValue = {
 	(_values select _index) select 3
 };
 
-private _from = ["from", "sender@mmc.local"] call _getValue;
-private _to = ["to", ""] call _getValue;
+private _direction = ["direction", "inbox"] call _getValue;
+private _counterpart = ["counterpart", "sender@mmc.local"] call _getValue;
+private _cc = ["cc", ""] call _getValue;
 private _subject = ["subject", "Mission Update"] call _getValue;
 private _body = ["body", "Mail body goes here."] call _getValue;
-private _date = ["date", "2035-06-01 08:00"] call _getValue;
+private _date = ["date", ""] call _getValue;
+private _time = ["time", ""] call _getValue;
+private _attachment = ["attachment", ""] call _getValue;
+private _attachmentDescription = ["attachmentDescription", ""] call _getValue;
 private _selected = (_display getVariable [QGVAR(userCheckboxes), []]) select {cbChecked (_x select 1)};
 
 if (_selected isEqualTo []) exitWith {
@@ -26,10 +30,15 @@ if (_selected isEqualTo []) exitWith {
 	false
 };
 
+if (_attachment isNotEqualTo "" && {!fileExists _attachment}) exitWith {
+	[objNull, "ATTACHMENT NOT FOUND"] call BIS_fnc_showCuratorFeedbackMessage;
+	false
+};
+
 {
 	private _computer = _x;
 	{
-		[_computer, _x select 0, _from, _to, _subject, _body, _date] remoteExecCall [QFUNC(addMailToUser), 0, true];
+		[_computer, _x select 0, _direction, _counterpart, _cc, _subject, _body, _date, _time, _attachment, _attachmentDescription] remoteExecCall [QFUNC(seedMail), 0, true];
 	} forEach _selected;
 } forEach GVAR(registeredComputers);
 

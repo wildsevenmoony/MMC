@@ -43,6 +43,7 @@ if (_index < 0) then {
 	private _existing = _users select _index;
 	_user set ["files", _existing getOrDefault ["files", []]];
 	_user set ["mail", _existing getOrDefault ["mail", []]];
+	_user set ["outbox", _existing getOrDefault ["outbox", []]];
 	_user set ["desktopTitle", _existing getOrDefault ["desktopTitle", _user getOrDefault ["desktopTitle", ""]]];
 	_user set ["desktopContent", _existing getOrDefault ["desktopContent", _user getOrDefault ["desktopContent", ""]]];
 	_user set ["desktopAlign", _existing getOrDefault ["desktopAlign", _user getOrDefault ["desktopAlign", "left"]]];

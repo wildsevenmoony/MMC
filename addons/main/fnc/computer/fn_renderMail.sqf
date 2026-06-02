@@ -132,9 +132,9 @@ if (_mode isEqualTo "read") exitWith {
 	private _attachmentText = ["", format [
 		"<br/><br/><t color='#9fb6d8'>Attachment: %1%2</t>",
 		_attachment,
-		["", format ["<br/>%1", _attachmentDescription]] select (_attachmentDescription isNotEqualTo "")
+		["", format ["<br/>%1", [_attachmentDescription] call FUNC(normalizeStructuredText)]] select (_attachmentDescription isNotEqualTo "")
 	]] select (_attachment isNotEqualTo "");
-	private _bodyText = ((_mail getOrDefault ["body", ""]) splitString (toString [10])) joinString "<br/>";
+	private _bodyText = [_mail getOrDefault ["body", ""]] call FUNC(normalizeStructuredText);
 	_body ctrlSetStructuredText parseText "";
 	_readMeta ctrlSetStructuredText parseText format [
 		"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>From: %2<br/>To: %3<br/>CC: %4<br/>Date: %5 %6</t>",

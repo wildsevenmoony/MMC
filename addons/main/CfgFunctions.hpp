@@ -54,6 +54,7 @@ class CfgFunctions {
 			class renderMail {};
 			class resizeMailBody {};
 			class sendMail {};
+			class seedMail {};
 			class setScreenState {};
 			class setPowerState {};
 			class setSystemOverlay {};

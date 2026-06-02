@@ -37,32 +37,67 @@ private _addControl = {
 };
 
 private _addRowBackground = {
+	params [["_height", _rowH]];
 	private _backgroundX = _rowBackgroundX;
 	private _labelTextX = _backgroundX + 0.008;
 	private _backgroundW = (_xField - _columnGapW - _backgroundX) max 0.05;
-	private _background = ["RscText", -1, [_backgroundX, _y, _backgroundW, _rowH], ""] call _addControl;
+	private _background = ["RscText", -1, [_backgroundX, _y, _backgroundW, _height], ""] call _addControl;
 	_background ctrlSetBackgroundColor [0, 0, 0, 0.35];
 	[_labelTextX, _xField]
 };
 
 private _addEdit = {
-	params ["_label", "_labelIdc", "_editIdc", ["_default", ""], ["_key", ""], ["_tooltip", ""]];
-	(call _addRowBackground) params ["_labelTextX", "_fieldX"];
+	params ["_label", "_labelIdc", "_editIdc", ["_default", ""], ["_key", ""], ["_tooltip", ""], ["_height", _rowH], ["_class", "RscEdit"]];
+	([_height] call _addRowBackground) params ["_labelTextX", "_fieldX"];
 	private _labelControl = ["RscText", _labelIdc, [_labelTextX, _y, _rowWLabel, _rowH], _label] call _addControl;
 	if (_tooltip isNotEqualTo "") then {
 		_labelControl ctrlSetTooltip _tooltip;
 	};
-	private _edit = ["RscEdit", _editIdc, [_fieldX, _y, _rowWField, _rowH], _default] call _addControl;
+	private _edit = [_class, _editIdc, [_fieldX, _y, _rowWField, _height], _default] call _addControl;
+	if (_tooltip isNotEqualTo "") then {
+		_edit ctrlSetTooltip _tooltip;
+	};
 	_fields pushBack [_key, _editIdc, "edit"];
-	_y = _y + _rowH + _rowGap;
+	_y = _y + _height + _rowGap;
 	_edit
 };
 
-["From", -1, IDC_MMC_DLG_MAIL_FROM, "sender@mmc.local", "from", "Sender mail address displayed in the Mail app."] call _addEdit;
-["To", -1, IDC_MMC_DLG_MAIL_TO, "", "to", "Leave empty to use each selected user's address."] call _addEdit;
+private _addCombo = {
+	params ["_label", "_comboIdc", "_values", ["_default", ""], ["_key", ""], ["_tooltip", ""]];
+	(call _addRowBackground) params ["_labelTextX", "_fieldX"];
+	private _labelControl = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], _label] call _addControl;
+	if (_tooltip isNotEqualTo "") then {
+		_labelControl ctrlSetTooltip _tooltip;
+	};
+	private _combo = ["RscCombo", _comboIdc, [_fieldX, _y, _rowWField, _rowH], ""] call _addControl;
+	{
+		_x params ["_text", "_data"];
+		private _index = _combo lbAdd _text;
+		_combo lbSetData [_index, _data];
+		if (_data isEqualTo _default) then {
+			_combo lbSetCurSel _index;
+		};
+	} forEach _values;
+	if (lbCurSel _combo < 0 && {lbSize _combo > 0}) then {
+		_combo lbSetCurSel 0;
+	};
+	if (_tooltip isNotEqualTo "") then {
+		_combo ctrlSetTooltip _tooltip;
+	};
+	_fields pushBack [_key, _comboIdc, "combo"];
+	_y = _y + _rowH + _rowGap;
+	_combo
+};
+
+["Mailbox", IDC_MMC_DLG_MAIL_DIRECTION, [["Inbox", "inbox"], ["Outbox", "outbox"]], "inbox", "direction", "Inbox means the selected user received this mail. Outbox means the selected user sent this mail."] call _addCombo;
+["Date", -1, IDC_MMC_DLG_MAIL_DATE, "", "date", "Mail date in YYYY-MM-DD format. Leave empty or enter an invalid value to use the current mission date."] call _addEdit;
+["Time", -1, IDC_MMC_DLG_MAIL_TIME, "", "time", "Mail time in HH:MM format. Leave empty or enter an invalid value to use the current mission time."] call _addEdit;
+["From/To", -1, IDC_MMC_DLG_MAIL_COUNTERPART, "sender@mmc.local", "counterpart", "If Mailbox is Inbox, this is the sender. If Mailbox is Outbox, this is the recipient."] call _addEdit;
+["CC", -1, IDC_MMC_DLG_MAIL_CC, "", "cc", "Optional comma-separated CC e-mail addresses. Existing users receive inbox copies."] call _addEdit;
 ["Subject", -1, IDC_MMC_DLG_MAIL_SUBJECT, "Mission Update", "subject", "Mail subject displayed in the inbox list."] call _addEdit;
-["Body", -1, IDC_MMC_DLG_MAIL_BODY, "Mail body goes here.", "body", "Mail body shown when the mail is selected."] call _addEdit;
-["Date", -1, IDC_MMC_DLG_MAIL_DATE, "2035-06-01 08:00", "date", "Display date for this mail."] call _addEdit;
+["Body", -1, IDC_MMC_DLG_MAIL_BODY, "Mail body goes here.", "body", "Structured text is supported, including tags such as <br/> and image tags. Use \n for line breaks.", _rowH * 5, QGVAR(RscComputerEditMulti)] call _addEdit;
+["Attachment Picture", -1, IDC_MMC_DLG_MAIL_ATTACHMENT, "", "attachment", "Optional picture texture path. If filled, it must exist and is added to recipient and CC file browsers."] call _addEdit;
+["Attachment Description", -1, IDC_MMC_DLG_MAIL_ATTACHMENT_DESC, "", "attachmentDescription", "Optional description shown under the attached picture in the Files app."] call _addEdit;
 
 (call _addRowBackground) params ["_labelTextX", "_fieldX"];
 private _label = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], "User"] call _addControl;

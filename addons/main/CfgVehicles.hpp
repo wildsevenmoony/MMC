@@ -334,19 +334,53 @@ class CfgVehicles {
 		scope = 2;
 
 		class Attributes: AttributesBase {
-			class GVAR(mailFrom): Edit {
-				property = QGVAR(mailFrom);
-				displayName = "From";
+			class GVAR(mailDirection): Combo {
+				property = QGVAR(mailDirection);
+				displayName = "Mailbox";
+				tooltip = "Inbox means the selected user received this mail. Outbox means the selected user sent this mail.";
+				typeName = "STRING";
+				defaultValue = "'inbox'";
+				expression = "_this setVariable ['%s', _value, true];";
+
+				class Values {
+					class Inbox {name = "Inbox"; value = "inbox";};
+					class Outbox {name = "Outbox"; value = "outbox";};
+				};
+			};
+
+			class GVAR(mailDate): Edit {
+				property = QGVAR(mailDate);
+				displayName = "Date";
+				tooltip = "Mail date in YYYY-MM-DD format. Leave empty or enter an invalid value to use the current mission date.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(mailTime): Edit {
+				property = QGVAR(mailTime);
+				displayName = "Time";
+				tooltip = "Mail time in HH:MM format. Leave empty or enter an invalid value to use the current mission time.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(mailCounterpart): Edit {
+				property = QGVAR(mailCounterpart);
+				displayName = "From/To";
+				tooltip = "If Mailbox is Inbox, this is the sender. If Mailbox is Outbox, this is the recipient.";
 				typeName = "STRING";
 				defaultValue = "'sender@mmc.local'";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
-			class GVAR(mailTo): Edit {
-				property = QGVAR(mailTo);
-				displayName = "To";
+			class GVAR(mailCc): Edit {
+				property = QGVAR(mailCc);
+				displayName = "CC";
+				tooltip = "Optional comma-separated CC e-mail addresses. Existing users receive inbox copies.";
 				typeName = "STRING";
-				defaultValue = "'operator@mmc.local'";
+				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
@@ -361,16 +395,28 @@ class CfgVehicles {
 			class GVAR(mailBody): Edit {
 				property = QGVAR(mailBody);
 				displayName = "Body";
+				tooltip = "Structured text is supported, including tags such as <br/> and image tags. Use \\n for line breaks.";
 				typeName = "STRING";
+				control = "EditMulti5";
 				defaultValue = "'Mail body goes here.'";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
-			class GVAR(mailDate): Edit {
-				property = QGVAR(mailDate);
-				displayName = "Date";
+			class GVAR(mailAttachment): Edit {
+				property = QGVAR(mailAttachment);
+				displayName = "Attachment Picture";
+				tooltip = "Optional picture texture path. If filled, it must exist and is added to recipient and CC file browsers.";
 				typeName = "STRING";
-				defaultValue = "'2035-06-01 08:00'";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(mailAttachmentDescription): Edit {
+				property = QGVAR(mailAttachmentDescription);
+				displayName = "Attachment Description";
+				tooltip = "Optional description shown under the attached picture in the Files app.";
+				typeName = "STRING";
+				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
@@ -378,16 +424,16 @@ class CfgVehicles {
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync an MMC computer object to add an email to its inbox.";
+			description = "Sync Add User modules to add an email to user inboxes or outboxes. Matching sender, recipient, and CC users receive mirrored mail copies.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
-				description[] = {"Synchronise any registered MMC computer object."};
+				description[] = {"Synchronise any Add User module or registered MMC computer object."};
 				position = 0;
 				direction = 0;
 				optional = 0;
 				duplicate = 1;
-				synced[] = {"AnyStaticObject", "AnyVehicle"};
+				synced[] = {"AnyStaticObject", "AnyVehicle", QGVAR(addUser)};
 			};
 		};
 	};

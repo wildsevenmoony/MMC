@@ -20,6 +20,8 @@ private _toUser = [_toEmail] call FUNC(findUserByEmail);
 if (count _fromUser == 0 || {count _toUser == 0}) exitWith {false};
 
 (call FUNC(formatMailDate)) params ["_date", "_time"];
+_body = [_body] call FUNC(normalizeStructuredText);
+_attachmentDescription = [_attachmentDescription] call FUNC(normalizeStructuredText);
 private _attachmentName = "";
 if (_attachment isNotEqualTo "") then {
 	private _parts = _attachment splitString "\/";
