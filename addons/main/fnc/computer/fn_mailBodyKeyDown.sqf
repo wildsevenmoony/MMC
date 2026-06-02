@@ -15,4 +15,8 @@ if !(_key in [28, 156]) exitWith {false};
 
 _ctrl ctrlSetText ((ctrlText _ctrl) + toString [10]);
 call FUNC(resizeMailBody);
-false
+
+private _display = ctrlParent _ctrl;
+ctrlSetFocus (_display displayCtrl IDC_MMC_MAIL_SUBJECT);
+ctrlSetFocus _ctrl;
+true

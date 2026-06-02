@@ -161,10 +161,10 @@ class GVAR(RscComputer) {
 		class FilePreviewImage: RscPicture {
 			idc = IDC_MMC_FILE_PREVIEW_IMAGE;
 			text = "";
-			x = "safeZoneX + 0.43 + ((safeZoneW - 0.61) - 0.54) / 2";
-			y = "safeZoneY + 0.19";
-			w = 0.54;
-			h = 0.405;
+			x = "safeZoneX + 0.49";
+			y = "safeZoneY + 0.18";
+			w = "safeZoneW - 0.73";
+			h = "safeZoneH - 0.48";
 			colorText[] = {1, 1, 1, 1};
 		};
 
@@ -761,10 +761,10 @@ class GVAR(RscComputer) {
 
 		class FrameFilePreviewImage: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
-			x = "safeZoneX + 0.43 + ((safeZoneW - 0.61) - 0.54) / 2";
-			y = "safeZoneY + 0.19";
-			w = 0.54;
-			h = 0.405;
+			x = "safeZoneX + 0.49";
+			y = "safeZoneY + 0.18";
+			w = "safeZoneW - 0.73";
+			h = "safeZoneH - 0.48";
 		};
 
 		class FrameMailTable: GVAR(RscComputerFrame) {
