@@ -35,6 +35,8 @@ private _allControls = [
 	IDC_MMC_MAIL_SUBJECT,
 	IDC_MMC_MAIL_ATTACHMENT_LABEL,
 	IDC_MMC_MAIL_ATTACHMENT,
+	IDC_MMC_MAIL_ATTACHMENT_DESC_LABEL,
+	IDC_MMC_MAIL_ATTACHMENT_DESC,
 	IDC_MMC_MAIL_BODY_LABEL,
 	IDC_MMC_MAIL_BODY_GROUP,
 	IDC_MMC_MAIL_BODY,
@@ -73,7 +75,7 @@ if (_fromNav) then {
 		_display setVariable [QGVAR(composeMode), "new"];
 		{
 			(_display displayCtrl _x) ctrlSetText "";
-		} forEach [IDC_MMC_MAIL_RECIPIENT, IDC_MMC_MAIL_CC, IDC_MMC_MAIL_SUBJECT, IDC_MMC_MAIL_ATTACHMENT, IDC_MMC_MAIL_BODY, IDC_MMC_MAIL_ERROR];
+		} forEach [IDC_MMC_MAIL_RECIPIENT, IDC_MMC_MAIL_CC, IDC_MMC_MAIL_SUBJECT, IDC_MMC_MAIL_ATTACHMENT, IDC_MMC_MAIL_ATTACHMENT_DESC, IDC_MMC_MAIL_BODY, IDC_MMC_MAIL_ERROR];
 	};
 };
 
@@ -101,6 +103,8 @@ if (_mode isEqualTo "compose") exitWith {
 		IDC_MMC_MAIL_SUBJECT,
 		IDC_MMC_MAIL_ATTACHMENT_LABEL,
 		IDC_MMC_MAIL_ATTACHMENT,
+		IDC_MMC_MAIL_ATTACHMENT_DESC_LABEL,
+		IDC_MMC_MAIL_ATTACHMENT_DESC,
 		IDC_MMC_MAIL_BODY_LABEL,
 		IDC_MMC_MAIL_BODY_GROUP,
 		IDC_MMC_MAIL_BODY,
@@ -122,7 +126,12 @@ if (_mode isEqualTo "read") exitWith {
 	_readMeta ctrlShow true;
 	_readGroup ctrlShow true;
 	private _attachment = _mail getOrDefault ["attachment", ""];
-	private _attachmentText = ["", format ["<br/><br/><t color='#9fb6d8'>Attachment: %1</t>", _attachment]] select (_attachment isNotEqualTo "");
+	private _attachmentDescription = _mail getOrDefault ["attachmentDescription", ""];
+	private _attachmentText = ["", format [
+		"<br/><br/><t color='#9fb6d8'>Attachment: %1%2</t>",
+		_attachment,
+		["", format ["<br/>%1", _attachmentDescription]] select (_attachmentDescription isNotEqualTo "")
+	]] select (_attachment isNotEqualTo "");
 	private _bodyText = ((_mail getOrDefault ["body", ""]) splitString (toString [10])) joinString "<br/>";
 	_body ctrlSetStructuredText parseText "";
 	_readMeta ctrlSetStructuredText parseText format [

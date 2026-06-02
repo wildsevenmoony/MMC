@@ -5,7 +5,8 @@ params [
 	["_name", "new_file.txt", [""]],
 	["_content", "", [""]],
 	["_type", "text", [""]],
-	["_path", "", [""]]
+	["_path", "", [""]],
+	["_texture", "", [""]]
 ];
 
 if (isNull _object) exitWith {false};
@@ -16,7 +17,8 @@ _files pushBack (createHashMapFromArray [
 	["name", _name],
 	["type", _type],
 	["path", _path],
-	["content", _content]
+	["content", _content],
+	["texture", _texture]
 ]);
 _data set ["files", _files];
 _object setVariable [QGVAR(data), _data, true];

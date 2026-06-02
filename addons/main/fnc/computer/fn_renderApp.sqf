@@ -55,6 +55,8 @@ private _mailControls = [
 	IDC_MMC_MAIL_SUBJECT,
 	IDC_MMC_MAIL_ATTACHMENT_LABEL,
 	IDC_MMC_MAIL_ATTACHMENT,
+	IDC_MMC_MAIL_ATTACHMENT_DESC_LABEL,
+	IDC_MMC_MAIL_ATTACHMENT_DESC,
 	IDC_MMC_MAIL_BODY_LABEL,
 	IDC_MMC_MAIL_BODY_GROUP,
 	IDC_MMC_MAIL_BODY,
@@ -201,7 +203,7 @@ switch (_app) do {
 				default {""};
 			};
 			private _content = if (_type isEqualTo "picture") then {
-				format ["<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><t align='center'>%1</t>", _file getOrDefault ["content", ""]]
+				format ["<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><t align='center'>%1</t>", _file getOrDefault ["content", ""]]
 			} else {
 				format ["<br/><br/>%1", _file getOrDefault ["content", ""]]
 			};

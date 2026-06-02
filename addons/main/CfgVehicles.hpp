@@ -237,6 +237,33 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(fileType): Edit {
+				property = QGVAR(fileType);
+				displayName = "File Type";
+				tooltip = "Use text or picture.";
+				typeName = "STRING";
+				defaultValue = "'text'";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(fileTexture): Edit {
+				property = QGVAR(fileTexture);
+				displayName = "Picture Texture";
+				tooltip = "Texture path for picture files, e.g. a mission or mod .paa.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(fileDescription): Edit {
+				property = QGVAR(fileDescription);
+				displayName = "Picture Description";
+				tooltip = "Description shown under the picture in the Files app.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class ModuleDescription: ModuleDescription {};
 		};
 

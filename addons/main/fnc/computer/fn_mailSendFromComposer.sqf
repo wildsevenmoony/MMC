@@ -16,6 +16,7 @@ private _cc = ctrlText (_display displayCtrl IDC_MMC_MAIL_CC);
 private _subject = ctrlText (_display displayCtrl IDC_MMC_MAIL_SUBJECT);
 private _body = ctrlText (_display displayCtrl IDC_MMC_MAIL_BODY);
 private _attachment = ctrlText (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT);
+private _attachmentDescription = ctrlText (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_DESC);
 private _error = _display displayCtrl IDC_MMC_MAIL_ERROR;
 
 private _setError = {
@@ -30,7 +31,7 @@ if (_subject isEqualTo "") exitWith {["Enter a subject."] call _setError; false}
 if (_body isEqualTo "") exitWith {["Enter a message."] call _setError; false};
 if (_attachment isNotEqualTo "" && {!fileExists _attachment}) exitWith {["Attachment file does not exist."] call _setError; false};
 
-private _sent = [_from, _to, _subject, _body, _attachment, _cc] call FUNC(sendMail);
+private _sent = [_from, _to, _subject, _body, _attachment, _cc, _attachmentDescription] call FUNC(sendMail);
 if (!_sent) exitWith {["Could not send mail."] call _setError; false};
 
 _display setVariable [QGVAR(mailFolder), "outbox"];

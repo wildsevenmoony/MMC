@@ -49,6 +49,7 @@ switch (_mode) do {
 (_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetText _subject;
 (_display displayCtrl IDC_MMC_MAIL_BODY) ctrlSetText _body;
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetText "";
+(_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_DESC) ctrlSetText "";
 (_display displayCtrl IDC_MMC_MAIL_ERROR) ctrlSetText "";
 _display setVariable [QGVAR(mailMode), "compose"];
 _display setVariable [QGVAR(composeMode), _mode];

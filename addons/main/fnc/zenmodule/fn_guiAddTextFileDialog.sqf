@@ -61,6 +61,9 @@ private _addEdit = {
 ["File Name", -1, IDC_MMC_DLG_FILE_NAME, "intel.txt", "fileName", "Displayed in the user's Files app."] call _addEdit;
 ["File Path", -1, IDC_MMC_DLG_FILE_PATH, "\Desktop\intel.txt", "filePath", "Displayed path in the Files app."] call _addEdit;
 ["Content", -1, IDC_MMC_DLG_FILE_CONTENT, "Mission intel goes here.", "content", "Text shown when the file is selected."] call _addEdit;
+["File Type", -1, IDC_MMC_DLG_FILE_TYPE, "text", "fileType", "Use text or picture."] call _addEdit;
+["Picture Texture", -1, IDC_MMC_DLG_FILE_TEXTURE, "", "fileTexture", "Texture path for picture files, e.g. a mission or mod .paa."] call _addEdit;
+["Picture Description", -1, IDC_MMC_DLG_FILE_DESCRIPTION, "", "fileDescription", "Description shown under the picture in the Files app."] call _addEdit;
 
 (call _addRowBackground) params ["_labelTextX", "_fieldX"];
 private _label = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], "User"] call _addControl;

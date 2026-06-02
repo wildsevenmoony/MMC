@@ -11,7 +11,8 @@ params [
 	["_subject", "", [""]],
 	["_body", "", [""]],
 	["_attachment", "", [""]],
-	["_cc", "", [""]]
+	["_cc", "", [""]],
+	["_attachmentDescription", "", [""]]
 ];
 
 private _fromUser = [_fromEmail] call FUNC(findUserByEmail);
@@ -33,6 +34,7 @@ private _message = createHashMapFromArray [
 	["time", _time],
 	["cc", _cc],
 	["attachment", _attachment],
+	["attachmentDescription", _attachmentDescription],
 	["read", false]
 ];
 
@@ -67,7 +69,7 @@ private _ccNames = [];
 					["name", _attachmentName],
 					["type", "picture"],
 					["path", format ["\Pictures\%1", _attachmentName]],
-					["content", format ["Attachment from: %1", _subject]],
+					["content", _attachmentDescription],
 					["texture", _attachment]
 				];
 				_user set ["files", _files];

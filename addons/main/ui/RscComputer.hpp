@@ -161,10 +161,10 @@ class GVAR(RscComputer) {
 		class FilePreviewImage: RscPicture {
 			idc = IDC_MMC_FILE_PREVIEW_IMAGE;
 			text = "";
-			x = "safeZoneX + 0.49";
-			y = "safeZoneY + 0.18";
-			w = "safeZoneW - 0.73";
-			h = "safeZoneH - 0.48";
+			x = "safeZoneX + 0.565";
+			y = "safeZoneY + 0.235";
+			w = "safeZoneW - 0.88";
+			h = "safeZoneH - 0.63";
 			colorText[] = {1, 1, 1, 1};
 		};
 
@@ -271,16 +271,31 @@ class GVAR(RscComputer) {
 		class MailAttachmentLabel: MailRecipientLabel {
 			idc = IDC_MMC_MAIL_ATTACHMENT_LABEL;
 			text = "Attachment";
-			y = "safeZoneY + safeZoneH - 0.224";
+			y = "safeZoneY + safeZoneH - 0.262";
 			tooltip = "Optional picture texture path, e.g. mission folder path or mod texture path. If set, the recipient receives it as a picture file.";
 		};
 
 		class MailAttachment: MailRecipient {
 			idc = IDC_MMC_MAIL_ATTACHMENT;
 			x = "safeZoneX + 0.56";
-			y = "safeZoneY + safeZoneH - 0.224";
+			y = "safeZoneY + safeZoneH - 0.262";
 			w = "safeZoneW - 0.78";
 			tooltip = "Optional picture texture path, e.g. mission folder path or mod texture path. If set, the recipient receives it as a picture file.";
+		};
+
+		class MailAttachmentDescriptionLabel: MailRecipientLabel {
+			idc = IDC_MMC_MAIL_ATTACHMENT_DESC_LABEL;
+			text = "Description";
+			y = "safeZoneY + safeZoneH - 0.222";
+			tooltip = "Optional description shown under the attached picture in the recipient's Files app.";
+		};
+
+		class MailAttachmentDescription: MailRecipient {
+			idc = IDC_MMC_MAIL_ATTACHMENT_DESC;
+			x = "safeZoneX + 0.56";
+			y = "safeZoneY + safeZoneH - 0.222";
+			w = "safeZoneW - 0.78";
+			tooltip = "Optional description shown under the attached picture in the recipient's Files app.";
 		};
 
 		class MailBodyLabel: MailRecipientLabel {
@@ -294,7 +309,7 @@ class GVAR(RscComputer) {
 			x = "safeZoneX + 0.445";
 			y = "safeZoneY + 0.366";
 			w = "safeZoneW - 0.64";
-			h = "safeZoneH - 0.637";
+			h = "safeZoneH - 0.675";
 			class VScrollbar {
 				width = 0.012;
 				autoScrollEnabled = 0;
@@ -761,10 +776,10 @@ class GVAR(RscComputer) {
 
 		class FrameFilePreviewImage: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
-			x = "safeZoneX + 0.49";
-			y = "safeZoneY + 0.18";
-			w = "safeZoneW - 0.73";
-			h = "safeZoneH - 0.48";
+			x = "safeZoneX + 0.565";
+			y = "safeZoneY + 0.235";
+			w = "safeZoneW - 0.88";
+			h = "safeZoneH - 0.63";
 		};
 
 		class FrameMailTable: GVAR(RscComputerFrame) {
