@@ -442,7 +442,7 @@ class CfgVehicles {
 			class GVAR(desktopContent): Edit {
 				property = QGVAR(desktopContent);
 				displayName = "Desktop Text";
-				tooltip = "Structured text is supported, including tags such as <br/> and image tags.";
+				tooltip = "Structured text is supported, including tags such as <br/> and image tags. Use \\n for line breaks.";
 				typeName = "STRING";
 				control = "EditMulti5";
 				defaultValue = "'Select an app on the left.'";

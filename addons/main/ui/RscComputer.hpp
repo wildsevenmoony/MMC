@@ -197,7 +197,7 @@ class GVAR(RscComputer) {
 		class FileDescriptionGroup: RscControlsGroup {
 			idc = IDC_MMC_FILE_DESCRIPTION_GROUP;
 			x = "safeZoneX + 0.615";
-			y = "safeZoneY + safeZoneH - 0.36";
+			y = "safeZoneY + safeZoneH - 0.47";
 			w = "safeZoneW - 0.98";
 			h = 0.14;
 			class VScrollbar {
@@ -846,7 +846,7 @@ class GVAR(RscComputer) {
 		class FrameFileDescription: GVAR(RscComputerFrame) {
 			idc = IDC_MMC_FRAME_FILE_DESCRIPTION;
 			x = "safeZoneX + 0.615";
-			y = "safeZoneY + safeZoneH - 0.36";
+			y = "safeZoneY + safeZoneH - 0.47";
 			w = "safeZoneW - 0.98";
 			h = 0.14;
 		};
