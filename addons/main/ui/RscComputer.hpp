@@ -150,6 +150,7 @@ class GVAR(RscComputer) {
 		class AppBody: RscStructuredText {
 			idc = IDC_MMC_APP_BODY;
 			shadow = 0;
+			enable = 0;
 			x = "safeZoneX + 0.43";
 			y = "safeZoneY + 0.135";
 			w = "safeZoneW - 0.61";
@@ -264,7 +265,7 @@ class GVAR(RscComputer) {
 			idc = IDC_MMC_MAIL_ATTACHMENT;
 			x = "safeZoneX + 0.56";
 			y = "safeZoneY + safeZoneH - 0.224";
-			w = "safeZoneW - 0.74";
+			w = "safeZoneW - 0.78";
 			tooltip = "Optional picture texture path, e.g. mission folder path or mod texture path. If set, the recipient receives it as a picture file.";
 		};
 
@@ -274,26 +275,51 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + 0.289";
 		};
 
-		class MailBody: MailRecipient {
-			idc = IDC_MMC_MAIL_BODY;
-			style = 16;
+		class MailBodyGroup: RscControlsGroup {
+			idc = IDC_MMC_MAIL_BODY_GROUP;
 			x = "safeZoneX + 0.445";
 			y = "safeZoneY + 0.324";
 			w = "safeZoneW - 0.64";
 			h = "safeZoneH - 0.595";
-			lineSpacing = 1;
 			class VScrollbar {
 				width = 0.012;
-				autoScrollEnabled = 1;
+				autoScrollEnabled = 0;
 			};
+			class HScrollbar {
+				height = 0;
+			};
+			class Controls {
+				class MailBody: RscEdit {
+					idc = IDC_MMC_MAIL_BODY;
+					shadow = 0;
+					style = 16;
+					x = 0;
+					y = 0;
+					w = "safeZoneW - 0.665";
+					h = 0.72;
+					lineSpacing = 1;
+					colorBackground[] = {1, 1, 1, 0.08};
+					onKeyUp = "call MMC_fnc_resizeMailBody";
+				};
+			};
+		};
+
+		class MailReadMeta: RscStructuredText {
+			idc = IDC_MMC_MAIL_READ_META;
+			shadow = 0;
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + 0.195";
+			w = "safeZoneW - 0.64";
+			h = 0.115;
+			colorBackground[] = {0, 0, 0, 0};
 		};
 
 		class MailReadGroup: RscControlsGroup {
 			idc = IDC_MMC_MAIL_READ_GROUP;
 			x = "safeZoneX + 0.445";
-			y = "safeZoneY + 0.195";
+			y = "safeZoneY + 0.318";
 			w = "safeZoneW - 0.64";
-			h = "safeZoneH - 0.385";
+			h = "safeZoneH - 0.508";
 			class VScrollbar {
 				width = 0.012;
 				autoScrollEnabled = 0;

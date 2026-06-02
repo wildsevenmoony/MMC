@@ -47,4 +47,5 @@ switch (_mode) do {
 _display setVariable [QGVAR(mailMode), "compose"];
 _display setVariable [QGVAR(composeMode), _mode];
 ["compose"] call FUNC(renderMail);
+call FUNC(resizeMailBody);
 true

@@ -25,6 +25,7 @@ private _activeUser = [_computer] call FUNC(getActiveUser);
 private _title = _display displayCtrl IDC_MMC_APP_TITLE;
 private _list = _display displayCtrl IDC_MMC_APP_LIST;
 private _body = _display displayCtrl IDC_MMC_APP_BODY;
+_body ctrlEnable false;
 private _previewImage = _display displayCtrl IDC_MMC_FILE_PREVIEW_IMAGE;
 private _previewFrame = _display displayCtrl IDC_MMC_FRAME_FILE_PREVIEW_IMAGE;
 private _mediaControls = [
@@ -53,7 +54,9 @@ private _mailControls = [
 	IDC_MMC_MAIL_ATTACHMENT_LABEL,
 	IDC_MMC_MAIL_ATTACHMENT,
 	IDC_MMC_MAIL_BODY_LABEL,
+	IDC_MMC_MAIL_BODY_GROUP,
 	IDC_MMC_MAIL_BODY,
+	IDC_MMC_MAIL_READ_META,
 	IDC_MMC_MAIL_READ_GROUP,
 	IDC_MMC_MAIL_SEND,
 	IDC_MMC_MAIL_CANCEL,

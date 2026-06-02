@@ -48,6 +48,7 @@ class CfgFunctions {
 			class registerObject {};
 			class renderApp {};
 			class renderMail {};
+			class resizeMailBody {};
 			class sendMail {};
 			class setScreenState {};
 			class setPowerState {};
