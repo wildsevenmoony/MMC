@@ -1,49 +1,45 @@
 # Moony's Magnificent Computers
 
-Moony's Magnificent Computers, or MMC, is planned as an Arma 3 framework for interactive in-mission computers. Mission makers will be able to attach a computer system to objects, define whether it starts powered on or off, and let players open a PC-style screen with apps, files, and mission intel.
+Moony's Magnificent Computers, or MMC, is an Arma 3 framework for interactive in-mission computer systems. Mission makers can register laptops, PCs, or other objects as computers and use them for files, pictures, e-mail, user accounts, and mission intel.
 
-## Planned Features
+## Features
 
-- Computer object setup:
-  - Attach an MMC computer to laptops, PCs, or any object through Eden and Zeus tooling.
-  - Configure default power state, background, available users, and starting files.
-- PC screen dialog:
-  - Desktop view with background, task bar, start button, clock, date, and power controls.
-  - Startup and shutdown flow.
-  - Placeholder textures until final art exists.
-- Files and folders:
-  - Mission-defined folder structure.
-  - Text notes and intel files.
-  - Picture files using predefined textures.
-  - Audio playback from configured sounds.
-  - Video support if it proves practical in Arma UI.
-- Programs:
-  - Mail between configured accounts.
-  - Messenger-style conversations.
-  - Text/notes editor.
-  - Extra utility apps as the framework grows.
-- Mission maker tools:
-  - Eden and Zeus modules for creating computers and adding files, mail, messages, or notes.
-  - CBA settings for player profile defaults such as login name, password, and background selection.
+- Register objects as computers through Eden modules, Zeus modules, or script.
+- Open registered computers through ACE interaction.
+- Power states with startup, shutdown, login, desktop, and powered-off flows.
+- PC-style screen with desktop background, taskbar, clock/date, start menu, and app buttons.
+- User accounts with username, password, e-mail address, background, optional forced layout, and closed-system support.
+- Client CBA settings for theme, preferred background, and logging out when the computer dialog is closed.
+- Theme layouts for dark, light, profile color, BLUFOR, OPFOR, Independent, and Civilian styles.
+- File browser with folders for text files, pictures, and audio files.
+- Text files and desktop text support structured text, image tags, and `\n` or `<br/>` line breaks.
+- Picture files support a texture path and description shown below the image.
+- Mail app with inbox, outbox, unread/read state, reply, forward, CC, picture attachment support, and mission-time timestamps.
+- Zeus modules for adding users, text files, pictures, mail, registering computers, changing power state, and modifying desktop text.
+- Eden modules for registering computers, adding users, adding text files, adding pictures, adding mail, and modifying desktop text.
 
 ## Current State
 
-This repository currently contains the initial HEMTT/Git scaffold and the first functional `main` addon slice:
+MMC is playable as a mission-maker tool, but it is still under active development. The current focus is the computer shell, user system, files, pictures, and mail workflow.
 
-- Objects can be registered as MMC computers through script or the `Register Computer` module.
-- Registered computers get an ACE interaction to open the PC screen.
-- The PC screen has a desktop shell, taskbar, start menu, clock/date, power on/off state, and app buttons.
-- Files, Mail, Messenger, and Notes render from the computer data model.
-- Eden/Zeus modules can inject text files and emails into synced computers.
-- CBA player profile settings exist for login name, password placeholder, and preferred background texture.
+Messenger, notes, richer media handling, and more polished computer-screen object textures are still future work. Video support was investigated and intentionally left out for now because Arma UI playback behavior is not reliable enough for the intended workflow.
 
-The next implementation pass should focus on login flow, a richer file explorer/folder model, editable notes, and multiplayer-safe mail/message sending.
+## Mission-Maker Notes
+
+- The `Register Computer` module turns synced objects into MMC computers.
+- The `Add User` module can be synced to specific registered computers. If it is not synced to a computer, the user is treated as globally available to registered computers unless a computer is marked as a closed system.
+- Text, picture, mail, and desktop modules can target users or computers depending on their sync setup.
+- Picture texture paths should point to valid `.paa` textures from the mission or a mod.
+- The file path fields are paths inside the computer's file browser, not necessarily real filesystem paths.
+- Audio playback currently relies on configured mod sounds. Mission-file audio is not treated as a reliable general-purpose file format yet.
 
 ## Requirements
 
 - Arma 3
 - CBA
 - ACE
+- Zeus Enhanced
+- Moony's Magnificent Base
 
 ## Building
 
@@ -58,10 +54,6 @@ hemtt release
 ```
 
 Generated build output, releases, private keys, and packed PBO files are ignored by Git.
-
-## Notes
-
-Advanced Equipment's Unix-style computer system is useful prior art for feature ideas and mission workflows. MMC is set up as a fresh project so it can follow Moony's existing mod structure and grow toward a PC-style interface.
 
 ## License
 
