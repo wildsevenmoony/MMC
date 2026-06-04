@@ -20,24 +20,11 @@ GVAR(registeredUsers) = [];
 [
 	QGVAR(profileTheme),
 	"LIST",
-	["Theme", "Client-side MMC desktop theme."],
+	["Default Theme", "Used when a mission/user layout is set to Default."],
 	["Moony's Magnificent Computers", "Player Profile"],
 	[
-		["dark", "light", "user", "blufor", "opfor", "independent", "civilian"],
-		["Dark", "Light", "User", "BLUFOR", "OPFOR", "Independent", "Civilian"],
-		0
-	],
-	0
-] call CBA_fnc_addSetting;
-
-[
-	QGVAR(profileBackground),
-	"LIST",
-	["Desktop Background", "Client-side preferred MMC desktop background."],
-	["Moony's Magnificent Computers", "Player Profile"],
-	[
-		["default_dark", "default_light", "nato", "csat", "aaf", "fia"],
-		["Default Dark", "Default Light", "NATO", "CSAT", "AAF", "FIA"],
+		["dark", "light"],
+		["Dark", "Light"],
 		0
 	],
 	0

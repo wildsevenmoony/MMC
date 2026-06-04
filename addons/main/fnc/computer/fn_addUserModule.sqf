@@ -45,30 +45,47 @@ if (_objects isEqualTo []) then {
 private _username = _logic getVariable [QGVAR(userName), "operator"];
 private _password = _logic getVariable [QGVAR(userPassword), ""];
 private _email = _logic getVariable [QGVAR(userEmail), "operator@mmcsystems.com"];
-private _background = _logic getVariable [QGVAR(userBackground), "default_dark"];
-private _backgroundCustom = _logic getVariable [QGVAR(userBackgroundCustom), ""];
-private _forceTheme = _logic getVariable [QGVAR(userForceTheme), ""];
-if (_backgroundCustom isNotEqualTo "") then {
-	_background = _backgroundCustom;
+private _theme = _logic getVariable [QGVAR(userTheme), _logic getVariable [QGVAR(userBackground), "default"]];
+private _customLayout = _logic getVariable [QGVAR(customLayout), createHashMap];
+if !(_customLayout isEqualType createHashMap) then {
+	_customLayout = createHashMap;
+};
+
+private _legacyBackgroundCustom = _logic getVariable [QGVAR(userBackgroundCustom), ""];
+if (_legacyBackgroundCustom isNotEqualTo "" && {count _customLayout == 0}) then {
+	_customLayout = createHashMapFromArray [
+		["preset", _theme],
+		["useCustomColors", false],
+		["background", _legacyBackgroundCustom],
+		["colors", createHashMap]
+	];
 };
 
 _logic setVariable [QGVAR(isUserModule), true, true];
-_logic setVariable [QGVAR(userConfig), createHashMapFromArray [
+private _userConfig = createHashMapFromArray [
 	["username", _username],
 	["password", _password],
 	["email", _email],
-	["background", _background],
-	["forceTheme", _forceTheme]
-], true];
+	["theme", _theme],
+	["scope", "pending"]
+];
+if (count _customLayout > 0) then {
+	_userConfig set ["customLayout", _customLayout];
+};
+_logic setVariable [QGVAR(userConfig), _userConfig, true];
 
 private _computerObjects = _objects select {_x getVariable [QGVAR(isComputer), false]};
+private _scope = "direct";
 if (_computerObjects isEqualTo []) then {
+	_scope = "global";
 	_computerObjects = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
 };
+_userConfig set ["scope", _scope];
+_logic setVariable [QGVAR(userConfig), _userConfig, true];
 
 {
 	if (!isNull _x) then {
-		[_x, _username, _password, _email, _background, _forceTheme] call FUNC(addUser);
+		[_x, _username, _password, _email, _theme, _customLayout, _scope] call FUNC(addUser);
 	};
 } forEach _computerObjects;
 

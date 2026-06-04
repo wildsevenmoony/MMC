@@ -17,6 +17,7 @@ private _data = createHashMap;
 
 _data set ["systemName", _config getOrDefault ["systemName", "MMC Workstation"]];
 _data set ["background", _config getOrDefault ["background", ""]];
+_data set ["layout", _config getOrDefault ["layout", createHashMap]];
 _data set ["closedSystem", _config getOrDefault ["closedSystem", false]];
 _data set ["desktopTitle", _config getOrDefault ["desktopTitle", "Welcome"]];
 _data set ["desktopContent", _config getOrDefault ["desktopContent", "Select an app on the left. Files, Mail, Messenger, and Notes are wired to the computer data model now.<br/><br/>The Start button controls power state."]];

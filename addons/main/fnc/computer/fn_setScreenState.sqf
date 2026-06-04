@@ -2,7 +2,7 @@
 
 /*
  * Author: Moony
- * Applies a placeholder screen texture to the computer object for a state.
+ * Applies the correct in-world screen texture to the computer object for a state.
  *
  * Arguments:
  * 0: Computer object <OBJECT>
@@ -19,18 +19,11 @@ params [
 
 if (isNull _object) exitWith {false};
 
-private _data = _object getVariable [QGVAR(data), createHashMap];
-private _screenTextures = _data getOrDefault ["screenTextures", createHashMap];
-private _texture = "";
+private _deviceConfig = [_object] call FUNC(getScreenDeviceConfig);
+_deviceConfig params [["_aspect", "1x1", [""]], ["_selection", 0, [0]]];
 
-if (_screenTextures isEqualType createHashMap) then {
-	_texture = _screenTextures getOrDefault [_state, ""];
-};
-
-if (_texture isEqualTo "") then {
-	_texture = PATHTOF(img\desktop_placeholder.paa);
-};
+private _texture = [_object, _state, _aspect] call FUNC(getScreenTexture);
 
 _object setVariable [QGVAR(screenState), _state, true];
-_object setObjectTextureGlobal [0, _texture];
+_object setObjectTextureGlobal [_selection, _texture];
 true

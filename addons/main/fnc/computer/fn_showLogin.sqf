@@ -15,6 +15,10 @@ _display setVariable [QGVAR(startMenuOpen), false];
 private _computer = _display getVariable [QGVAR(computer), objNull];
 [_computer, "login"] call FUNC(setScreenState);
 
+private _themeConfig = [_display] call FUNC(getThemeConfig);
+(_display displayCtrl IDC_MMC_DESKTOP_IMAGE) ctrlSetText (_themeConfig getOrDefault ["backgroundTexture", PATHTOF(img\desktop_default_dark.paa)]);
+[_display] call FUNC(applyTheme);
+
 {
 	(_display displayCtrl _x) ctrlShow false;
 } forEach [

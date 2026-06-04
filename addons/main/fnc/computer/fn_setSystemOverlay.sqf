@@ -147,8 +147,8 @@ private _barFill = _display displayCtrl IDC_MMC_BOOT_BAR_FILL;
 private _title = _display displayCtrl IDC_MMC_BOOT_TITLE;
 private _status = _display displayCtrl IDC_MMC_BOOT_STATUS;
 private _stage = _display displayCtrl IDC_MMC_BOOT_STAGE;
-private _theme = GVAR(profileTheme);
-private _isLight = _theme isEqualTo "light";
+private _themeConfig = [_display] call FUNC(getThemeConfig);
+private _isLight = _themeConfig getOrDefault ["isLight", false];
 
 _powerScreen ctrlShow _show;
 _barBg ctrlShow (_show && {_progress >= 0});
@@ -158,25 +158,10 @@ _status ctrlShow _show;
 _stage ctrlShow _show;
 
 if (_show) then {
-	private _textColor = if (_isLight) then {[0.035, 0.04, 0.05, 1]} else {[0.92, 0.94, 0.97, 1]};
-	private _overlayColor = if (_isLight) then {[0.9, 0.92, 0.94, 0.96]} else {[0, 0, 0, 0.96]};
-	private _barBackground = if (_isLight) then {[0.08, 0.1, 0.12, 0.22]} else {[1, 1, 1, 0.22]};
-	private _barColor = if (_isLight) then {[0.18, 0.24, 0.32, 0.98]} else {[0.13, 0.54, 0.21, 0.95]};
-
-	switch (_theme) do {
-		case "user": {
-			_barColor = [
-				profileNamespace getVariable ["GUI_BCG_RGB_R", 0.13],
-				profileNamespace getVariable ["GUI_BCG_RGB_G", 0.54],
-				profileNamespace getVariable ["GUI_BCG_RGB_B", 0.21],
-				profileNamespace getVariable ["GUI_BCG_RGB_A", 0.8]
-			];
-		};
-		case "blufor": {_barColor = [0, 0.333, 0.706, 0.95]};
-		case "opfor": {_barColor = [0.886, 0, 0, 0.95]};
-		case "independent": {_barColor = [0, 0.561, 0, 0.95]};
-		case "civilian": {_barColor = [0.631, 0, 0.706, 0.95]};
-	};
+	private _textColor = _themeConfig getOrDefault ["text", [[0.92, 0.94, 0.97, 1], [0.035, 0.04, 0.05, 1]] select _isLight];
+	private _overlayColor = _themeConfig getOrDefault ["powerBackground", [[0, 0, 0, 0.96], [0.9, 0.92, 0.94, 0.96]] select _isLight];
+	private _barBackground = _themeConfig getOrDefault ["bootBarBg", [[1, 1, 1, 0.22], [0.08, 0.1, 0.12, 0.22]] select _isLight];
+	private _barColor = _themeConfig getOrDefault ["bootAccent", [[0.13, 0.54, 0.21, 0.95], [0.18, 0.24, 0.32, 0.98]] select _isLight];
 
 	_powerScreen ctrlSetBackgroundColor _overlayColor;
 	_barBg ctrlSetBackgroundColor _barBackground;

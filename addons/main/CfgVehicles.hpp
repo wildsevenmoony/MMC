@@ -35,34 +35,6 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
-			class GVAR(background): Combo {
-				property = QGVAR(background);
-				displayName = "Background";
-				tooltip = "Preset desktop background. Ignored if Custom Background Texture is filled.";
-				typeName = "STRING";
-				defaultValue = "''";
-				expression = "_this setVariable ['%s', _value, true];";
-
-				class Values {
-					class None {name = ""; value = "";};
-					class DefaultDark {name = "Default Dark"; value = "default_dark";};
-					class DefaultLight {name = "Default Light"; value = "default_light";};
-					class NATO {name = "NATO"; value = "nato";};
-					class CSAT {name = "CSAT"; value = "csat";};
-					class AAF {name = "AAF"; value = "aaf";};
-					class FIA {name = "FIA"; value = "fia";};
-				};
-			};
-
-			class GVAR(backgroundCustom): Edit {
-				property = QGVAR(backgroundCustom);
-				displayName = "Custom Background Texture";
-				tooltip = "Optional texture path. If filled, this overrides the Background selection above.";
-				typeName = "STRING";
-				defaultValue = "''";
-				expression = "_this setVariable ['%s', _value, true];";
-			};
-
 			class GVAR(closedSystem): Checkbox {
 				property = QGVAR(closedSystem);
 				displayName = "Closed System";
@@ -136,50 +108,19 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
-			class GVAR(userBackground): Combo {
-				property = QGVAR(userBackground);
-				displayName = "Background";
-				tooltip = "Preset desktop background for this user. Ignored if Custom Background Texture is filled.";
+			class GVAR(userTheme): Combo {
+				property = QGVAR(userTheme);
+				displayName = "Theme";
+				tooltip = "Preset layout and desktop background for this user. Default uses the client's CBA Default Theme.";
 				typeName = "STRING";
-				defaultValue = "'default_dark'";
+				defaultValue = "'default'";
 				expression = "_this setVariable ['%s', _value, true];";
 
 				class Values {
-					class DefaultDark {name = "Default Dark"; value = "default_dark";};
-					class DefaultLight {name = "Default Light"; value = "default_light";};
+					class Default {name = "Default"; value = "default";};
 					class NATO {name = "NATO"; value = "nato";};
 					class CSAT {name = "CSAT"; value = "csat";};
 					class AAF {name = "AAF"; value = "aaf";};
-					class FIA {name = "FIA"; value = "fia";};
-				};
-			};
-
-			class GVAR(userBackgroundCustom): Edit {
-				property = QGVAR(userBackgroundCustom);
-				displayName = "Custom Background Texture";
-				tooltip = "Optional texture path. If filled, this overrides the Background selection above.";
-				typeName = "STRING";
-				defaultValue = "''";
-				expression = "_this setVariable ['%s', _value, true];";
-			};
-
-			class GVAR(userForceTheme): Combo {
-				property = QGVAR(userForceTheme);
-				displayName = "Force Layout";
-				tooltip = "Optional layout override for this user. If set, it ignores the player's CBA Theme setting while this user is logged in.";
-				typeName = "STRING";
-				defaultValue = "''";
-				expression = "_this setVariable ['%s', _value, true];";
-
-				class Values {
-					class None {name = "None"; value = "";};
-					class Dark {name = "Dark"; value = "dark";};
-					class Light {name = "Light"; value = "light";};
-					class User {name = "User"; value = "user";};
-					class BLUFOR {name = "BLUFOR"; value = "blufor";};
-					class OPFOR {name = "OPFOR"; value = "opfor";};
-					class Independent {name = "Independent"; value = "independent";};
-					class Civilian {name = "Civilian"; value = "civilian";};
 				};
 			};
 
@@ -187,7 +128,7 @@ class CfgVehicles {
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync an MMC computer object to add a login user to that computer.";
+			description = "Sync an MMC computer object to add a login user to that computer. If no computer is synced, the user is added to all registered MMC computers.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
@@ -197,6 +138,214 @@ class CfgVehicles {
 				optional = 0;
 				duplicate = 1;
 				synced[] = {"AnyStaticObject", "AnyVehicle"};
+			};
+		};
+	};
+
+	class GVAR(customLayout): Module_F {
+		category = QGVAR(Modules);
+		displayName = "Computer: Layout";
+		function = QFUNC(customLayoutModule);
+		functionPriority = 25;
+		isDisposable = 0;
+		is3DEN = 1;
+		isGlobal = 0;
+		isTriggerActivated = 0;
+		scope = 2;
+
+		class Attributes: AttributesBase {
+			class GVAR(customLayoutPreset): Combo {
+				property = QGVAR(customLayoutPreset);
+				displayName = "Preset";
+				tooltip = "Base layout and desktop background preset for the computer. Default uses the client's CBA Default Theme.";
+				typeName = "STRING";
+				defaultValue = "'default'";
+				expression = "_this setVariable ['%s', _value, true];";
+
+				class Values {
+					class Default {name = "Default"; value = "default";};
+					class NATO {name = "NATO"; value = "nato";};
+					class CSAT {name = "CSAT"; value = "csat";};
+					class AAF {name = "AAF"; value = "aaf";};
+				};
+			};
+
+			class GVAR(customLayoutUseCustomColors): Checkbox {
+				property = QGVAR(customLayoutUseCustomColors);
+				displayName = "Custom Color Scheme";
+				tooltip = "If enabled, the Preset color scheme is ignored and the custom color fields below are used. Empty or invalid fields fall back to a readable dark base.";
+				typeName = "BOOL";
+				defaultValue = "false";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutDesktopColor): Edit {
+				property = QGVAR(customLayoutDesktopColor);
+				displayName = "Desktop Color";
+				tooltip = "Hex color, e.g. 0B1320 or #0B1320. Used when Custom Color Scheme is enabled.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutPanelColor): Edit {
+				property = QGVAR(customLayoutPanelColor);
+				displayName = "Window Color";
+				tooltip = "Hex color for content boxes and lists.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutPanelStrongColor): Edit {
+				property = QGVAR(customLayoutPanelStrongColor);
+				displayName = "Menu Bar Color";
+				tooltip = "Hex color for task bars, title bars, and strong panels.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutButtonColor): Edit {
+				property = QGVAR(customLayoutButtonColor);
+				displayName = "Button Color";
+				tooltip = "Hex color for buttons.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutButtonHoverColor): Edit {
+				property = QGVAR(customLayoutButtonHoverColor);
+				displayName = "Button Hover Color";
+				tooltip = "Hex color for hovered buttons.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutAccentColor): Edit {
+				property = QGVAR(customLayoutAccentColor);
+				displayName = "Accent Color";
+				tooltip = "Hex color for progress bars and small highlight elements.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutTextColor): Edit {
+				property = QGVAR(customLayoutTextColor);
+				displayName = "Text Color";
+				tooltip = "Hex color for readable UI text.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutBorderColor): Edit {
+				property = QGVAR(customLayoutBorderColor);
+				displayName = "Border Color";
+				tooltip = "Hex color for button and window outlines.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutBackground): Edit {
+				property = QGVAR(customLayoutBackground);
+				displayName = "Custom Desktop Picture";
+				tooltip = "Optional texture path. If filled, this overrides the Preset desktop background while keeping either preset or custom colors.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutScreen1x1Login): Edit {
+				property = QGVAR(customLayoutScreen1x1Login);
+				displayName = "Screen 1x1 Login";
+				tooltip = "Optional 1024x1024 in-world screen texture for the login state. Leave empty to use the Preset image.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutScreen1x1Desktop): Edit {
+				property = QGVAR(customLayoutScreen1x1Desktop);
+				displayName = "Screen 1x1 Desktop";
+				tooltip = "Optional 1024x1024 in-world screen texture for the desktop state. Leave empty to use the Preset image.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutScreen1x1Startup): Edit {
+				property = QGVAR(customLayoutScreen1x1Startup);
+				displayName = "Screen 1x1 Startup";
+				tooltip = "Optional 1024x1024 in-world screen texture for the startup state. Leave empty to use the Preset image.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutScreen1x1Shutdown): Edit {
+				property = QGVAR(customLayoutScreen1x1Shutdown);
+				displayName = "Screen 1x1 Shutdown";
+				tooltip = "Optional 1024x1024 in-world screen texture for powered-off and shutdown states. Leave empty to use the Preset image.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutScreen2x1Login): Edit {
+				property = QGVAR(customLayoutScreen2x1Login);
+				displayName = "Screen 2x1 Login";
+				tooltip = "Optional 1024x512 in-world screen texture for the login state. Leave empty to use the Preset image.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutScreen2x1Desktop): Edit {
+				property = QGVAR(customLayoutScreen2x1Desktop);
+				displayName = "Screen 2x1 Desktop";
+				tooltip = "Optional 1024x512 in-world screen texture for the desktop state. Leave empty to use the Preset image.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutScreen2x1Startup): Edit {
+				property = QGVAR(customLayoutScreen2x1Startup);
+				displayName = "Screen 2x1 Startup";
+				tooltip = "Optional 1024x512 in-world screen texture for the startup state. Leave empty to use the Preset image.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutScreen2x1Shutdown): Edit {
+				property = QGVAR(customLayoutScreen2x1Shutdown);
+				displayName = "Screen 2x1 Shutdown";
+				tooltip = "Optional 1024x512 in-world screen texture for powered-off and shutdown states. Leave empty to use the Preset image.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class ModuleDescription: ModuleDescription {};
+		};
+
+		class ModuleDescription: ModuleDescription {
+			description = "Sync this module to one or more Register Computer modules or registered computers to set their pre-login layout/background.";
+			sync[] = {"LocationArea_F"};
+
+			class LocationArea_F {
+				description[] = {"Synchronise one or more Register Computer modules or registered MMC computer objects."};
+				position = 0;
+				direction = 0;
+				optional = 0;
+				duplicate = 1;
+				synced[] = {QGVAR(registerComputer), "AnyStaticObject", "AnyVehicle"};
 			};
 		};
 	};
@@ -353,7 +502,7 @@ class CfgVehicles {
 				displayName = "Date";
 				tooltip = "Mail date in YYYY-MM-DD format. Leave empty or enter an invalid value to use the current mission date.";
 				typeName = "STRING";
-				defaultValue = "''";
+				defaultValue = "'2026-01-01'";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
@@ -362,7 +511,7 @@ class CfgVehicles {
 				displayName = "Time";
 				tooltip = "Mail time in HH:MM format. Leave empty or enter an invalid value to use the current mission time.";
 				typeName = "STRING";
-				defaultValue = "''";
+				defaultValue = "'00:00'";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 

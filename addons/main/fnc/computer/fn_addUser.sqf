@@ -10,8 +10,9 @@ params [
 	["_username", "operator", [""]],
 	["_password", "", [""]],
 	["_email", "", [""]],
-	["_background", "default_dark", [""]],
-	["_forceTheme", "", [""]]
+	["_theme", "default", [""]],
+	["_customLayout", createHashMap, [createHashMap]],
+	["_scope", "global", [""]]
 ];
 
 if (isNull _object) exitWith {false};
@@ -29,12 +30,16 @@ private _user = createHashMapFromArray [
 	["username", _username],
 	["password", _password],
 	["email", _email],
-	["background", _background],
-	["forceTheme", _forceTheme],
+	["theme", _theme],
+	["scope", _scope],
 	["files", []],
 	["mail", []],
 	["source", "module"]
 ];
+
+if (count _customLayout > 0) then {
+	_user set ["customLayout", _customLayout];
+};
 
 private _index = _users findIf {toLowerANSI (_x getOrDefault ["username", ""]) isEqualTo _lookup};
 if (_index < 0) then {
@@ -47,6 +52,12 @@ if (_index < 0) then {
 	_user set ["desktopTitle", _existing getOrDefault ["desktopTitle", _user getOrDefault ["desktopTitle", ""]]];
 	_user set ["desktopContent", _existing getOrDefault ["desktopContent", _user getOrDefault ["desktopContent", ""]]];
 	_user set ["desktopAlign", _existing getOrDefault ["desktopAlign", _user getOrDefault ["desktopAlign", "left"]]];
+	if (count _customLayout == 0 && {_existing getOrDefault ["customLayout", createHashMap] isEqualType createHashMap}) then {
+		private _existingLayout = _existing getOrDefault ["customLayout", createHashMap];
+		if (count _existingLayout > 0) then {
+			_user set ["customLayout", _existingLayout];
+		};
+	};
 	_users set [_index, _user];
 };
 

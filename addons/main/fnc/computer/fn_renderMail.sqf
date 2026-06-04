@@ -178,8 +178,8 @@ _table ctrlShow true;
 _header ctrlSetText (["Inbox", "Outbox"] select (_folder isEqualTo "outbox"));
 lnbClear _table;
 
-private _theme = GVAR(profileTheme);
-private _isLight = _theme isEqualTo "light";
+private _themeConfig = [_display] call FUNC(getThemeConfig);
+private _isLight = _themeConfig getOrDefault ["isLight", false];
 private _readIcon = [PATHTOF(img\mail_read_white.paa), PATHTOF(img\mail_read_black.paa)] select _isLight;
 private _unreadIcon = [PATHTOF(img\mail_unread_white.paa), PATHTOF(img\mail_unread_black.paa)] select _isLight;
 private _unreadColor = [[1, 1, 1, 1], [0, 0, 0, 1]] select _isLight;

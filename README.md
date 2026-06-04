@@ -8,15 +8,15 @@ Moony's Magnificent Computers, or MMC, is an Arma 3 framework for interactive in
 - Open registered computers through ACE interaction.
 - Power states with startup, shutdown, login, desktop, and powered-off flows.
 - PC-style screen with desktop background, taskbar, clock/date, start menu, and app buttons.
-- User accounts with username, password, e-mail address, background, optional forced layout, and closed-system support.
-- Client CBA settings for theme, preferred background, and logging out when the computer dialog is closed.
-- Theme layouts for dark, light, profile color, BLUFOR, OPFOR, Independent, and Civilian styles.
+- User accounts with username, password, e-mail address, theme, and closed-system support.
+- Client CBA settings for default dark/light theme preference and logging out when the computer dialog is closed.
+- Theme layouts for Default, NATO, CSAT, and AAF styles, plus an Eden layout module for mission-specific colors and desktop pictures.
 - File browser with folders for text files, pictures, and audio files.
 - Text files and desktop text support structured text, image tags, and `\n` or `<br/>` line breaks.
 - Picture files support a texture path and description shown below the image.
 - Mail app with inbox, outbox, unread/read state, reply, forward, CC, picture attachment support, and mission-time timestamps.
 - Zeus modules for adding users, text files, pictures, mail, registering computers, changing power state, and modifying desktop text.
-- Eden modules for registering computers, adding users, adding text files, adding pictures, adding mail, and modifying desktop text.
+- Eden modules for registering computers, adding users, layouts, adding text files, adding pictures, adding mail, and modifying desktop text.
 
 ## Current State
 
@@ -29,6 +29,9 @@ Messenger, notes, richer media handling, and more polished computer-screen objec
 - The `Register Computer` module turns synced objects into MMC computers.
 - The `Add User` module can be synced to specific registered computers. If it is not synced to a computer, the user is treated as globally available to registered computers unless a computer is marked as a closed system.
 - Text, picture, mail, and desktop modules can target users or computers depending on their sync setup.
+- Startup and login screens use a direct user layout first. If no user is added directly to that computer, they use a synced `Layout` module on the `Register Computer` module or computer object, then fall back to the client default.
+- The `Layout` module syncs to `Register Computer` modules or registered computers and can set preset colors/backgrounds or custom mission-specific colors and a desktop picture.
+- In-world screen textures are applied automatically for supported 1x1 and 2x1 laptop/PC/TV objects. Add more supported device classes in `fn_getScreenDeviceConfig.sqf`.
 - Picture texture paths should point to valid `.paa` textures from the mission or a mod.
 - The file path fields are paths inside the computer's file browser, not necessarily real filesystem paths.
 - Audio playback currently relies on configured mod sounds. Mission-file audio is not treated as a reliable general-purpose file format yet.

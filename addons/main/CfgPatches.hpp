@@ -22,6 +22,7 @@ class CfgPatches {
 		units[] = {
 			QGVAR(registerComputer),
 			QGVAR(addUser),
+			QGVAR(customLayout),
 			QGVAR(addTextFile),
 			QGVAR(addPicture),
 			QGVAR(modifyDesktop),

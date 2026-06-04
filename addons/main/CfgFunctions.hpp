@@ -18,11 +18,16 @@ class CfgFunctions {
 			class addActions {};
 			class canOpen {};
 			class createDefaultData {};
+			class customLayoutModule {};
 			class findUserByEmail {};
 			class formatMailDate {};
 			class getActiveUser {};
 			class getAudioFiles {};
+			class getLayoutFromModule {};
 			class getRegisteredUsers {};
+			class getScreenDeviceConfig {};
+			class getScreenTexture {};
+			class getThemeConfig {};
 			class initDisplay {};
 			class handleDisplayUnload {};
 			class addMailModule {};
@@ -56,6 +61,7 @@ class CfgFunctions {
 			class sendMail {};
 			class seedMail {};
 			class setScreenState {};
+			class setComputerLayout {};
 			class setPowerState {};
 			class setSystemOverlay {};
 			class showLogin {};

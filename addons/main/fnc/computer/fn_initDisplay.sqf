@@ -27,12 +27,8 @@ _display setVariable [QGVAR(startMenuOpen), false];
 private _activeUser = [_computer] call FUNC(getActiveUser);
 _display setVariable [QGVAR(activeUser), _activeUser];
 
-private _background = _data getOrDefault ["background", ""];
-if (count _activeUser > 0) then {
-	_background = _activeUser getOrDefault ["background", _background];
-};
-_background = [_background] call FUNC(getBackgroundPath);
-(_display displayCtrl IDC_MMC_DESKTOP_IMAGE) ctrlSetText _background;
+private _themeConfig = [_display] call FUNC(getThemeConfig);
+(_display displayCtrl IDC_MMC_DESKTOP_IMAGE) ctrlSetText (_themeConfig getOrDefault ["backgroundTexture", PATHTOF(img\desktop_default_dark.paa)]);
 
 [_display] call FUNC(applyTheme);
 

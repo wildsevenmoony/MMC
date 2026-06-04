@@ -2,7 +2,7 @@
 
 /*
  * Author: Moony
- * Registers synced objects as MMC computers from an Eden/Zeus module.
+ * Applies an Eden layout module to synced Register Computer modules or computers.
  */
 
 private _logic = objNull;
@@ -42,30 +42,27 @@ if (_objects isEqualTo []) then {
 	_objects = synchronizedObjects _logic;
 };
 
-private _layoutModules = _objects select {typeOf _x isEqualTo QGVAR(customLayout)};
-private _targets = _objects select {!(_x isKindOf "Logic")};
+private _layout = [_logic] call FUNC(getLayoutFromModule);
 
-private _config = createHashMapFromArray [
-	["poweredOn", _logic getVariable [QGVAR(poweredOn), true]],
-	["closedSystem", _logic getVariable [QGVAR(closedSystem), false]],
-	["systemName", _logic getVariable [QGVAR(systemName), "MMC Workstation"]]
-];
-
-private _layout = _logic getVariable [QGVAR(computerLayout), createHashMap];
-if (_layoutModules isNotEqualTo []) then {
-	_layout = [_layoutModules select 0] call FUNC(getLayoutFromModule);
-};
-if (_layout isEqualType createHashMap && {count _layout > 0}) then {
-	_config set ["layout", _layout];
-};
-
-_logic setVariable [QGVAR(registeredComputerObjects), _targets, true];
+private _registerModules = _objects select {typeOf _x isEqualTo QGVAR(registerComputer)};
+private _computerObjects = _objects select {_x getVariable [QGVAR(isComputer), false]};
 
 {
-	if (!isNull _x) then {
-		[_x, _config] call FUNC(registerObject);
+	_x setVariable [QGVAR(computerLayout), _layout, true];
+
+	private _targets = _x getVariable [QGVAR(registeredComputerObjects), []];
+	if (_targets isEqualTo []) then {
+		_targets = (synchronizedObjects _x) select {_x getVariable [QGVAR(isComputer), false]};
 	};
-} forEach _targets;
+
+	{
+		[_x, _layout] call FUNC(setComputerLayout);
+	} forEach _targets;
+} forEach _registerModules;
+
+{
+	[_x, _layout] call FUNC(setComputerLayout);
+} forEach _computerObjects;
 
 if (!is3DEN) then {
 	deleteVehicle _logic;

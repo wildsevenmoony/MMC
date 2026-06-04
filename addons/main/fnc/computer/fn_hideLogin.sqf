@@ -41,11 +41,8 @@ private _username = _activeUser getOrDefault ["username", ""];
 
 (_display displayCtrl IDC_MMC_USER) ctrlSetText format ["%1  |  %2", _username, _systemName];
 
-private _background = _activeUser getOrDefault ["background", ""];
-if (_background isEqualTo "") then {
-	_background = _data getOrDefault ["background", ""];
-};
-(_display displayCtrl IDC_MMC_DESKTOP_IMAGE) ctrlSetText ([_background] call FUNC(getBackgroundPath));
+private _themeConfig = [_display] call FUNC(getThemeConfig);
+(_display displayCtrl IDC_MMC_DESKTOP_IMAGE) ctrlSetText (_themeConfig getOrDefault ["backgroundTexture", PATHTOF(img\desktop_default_dark.paa)]);
 
 [_display] call FUNC(applyTheme);
 
