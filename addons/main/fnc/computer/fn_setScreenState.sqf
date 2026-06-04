@@ -19,6 +19,10 @@ params [
 
 if (isNull _object) exitWith {false};
 
+if (_object getVariable [QGVAR(destroyed), false]) then {
+	_state = "broken";
+};
+
 private _deviceConfig = [_object] call FUNC(getScreenDeviceConfig);
 _deviceConfig params [["_aspect", "1x1", [""]], ["_selection", 0, [0]]];
 

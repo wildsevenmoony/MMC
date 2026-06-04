@@ -104,6 +104,10 @@ private _themeConfig = [_display] call FUNC(getThemeConfig);
 
 [] call FUNC(updateClock);
 
+if (_computer getVariable [QGVAR(booting), false]) exitWith {
+	[_display, true, ["MMC", "Starting system...", "Powering hardware interfaces"], 0.08] call FUNC(setSystemOverlay);
+};
+
 if (count _activeUser == 0) then {
 	[_display] call FUNC(showLogin);
 } else {

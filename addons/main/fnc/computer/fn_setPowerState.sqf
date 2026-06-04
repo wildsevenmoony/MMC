@@ -18,6 +18,10 @@ params [
 ];
 
 if (isNull _object) exitWith {false};
+if (!alive _object || {_object getVariable [QGVAR(destroyed), false]}) exitWith {
+	[_object] call FUNC(handleDestroyed);
+	false
+};
 
 _object setVariable [QGVAR(poweredOn), _poweredOn, true];
 if (!_poweredOn) then {

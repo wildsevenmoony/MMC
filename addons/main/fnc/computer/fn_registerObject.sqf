@@ -21,10 +21,25 @@ if (isNull _object) exitWith {objNull};
 
 _object setVariable [QGVAR(isComputer), true, true];
 _object setVariable [QGVAR(config), _config, true];
+_object setVariable [QGVAR(destroyed), !alive _object, true];
 _object setVariable [QGVAR(poweredOn), _config getOrDefault ["poweredOn", true], true];
 _object setVariable [QGVAR(booting), false, true];
 _object setVariable [QGVAR(activeUser), createHashMap, true];
 _object setVariable [QGVAR(data), _config getOrDefault ["data", [_config] call FUNC(createDefaultData)], true];
+
+if !(_object getVariable [QGVAR(destroyedEhAdded), false]) then {
+	_object setVariable [QGVAR(destroyedEhAdded), true];
+	_object addEventHandler ["Killed", {
+		params ["_object"];
+		[_object] call MMC_fnc_handleDestroyed;
+	}];
+};
+
+if (_object getVariable [QGVAR(destroyed), false]) exitWith {
+	[_object] call FUNC(handleDestroyed);
+	_object
+};
+
 [_object, ["powered_off", "login"] select (_object getVariable [QGVAR(poweredOn), true])] call FUNC(setScreenState);
 
 if !(GVAR(registeredComputers) isEqualType []) then {

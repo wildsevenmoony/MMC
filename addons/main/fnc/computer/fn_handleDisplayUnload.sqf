@@ -13,6 +13,15 @@ params [
 if (!isNull _display && {GVAR(logoutOnClose)}) then {
 	private _computer = _display getVariable [QGVAR(computer), objNull];
 	[_computer] call FUNC(logout);
+	if (
+		!isNull _computer
+		&& {alive _computer}
+		&& {!(_computer getVariable [QGVAR(destroyed), false])}
+		&& {_computer getVariable [QGVAR(poweredOn), true]}
+		&& {!(_computer getVariable [QGVAR(booting), false])}
+	) then {
+		[_computer, "login"] call FUNC(setScreenState);
+	};
 };
 
 if (!isNull _display) then {

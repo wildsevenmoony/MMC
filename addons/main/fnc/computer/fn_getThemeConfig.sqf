@@ -105,6 +105,7 @@ private _config = createHashMapFromArray [
 	["button", [0.028, 0.032, 0.042, 0.98]],
 	["buttonHover", [0.07, 0.078, 0.096, 0.98]],
 	["buttonText", [0.92, 0.94, 0.97, 1]],
+	["buttonHoverText", [0.92, 0.94, 0.97, 1]],
 	["bootAccent", [0.13, 0.54, 0.21, 0.95]],
 	["border", [0, 0, 0, 0.85]],
 	["bootBarBg", [1, 1, 1, 0.22]],
@@ -120,6 +121,7 @@ switch (_themeName) do {
 		_config set ["button", [0.88, 0.895, 0.91, 0.98]];
 		_config set ["buttonHover", [0.76, 0.78, 0.81, 0.98]];
 		_config set ["buttonText", [0.035, 0.04, 0.05, 1]];
+		_config set ["buttonHoverText", [1, 1, 1, 1]];
 		_config set ["bootAccent", [0.18, 0.24, 0.32, 0.98]];
 		_config set ["border", [0.1, 0.12, 0.14, 0.75]];
 		_config set ["bootBarBg", [0.08, 0.1, 0.12, 0.18]];
@@ -211,6 +213,7 @@ if (_useCustomColors) then {
 		[_config, _colors, "text", "text", 1, _parseHexColor] call _applyColor;
 		[_config, _colors, "border", "border", 0.85, _parseHexColor] call _applyColor;
 		_config set ["buttonText", _config getOrDefault ["text", [0.92, 0.94, 0.97, 1]]];
+		_config set ["buttonHoverText", _config getOrDefault ["text", [0.92, 0.94, 0.97, 1]]];
 	};
 };
 

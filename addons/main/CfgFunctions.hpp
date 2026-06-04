@@ -29,6 +29,8 @@ class CfgFunctions {
 			class getScreenTexture {};
 			class getThemeConfig {};
 			class initDisplay {};
+			class handleDestroyed {};
+			class handleDestroyedLocal {};
 			class handleDisplayUnload {};
 			class addMailModule {};
 			class addPictureModule {};

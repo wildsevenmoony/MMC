@@ -19,12 +19,18 @@ params [
 	["_aspect", "1x1", [""]]
 ];
 
-private _screenState = switch (toLowerANSI _state) do {
+private _rawState = toLowerANSI _state;
+if (_rawState isEqualTo "broken" || {_object getVariable [QGVAR(destroyed), false]}) exitWith {
+	format ["\z\mmc\addons\main\img\screen_%1_broken.paa", _aspect]
+};
+
+if (_rawState isEqualTo "powered_off") exitWith {"#(argb,8,8,3)color(0,0,0,0,co)"};
+
+private _screenState = switch (_rawState) do {
 	case "startup": {"startup"};
 	case "login": {"login"};
 	case "desktop": {"desktop"};
-	case "power_down";
-	case "powered_off": {"shutdown"};
+	case "power_down": {"shutdown"};
 	default {"desktop"};
 };
 
@@ -37,12 +43,13 @@ private _normalizeTheme = {
 	params [["_value", "default", [""]], ["_fallback", "dark", [""]]];
 
 	private _normalized = toLowerANSI _value;
+	private _normalizedFallback = ["default", "default_light"] select ((toLowerANSI _fallback) isEqualTo "light");
 	switch (_normalized) do {
-		case "";
-		case "default": {_fallback};
-		case "dark";
+		case "": {_normalizedFallback};
+		case "default": {_normalizedFallback};
+		case "dark": {"default"};
 		case "default_dark": {"default"};
-		case "light";
+		case "light": {"default_light"};
 		case "default_light": {"default_light"};
 		case "blufor": {"nato"};
 		case "opfor": {"csat"};

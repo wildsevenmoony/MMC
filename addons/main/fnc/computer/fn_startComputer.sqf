@@ -18,6 +18,8 @@ params [
 ];
 
 if (isNull _object || {!(_object getVariable [QGVAR(isComputer), false])}) exitWith {false};
+if (!alive _object || {_object getVariable [QGVAR(destroyed), false]}) exitWith {false};
+
 if (_object getVariable [QGVAR(poweredOn), true]) exitWith {
 	if (_openAfterBoot) then {
 		[_object] call FUNC(open);
@@ -80,6 +82,9 @@ _object setVariable [QGVAR(booting), true, true];
 	};
 
 	if (isNull _object) exitWith {};
+	if (!alive _object || {_object getVariable [QGVAR(destroyed), false]}) exitWith {
+		[_object] call MMC_fnc_handleDestroyed;
+	};
 
 	_object setVariable [QGVAR(poweredOn), true, true];
 	_object setVariable [QGVAR(booting), false, true];
@@ -95,7 +100,7 @@ _object setVariable [QGVAR(booting), true, true];
 				["desktop"] call FUNC(renderApp);
 			};
 		} else {
-			[_object] call FUNC(open);
+			[_object, ["desktop", "login"] select (count ([_object] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);
 		};
 	} else {
 		[_object, ["desktop", "login"] select (count ([_object] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);

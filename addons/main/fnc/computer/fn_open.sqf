@@ -15,6 +15,11 @@ params [["_object", objNull, [objNull]]];
 
 if (isNull _object || {!(_object getVariable [QGVAR(isComputer), false])}) exitWith {false};
 
+if (!alive _object || {_object getVariable [QGVAR(destroyed), false]}) exitWith {
+	["This computer is destroyed.", 1.5, player, 12] call ace_common_fnc_displayTextStructured;
+	false
+};
+
 if (_object getVariable [QGVAR(booting), false]) exitWith {
 	hint "The computer is booting.";
 	false

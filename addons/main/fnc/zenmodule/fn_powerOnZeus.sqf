@@ -14,6 +14,10 @@ if (isNull _objectUnderCursor || {!(_objectUnderCursor getVariable [QGVAR(isComp
 	[objNull, "PLACE ON AN MMC COMPUTER"] call BIS_fnc_showCuratorFeedbackMessage;
 };
 
+if (!alive _objectUnderCursor || {_objectUnderCursor getVariable [QGVAR(destroyed), false]}) exitWith {
+	[objNull, "COMPUTER IS DESTROYED"] call BIS_fnc_showCuratorFeedbackMessage;
+};
+
 if (_objectUnderCursor getVariable [QGVAR(poweredOn), false]) exitWith {
 	[objNull, "COMPUTER IS ALREADY ON"] call BIS_fnc_showCuratorFeedbackMessage;
 };

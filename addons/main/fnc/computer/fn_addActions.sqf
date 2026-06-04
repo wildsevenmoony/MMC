@@ -36,6 +36,8 @@ private _startAction = [
 	{[_target, true] call FUNC(startComputer)},
 	{
 		(_target getVariable [QGVAR(isComputer), false])
+		&& {alive _target}
+		&& {!(_target getVariable [QGVAR(destroyed), false])}
 		&& {!(_target getVariable [QGVAR(poweredOn), true])}
 		&& {!(_target getVariable [QGVAR(booting), false])}
 	}
