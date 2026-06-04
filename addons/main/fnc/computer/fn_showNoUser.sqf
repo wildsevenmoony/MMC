@@ -2,7 +2,13 @@
 
 /*
  * Author: Moony
- * Shows the login screen and hides the desktop shell.
+ * Shows a login-style notice for no-login computers without a configured user.
+ *
+ * Arguments:
+ * 0: Display <DISPLAY>
+ *
+ * Return Value:
+ * None
  */
 
 params [["_display", displayNull, [displayNull]]];
@@ -14,39 +20,12 @@ if (isNull _display) exitWith {};
 _display setVariable [QGVAR(startMenuOpen), false];
 
 private _computer = _display getVariable [QGVAR(computer), objNull];
-private _data = _computer getVariable [QGVAR(data), createHashMap];
-if (!(_data getOrDefault ["loginRequired", true])) exitWith {
-	private _activeUser = [_computer] call FUNC(ensureAutoLoginUser);
-	if (count _activeUser == 0) then {
-		[_display] call FUNC(showNoUser);
-	} else {
-		[_display] call FUNC(hideLogin);
-		["desktop"] call FUNC(renderApp);
-	};
-};
-
 [_computer, "login"] call FUNC(setScreenState);
 
 private _themeConfig = [_display] call FUNC(getThemeConfig);
+private _textColor = _themeConfig getOrDefault ["text", [0.92, 0.94, 0.97, 1]];
 (_display displayCtrl IDC_MMC_DESKTOP_IMAGE) ctrlSetText (_themeConfig getOrDefault ["backgroundTexture", PATHTOF(img\desktop_default_dark.paa)]);
 [_display] call FUNC(applyTheme);
-
-(_display displayCtrl IDC_MMC_LOGIN_TITLE) ctrlSetText "Sign in";
-(_display displayCtrl IDC_MMC_LOGIN_ERROR) ctrlSetTextColor [1, 0.25, 0.25, 1];
-(_display displayCtrl IDC_MMC_LOGIN_ERROR) ctrlSetPosition [
-	safeZoneX + safeZoneW * 0.39,
-	safeZoneY + safeZoneH * 0.525,
-	safeZoneW * 0.22,
-	0.028
-];
-(_display displayCtrl IDC_MMC_LOGIN_ERROR) ctrlCommit 0;
-{
-	(_display displayCtrl (_x select 0)) ctrlSetPosition (_x select 1);
-	(_display displayCtrl (_x select 0)) ctrlCommit 0;
-} forEach [
-	[IDC_MMC_LOGIN_SHUTDOWN, [safeZoneX + safeZoneW * 0.548, safeZoneY + safeZoneH * 0.545, safeZoneW * 0.072, 0.052]],
-	[IDC_MMC_FRAME_LOGIN_SHUTDOWN, [safeZoneX + safeZoneW * 0.548, safeZoneY + safeZoneH * 0.545, safeZoneW * 0.072, 0.052]]
-];
 
 {
 	(_display displayCtrl _x) ctrlShow false;
@@ -120,16 +99,10 @@ private _themeConfig = [_display] call FUNC(getThemeConfig);
 	IDC_MMC_FRAME_FILE_PREVIEW_IMAGE,
 	IDC_MMC_FRAME_FILE_DESCRIPTION,
 	IDC_MMC_FRAME_MAIL_TABLE,
-	IDC_MMC_FRAME_START_BUTTON
-];
-
-{
-	(_display displayCtrl _x) ctrlShow true;
-} forEach [
-	IDC_MMC_LOGIN_PANEL,
-	IDC_MMC_LOGIN_TITLE,
+	IDC_MMC_FRAME_START_BUTTON,
 	IDC_MMC_LOGIN_USERNAME_LABEL,
 	IDC_MMC_LOGIN_USERNAME,
+	IDC_MMC_FRAME_LOGIN_USERNAME,
 	IDC_MMC_LOGIN_PASSWORD_LABEL,
 	IDC_MMC_LOGIN_PASSWORD,
 	IDC_MMC_LOGIN_PASSWORD_VISIBLE,
@@ -137,21 +110,46 @@ private _themeConfig = [_display] call FUNC(getThemeConfig);
 	IDC_MMC_LOGIN_PASSWORD_TOGGLE,
 	IDC_MMC_FRAME_LOGIN_PASSWORD_TOGGLE,
 	IDC_MMC_LOGIN_BUTTON,
-	IDC_MMC_FRAME_LOGIN_BUTTON,
-	IDC_MMC_LOGIN_SHUTDOWN,
-	IDC_MMC_FRAME_LOGIN_SHUTDOWN,
-	IDC_MMC_LOGIN_ERROR,
-	IDC_MMC_FRAME_LOGIN_PANEL,
-	IDC_MMC_FRAME_LOGIN_USERNAME
+	IDC_MMC_FRAME_LOGIN_BUTTON
 ];
 
-(_display displayCtrl IDC_MMC_LOGIN_USERNAME) ctrlSetText "";
-(_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlSetText "";
-(_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE) ctrlSetText "";
-(_display displayCtrl IDC_MMC_LOGIN_PASSWORD_VISIBLE) ctrlShow false;
-(_display displayCtrl IDC_MMC_LOGIN_PASSWORD) ctrlShow true;
-(_display displayCtrl IDC_MMC_LOGIN_PASSWORD_TOGGLE) ctrlSetText "Show";
-_display setVariable [QGVAR(passwordVisible), false];
-_display setVariable [QGVAR(loginPassword), ""];
-(_display displayCtrl IDC_MMC_LOGIN_ERROR) ctrlSetStructuredText parseText "";
-ctrlSetFocus (_display displayCtrl IDC_MMC_LOGIN_USERNAME);
+{
+	(_display displayCtrl _x) ctrlShow true;
+} forEach [
+	IDC_MMC_LOGIN_PANEL,
+	IDC_MMC_FRAME_LOGIN_PANEL,
+	IDC_MMC_LOGIN_TITLE,
+	IDC_MMC_LOGIN_ERROR,
+	IDC_MMC_LOGIN_SHUTDOWN,
+	IDC_MMC_FRAME_LOGIN_SHUTDOWN
+];
+
+private _title = _display displayCtrl IDC_MMC_LOGIN_TITLE;
+private _message = _display displayCtrl IDC_MMC_LOGIN_ERROR;
+private _shutdown = _display displayCtrl IDC_MMC_LOGIN_SHUTDOWN;
+private _shutdownFrame = _display displayCtrl IDC_MMC_FRAME_LOGIN_SHUTDOWN;
+
+_title ctrlSetText "No user configured";
+_message ctrlSetTextColor _textColor;
+_message ctrlSetStructuredText parseText "<t align='center' size='1.08'>This computer has no login screen and needs one directly synced Add User module.</t>";
+
+_message ctrlSetPosition [
+	safeZoneX + safeZoneW * 0.39,
+	safeZoneY + safeZoneH * 0.41,
+	safeZoneW * 0.22,
+	0.085
+];
+_message ctrlCommit 0;
+
+{
+	_x ctrlSetPosition [
+		safeZoneX + safeZoneW * 0.455,
+		safeZoneY + safeZoneH * 0.52,
+		safeZoneW * 0.09,
+		0.052
+	];
+	_x ctrlCommit 0;
+} forEach [_shutdown, _shutdownFrame];
+
+_shutdown ctrlSetText "Shut Down";
+ctrlSetFocus _shutdown;

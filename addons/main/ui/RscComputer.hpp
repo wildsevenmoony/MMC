@@ -16,6 +16,7 @@ class GVAR(RscComputerEditMulti): RscEdit {
 
 class GVAR(RscComputerButton): RscButton {
 	shadow = 0;
+	text = "";
 	colorShadow[] = {0, 0, 0, 0};
 	colorFocused[] = {0.07, 0.078, 0.096, 0.98};
 	colorBackground2[] = {0.07, 0.078, 0.096, 0.98};
@@ -37,6 +38,30 @@ class GVAR(RscComputerFrame): RscText {
 	text = "";
 	colorText[] = {0, 0, 0, 0.85};
 	colorBackground[] = {0, 0, 0, 0};
+};
+
+class GVAR(RscComputerLine): RscText {
+	shadow = 0;
+	style = 0;
+	text = "";
+	colorText[] = {0, 0, 0, 0};
+	colorBackground[] = {0, 0, 0, 0.85};
+};
+
+class GVAR(RscComputerAppGroup): RscControlsGroup {
+	text = "";
+	x = 0;
+	y = 0;
+	w = 1;
+	h = 1;
+	class VScrollbar {
+		width = 0.012;
+		autoScrollEnabled = 0;
+	};
+	class HScrollbar {
+		height = 0;
+	};
+	class Controls {};
 };
 
 class GVAR(RscComputer) {

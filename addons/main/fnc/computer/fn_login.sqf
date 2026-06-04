@@ -9,8 +9,10 @@ private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (isNull _display) exitWith {};
 
 private _computer = _display getVariable [QGVAR(computer), objNull];
-private _data = _display getVariable [QGVAR(data), createHashMap];
 if (isNull _computer || {!(_computer getVariable [QGVAR(poweredOn), true])}) exitWith {};
+
+private _data = _computer getVariable [QGVAR(data), _display getVariable [QGVAR(data), createHashMap]];
+_display setVariable [QGVAR(data), _data];
 
 private _username = ctrlText (_display displayCtrl IDC_MMC_LOGIN_USERNAME);
 private _password = if (_display getVariable [QGVAR(passwordVisible), false]) then {

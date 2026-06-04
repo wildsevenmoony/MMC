@@ -18,12 +18,44 @@ params [
 if (isNull _object) exitWith {false};
 if (_username isEqualTo "") exitWith {false};
 
+private _disabledAppsProvided = (count _this) > 7;
+private _disabledApps = if (_disabledAppsProvided) then {
+	[_this select 7] call FUNC(normalizeStandardAppIds)
+} else {
+	[]
+};
+
 if (_email isEqualTo "") then {
 	_email = format ["%1@mmcsystems.com", _username];
 };
 _email = [_email, _username] call FUNC(makeUniqueEmail);
 
 private _data = _object getVariable [QGVAR(data), [createHashMap] call FUNC(createDefaultData)];
+private _loginRequired = _data getOrDefault ["loginRequired", true];
+private _autoLoginUsername = _data getOrDefault ["autoLoginUsername", ""];
+private _allowed = true;
+
+if (_data getOrDefault ["closedSystem", false] && {_scope isNotEqualTo "direct"}) then {
+	_allowed = false;
+};
+
+if (!_loginRequired) then {
+	if (_scope isNotEqualTo "direct") then {
+		_allowed = false;
+	} else {
+		if (_autoLoginUsername isEqualTo "") then {
+			_autoLoginUsername = _username;
+			_data set ["autoLoginUsername", _autoLoginUsername];
+		} else {
+			if (toLowerANSI _autoLoginUsername isNotEqualTo toLowerANSI _username) then {
+				_allowed = false;
+			};
+		};
+	};
+};
+
+if (!_allowed) exitWith {false};
+
 private _users = _data getOrDefault ["users", []];
 private _lookup = toLowerANSI _username;
 private _user = createHashMapFromArray [
@@ -32,6 +64,7 @@ private _user = createHashMapFromArray [
 	["email", _email],
 	["theme", _theme],
 	["scope", _scope],
+	["disabledApps", _disabledApps],
 	["files", []],
 	["mail", []],
 	["source", "module"]
@@ -52,6 +85,9 @@ if (_index < 0) then {
 	_user set ["desktopTitle", _existing getOrDefault ["desktopTitle", _user getOrDefault ["desktopTitle", ""]]];
 	_user set ["desktopContent", _existing getOrDefault ["desktopContent", _user getOrDefault ["desktopContent", ""]]];
 	_user set ["desktopAlign", _existing getOrDefault ["desktopAlign", _user getOrDefault ["desktopAlign", "left"]]];
+	if (!_disabledAppsProvided) then {
+		_user set ["disabledApps", _existing getOrDefault ["disabledApps", []]];
+	};
 	if (count _customLayout == 0 && {_existing getOrDefault ["customLayout", createHashMap] isEqualType createHashMap}) then {
 		private _existingLayout = _existing getOrDefault ["customLayout", createHashMap];
 		if (count _existingLayout > 0) then {
@@ -63,6 +99,11 @@ if (_index < 0) then {
 
 _data set ["users", _users];
 _object setVariable [QGVAR(data), _data, true];
+[_object] call FUNC(ensureAutoLoginUser);
+
+if (!_loginRequired && {_object getVariable [QGVAR(poweredOn), true]}) then {
+	[_object, "desktop"] call FUNC(setScreenState);
+};
 
 if !(GVAR(registeredUsers) isEqualType []) then {
 	GVAR(registeredUsers) = [];

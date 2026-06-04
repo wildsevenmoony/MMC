@@ -39,6 +39,12 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 		],
 		[
 			"CHECKBOX",
+			["Login Screen", "If disabled, the computer automatically opens the desktop of its first direct user. Add a user to the computer afterwards if none exists yet."],
+			true,
+			false
+		],
+		[
+			"CHECKBOX",
 			["Closed System", "Closed systems only allow users explicitly added to this computer. Open systems can use globally registered mission users."],
 			false,
 			false
@@ -48,11 +54,35 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 			["Starts Powered On", "If unchecked, Zeus or ACE must start the computer before players can open it."],
 			true,
 			false
+		],
+		[
+			"CHECKBOX",
+			["Files App", "If unchecked, the Files app is hidden for every user on this computer."],
+			true,
+			false
+		],
+		[
+			"CHECKBOX",
+			["Mail App", "If unchecked, the Mail app is hidden for every user on this computer."],
+			true,
+			false
+		],
+		[
+			"CHECKBOX",
+			["Messenger App", "If unchecked, the Messenger app is hidden for every user on this computer."],
+			true,
+			false
+		],
+		[
+			"CHECKBOX",
+			["Notes App", "If unchecked, the Notes app is hidden for every user on this computer."],
+			true,
+			false
 		]
 	],
 	{
 		params ["_dialogValues", "_object"];
-		_dialogValues params ["_systemName", "_theme", "_closedSystem", "_poweredOn"];
+		_dialogValues params ["_systemName", "_theme", "_loginRequired", "_closedSystem", "_poweredOn", "_filesEnabled", "_mailEnabled", "_messagesEnabled", "_notesEnabled"];
 
 		private _layout = createHashMapFromArray [
 			["preset", _theme],
@@ -61,11 +91,19 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 			["colors", createHashMap]
 		];
 
+		private _disabledApps = [];
+		if (!_filesEnabled) then {_disabledApps pushBack "files"};
+		if (!_mailEnabled) then {_disabledApps pushBack "mail"};
+		if (!_messagesEnabled) then {_disabledApps pushBack "messages"};
+		if (!_notesEnabled) then {_disabledApps pushBack "notes"};
+
 		private _config = createHashMapFromArray [
 			["systemName", _systemName],
 			["layout", _layout],
+			["loginRequired", _loginRequired],
 			["closedSystem", _closedSystem],
-			["poweredOn", _poweredOn]
+			["poweredOn", _poweredOn],
+			["disabledApps", _disabledApps]
 		];
 
 		[_object, _config] remoteExecCall [QFUNC(registerObject), 0, true];

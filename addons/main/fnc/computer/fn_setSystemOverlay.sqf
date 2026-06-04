@@ -23,6 +23,10 @@ params [
 
 if (isNull _display) exitWith {};
 
+if (_show) then {
+	[_display] call FUNC(clearCustomControls);
+};
+
 private _desktopControls = [
 	IDC_MMC_TASKBAR,
 	IDC_MMC_START_BUTTON,
@@ -130,15 +134,20 @@ if (_show) then {
 	private _computer = _display getVariable [QGVAR(computer), objNull];
 	private _poweredOn = _computer getVariable [QGVAR(poweredOn), true];
 	private _booting = _computer getVariable [QGVAR(booting), false];
+	private _data = _computer getVariable [QGVAR(data), createHashMap];
+	private _showLogout = _poweredOn && {_data getOrDefault ["loginRequired", true]};
 
 	(_display displayCtrl IDC_MMC_START_MENU) ctrlShow _menuOpen;
 	(_display displayCtrl IDC_MMC_FRAME_START_MENU) ctrlShow _menuOpen;
 	(_display displayCtrl IDC_MMC_START_BOOT) ctrlShow (_menuOpen && {!_poweredOn} && {!_booting});
 	(_display displayCtrl IDC_MMC_FRAME_START_BOOT) ctrlShow (_menuOpen && {!_poweredOn} && {!_booting});
-	(_display displayCtrl IDC_MMC_START_LOGOUT) ctrlShow (_menuOpen && {_poweredOn});
-	(_display displayCtrl IDC_MMC_FRAME_START_LOGOUT) ctrlShow (_menuOpen && {_poweredOn});
+	(_display displayCtrl IDC_MMC_START_LOGOUT) ctrlShow (_menuOpen && {_showLogout});
+	(_display displayCtrl IDC_MMC_FRAME_START_LOGOUT) ctrlShow (_menuOpen && {_showLogout});
 	(_display displayCtrl IDC_MMC_START_SHUTDOWN) ctrlShow (_menuOpen && {_poweredOn});
 	(_display displayCtrl IDC_MMC_FRAME_START_SHUTDOWN) ctrlShow (_menuOpen && {_poweredOn});
+	if (count ([_computer] call FUNC(getActiveUser)) > 0) then {
+		[_display] call FUNC(refreshStandardApps);
+	};
 };
 
 private _powerScreen = _display displayCtrl IDC_MMC_POWER_SCREEN;

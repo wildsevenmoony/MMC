@@ -30,6 +30,7 @@ if (!_poweredOn) then {
 	[_object] call FUNC(stopAudio);
 	[_object, "powered_off"] call FUNC(setScreenState);
 } else {
+	private _data = _object getVariable [QGVAR(data), createHashMap];
 	[_object, ["desktop", "login"] select (count ([_object] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);
 };
 _poweredOn

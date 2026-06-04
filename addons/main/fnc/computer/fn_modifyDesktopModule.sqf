@@ -44,26 +44,50 @@ if (_objects isEqualTo []) then {
 private _title = _logic getVariable [QGVAR(desktopTitle), "Welcome"];
 private _content = _logic getVariable [QGVAR(desktopContent), "Select an app on the left."];
 private _align = _logic getVariable [QGVAR(desktopAlign), "left"];
+private _script = _logic getVariable [QGVAR(desktopScript), ""];
 private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), false]};
+
+private _getRegisterTargets = {
+	params [["_registerModule", objNull, [objNull]]];
+
+	private _targets = _registerModule getVariable [QGVAR(registeredComputerObjects), []];
+	if (_targets isEqualTo []) then {
+		_targets = (synchronizedObjects _registerModule) select {_x getVariable [QGVAR(isComputer), false]};
+	};
+
+	_targets
+};
 
 if (_userModules isNotEqualTo []) then {
 	{
 		private _userConfig = _x getVariable [QGVAR(userConfig), createHashMap];
 		private _username = _userConfig getOrDefault ["username", ""];
-		private _targets = (synchronizedObjects _x) select {_x getVariable [QGVAR(isComputer), false]};
+		private _synced = synchronizedObjects _x;
+		private _targets = [];
+		{
+			_targets append ([_x] call _getRegisterTargets);
+		} forEach (_synced select {typeOf _x isEqualTo QGVAR(registerComputer)});
+		_targets append (_synced select {_x getVariable [QGVAR(isComputer), false]});
+		_targets = _targets arrayIntersect _targets;
 		if (_targets isEqualTo []) then {
 			_targets = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
 		};
 		{
-			[_x, _username, _title, _content, _align] call FUNC(modifyDesktop);
+			[_x, _username, _title, _content, _align, _script] call FUNC(modifyDesktop);
 		} forEach _targets;
 	} forEach _userModules;
 } else {
+	private _registerTargets = [];
 	{
-		if (!isNull _x) then {
-			[_x, "", _title, _content, _align] call FUNC(modifyDesktop);
-		};
-	} forEach (_objects select {_x getVariable [QGVAR(isComputer), false]});
+		_registerTargets append ([_x] call _getRegisterTargets);
+	} forEach (_objects select {typeOf _x isEqualTo QGVAR(registerComputer)});
+
+	private _objectTargets = _objects select {_x getVariable [QGVAR(isComputer), false]};
+	private _targets = (_registerTargets + _objectTargets) arrayIntersect (_registerTargets + _objectTargets);
+
+	{
+		[_x, "", _title, _content, _align, _script] call FUNC(modifyDesktop);
+	} forEach _targets;
 };
 
 if (!is3DEN) then {

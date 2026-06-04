@@ -21,11 +21,14 @@ private _computer = _display getVariable [QGVAR(computer), objNull];
 private _data = _display getVariable [QGVAR(data), createHashMap];
 private _poweredOn = _computer getVariable [QGVAR(poweredOn), true];
 private _activeUser = [_computer] call FUNC(getActiveUser);
+private _loginRequired = _data getOrDefault ["loginRequired", true];
 
 private _title = _display displayCtrl IDC_MMC_APP_TITLE;
 private _list = _display displayCtrl IDC_MMC_APP_LIST;
 private _body = _display displayCtrl IDC_MMC_APP_BODY;
 _body ctrlEnable false;
+_body ctrlSetPosition [safeZoneX + 0.43, safeZoneY + 0.135, safeZoneW - 0.61, safeZoneH - 0.315];
+_body ctrlCommit 0;
 private _desktopGroup = _display displayCtrl IDC_MMC_DESKTOP_CONTENT_GROUP;
 private _desktopBody = _display displayCtrl IDC_MMC_DESKTOP_CONTENT_BODY;
 private _previewImage = _display displayCtrl IDC_MMC_FILE_PREVIEW_IMAGE;
@@ -98,7 +101,11 @@ if (!_poweredOn) exitWith {
 [_display, false] call FUNC(setSystemOverlay);
 
 if (count _activeUser == 0) exitWith {
-	[_display] call FUNC(showLogin);
+	if (_loginRequired) then {
+		[_display] call FUNC(showLogin);
+	} else {
+		[_display] call FUNC(showNoUser);
+	};
 };
 
 private _isSelect = _app isEqualTo "select";
@@ -111,6 +118,13 @@ if (_app isEqualTo "select") then {
 	};
 };
 
+private _standardIds = ["files", "mail", "messages", "notes"];
+if (_app in _standardIds && {!([_computer, _app, _activeUser] call FUNC(isStandardAppEnabled))}) then {
+	_app = "desktop";
+	_display setVariable [QGVAR(currentApp), "desktop"];
+	_event = [];
+};
+
 private _index = if (_event isEqualTo []) then {lbCurSel _list} else {_event select 1};
 lbClear _list;
 
@@ -120,6 +134,14 @@ private _setBody = {
 };
 
 private _noContent = "<t size='1.25'>No Content available</t>";
+
+[_display] call FUNC(refreshStandardApps);
+[_display] call FUNC(refreshAppButtons);
+[_display, false, true] call FUNC(clearCustomControls);
+
+if ((_app select [0, 7]) isEqualTo "custom:") exitWith {
+	[_app select [7]] call FUNC(renderCustomApp);
+};
 
 switch (_app) do {
 	case "files": {
@@ -248,21 +270,66 @@ switch (_app) do {
 	};
 	default {
 		_title ctrlSetText "Desktop";
-		private _desktopTitle = _activeUser getOrDefault ["desktopTitle", _data getOrDefault ["desktopTitle", "Welcome"]];
-		private _desktopContent = _activeUser getOrDefault ["desktopContent", _data getOrDefault ["desktopContent", "Select an app on the left. Files, Mail, Messenger, and Notes are wired to the computer data model now.<br/><br/>The Start button controls power state."]];
-		_desktopContent = [_desktopContent] call FUNC(normalizeStructuredText);
-		private _desktopAlign = toLowerANSI (_activeUser getOrDefault ["desktopAlign", _data getOrDefault ["desktopAlign", "left"]]);
-		if !(_desktopAlign in ["left", "center", "right"]) then {
-			_desktopAlign = "left";
-		};
-		_body ctrlSetStructuredText parseText "";
-		_desktopBody ctrlSetStructuredText parseText format ["<t align='%1'><t size='1.35'>%2</t><br/><br/>%3</t>", _desktopAlign, _desktopTitle, _desktopContent];
-		private _desktopHeight = 0.2 max ((ctrlTextHeight _desktopBody) + 0.03);
-		private _desktopPos = ctrlPosition _desktopBody;
-		_desktopPos set [3, _desktopHeight];
-		_desktopBody ctrlSetPosition _desktopPos;
-		_desktopBody ctrlCommit 0;
 		_desktopGroup ctrlShow true;
+		_body ctrlSetStructuredText parseText "";
+
+		private _desktopScript = _activeUser getOrDefault ["desktopScript", _data getOrDefault ["desktopScript", ""]];
+		if (_desktopScript isNotEqualTo "") then {
+			_desktopBody ctrlSetStructuredText parseText "";
+			_desktopBody ctrlShow false;
+
+			private _desktopPos = ctrlPosition _desktopGroup;
+			private _group = _display ctrlCreate [QGVAR(RscComputerAppGroup), [_display] call FUNC(nextDynamicIdc), _desktopGroup];
+			_group ctrlSetPosition [0, 0, (_desktopPos select 2), (_desktopPos select 3)];
+			_group ctrlSetText "";
+			_group ctrlCommit 0;
+			_display setVariable [QGVAR(customActionControls), [_group]];
+			_display setVariable [QGVAR(appControlMap), createHashMap];
+
+			private _app = createHashMapFromArray [
+				["id", "desktop"],
+				["label", "Desktop"],
+				["refreshAfterAction", false]
+			];
+
+			uiNamespace setVariable [QGVAR(appBuilderDisplay), _display];
+			uiNamespace setVariable [QGVAR(appBuilderComputer), _computer];
+			uiNamespace setVariable [QGVAR(appBuilderUser), _activeUser];
+			uiNamespace setVariable [QGVAR(appBuilderApp), _app];
+			uiNamespace setVariable [QGVAR(appBuilderGroup), _group];
+			uiNamespace setVariable [QGVAR(appBuilderY), 0.015];
+
+			private _scriptCode = compile preprocessFileLineNumbers _desktopScript;
+			private _result = [_computer, _activeUser, _app, _display] call _scriptCode;
+			if (!isNil "_result" && {_result isNotEqualTo ""}) then {
+				if !(_result isEqualType "") then {
+					_result = str _result;
+				};
+				[_result] call FUNC(addAppStructuredText);
+			};
+
+			uiNamespace setVariable [QGVAR(appBuilderDisplay), displayNull];
+			uiNamespace setVariable [QGVAR(appBuilderComputer), objNull];
+			uiNamespace setVariable [QGVAR(appBuilderUser), createHashMap];
+			uiNamespace setVariable [QGVAR(appBuilderApp), createHashMap];
+			uiNamespace setVariable [QGVAR(appBuilderGroup), controlNull];
+			uiNamespace setVariable [QGVAR(appBuilderY), 0];
+		} else {
+			_desktopBody ctrlShow true;
+			private _desktopTitle = _activeUser getOrDefault ["desktopTitle", _data getOrDefault ["desktopTitle", "Welcome"]];
+			private _desktopContent = _activeUser getOrDefault ["desktopContent", _data getOrDefault ["desktopContent", "Select an app on the left. Files, Mail, Messenger, and Notes are wired to the computer data model now.<br/><br/>The Start button controls power state."]];
+			_desktopContent = [_desktopContent] call FUNC(normalizeStructuredText);
+			private _desktopAlign = toLowerANSI (_activeUser getOrDefault ["desktopAlign", _data getOrDefault ["desktopAlign", "left"]]);
+			if !(_desktopAlign in ["left", "center", "right"]) then {
+				_desktopAlign = "left";
+			};
+			_desktopBody ctrlSetStructuredText parseText format ["<t align='%1'><t size='1.35'>%2</t><br/><br/>%3</t>", _desktopAlign, _desktopTitle, _desktopContent];
+			private _desktopHeight = 0.2 max ((ctrlTextHeight _desktopBody) + 0.03);
+			private _desktopPos = ctrlPosition _desktopBody;
+			_desktopPos set [3, _desktopHeight];
+			_desktopBody ctrlSetPosition _desktopPos;
+			_desktopBody ctrlCommit 0;
+		};
 	};
 };
 

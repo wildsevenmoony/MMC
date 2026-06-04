@@ -12,7 +12,13 @@ params [
 
 if (!isNull _display && {GVAR(logoutOnClose)}) then {
 	private _computer = _display getVariable [QGVAR(computer), objNull];
-	[_computer] call FUNC(logout);
+	private _data = _computer getVariable [QGVAR(data), createHashMap];
+	private _loginRequired = _data getOrDefault ["loginRequired", true];
+	if (_loginRequired) then {
+		[_computer] call FUNC(logout);
+	} else {
+		[_computer] call FUNC(ensureAutoLoginUser);
+	};
 	if (
 		!isNull _computer
 		&& {alive _computer}
@@ -20,7 +26,7 @@ if (!isNull _display && {GVAR(logoutOnClose)}) then {
 		&& {_computer getVariable [QGVAR(poweredOn), true]}
 		&& {!(_computer getVariable [QGVAR(booting), false])}
 	) then {
-		[_computer, "login"] call FUNC(setScreenState);
+		[_computer, ["desktop", "login"] select (count ([_computer] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);
 	};
 };
 

@@ -46,6 +46,7 @@ private _username = _logic getVariable [QGVAR(userName), "operator"];
 private _password = _logic getVariable [QGVAR(userPassword), ""];
 private _email = _logic getVariable [QGVAR(userEmail), "operator@mmcsystems.com"];
 private _theme = _logic getVariable [QGVAR(userTheme), _logic getVariable [QGVAR(userBackground), "default"]];
+private _disabledApps = [_logic] call FUNC(getDisabledAppsFromConfig);
 private _customLayout = _logic getVariable [QGVAR(customLayout), createHashMap];
 if !(_customLayout isEqualType createHashMap) then {
 	_customLayout = createHashMap;
@@ -67,7 +68,8 @@ private _userConfig = createHashMapFromArray [
 	["password", _password],
 	["email", _email],
 	["theme", _theme],
-	["scope", "pending"]
+	["scope", "pending"],
+	["disabledApps", _disabledApps]
 ];
 if (count _customLayout > 0) then {
 	_userConfig set ["customLayout", _customLayout];
@@ -75,17 +77,45 @@ if (count _customLayout > 0) then {
 _logic setVariable [QGVAR(userConfig), _userConfig, true];
 
 private _computerObjects = _objects select {_x getVariable [QGVAR(isComputer), false]};
+private _registerModules = _objects select {typeOf _x isEqualTo QGVAR(registerComputer)};
+private _hasComputerTarget = (_computerObjects isNotEqualTo []) || {_registerModules isNotEqualTo []};
+{
+	private _registeredObjects = _x getVariable [QGVAR(registeredComputerObjects), []];
+	if (_registeredObjects isEqualTo []) then {
+		_registeredObjects = (synchronizedObjects _x) select {!(_x isKindOf "Logic")};
+	};
+	_computerObjects append _registeredObjects;
+} forEach _registerModules;
+_computerObjects = _computerObjects arrayIntersect _computerObjects;
+
 private _scope = "direct";
 if (_computerObjects isEqualTo []) then {
-	_scope = "global";
-	_computerObjects = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
+	if (!_hasComputerTarget) then {
+		_scope = "global";
+		_computerObjects = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
+	} else {
+		_computerObjects = [];
+	};
 };
 _userConfig set ["scope", _scope];
 _logic setVariable [QGVAR(userConfig), _userConfig, true];
 
+if (_scope isEqualTo "global") then {
+	if !(GVAR(pendingGlobalUsers) isEqualType []) then {
+		GVAR(pendingGlobalUsers) = [];
+	};
+	private _lookup = toLowerANSI _username;
+	private _pendingIndex = GVAR(pendingGlobalUsers) findIf {toLowerANSI (_x getOrDefault ["username", ""]) isEqualTo _lookup};
+	if (_pendingIndex < 0) then {
+		GVAR(pendingGlobalUsers) pushBack _userConfig;
+	} else {
+		GVAR(pendingGlobalUsers) set [_pendingIndex, _userConfig];
+	};
+};
+
 {
 	if (!isNull _x) then {
-		[_x, _username, _password, _email, _theme, _customLayout, _scope] call FUNC(addUser);
+		[_x, _username, _password, _email, _theme, _customLayout, _scope, _disabledApps] call FUNC(addUser);
 	};
 } forEach _computerObjects;
 

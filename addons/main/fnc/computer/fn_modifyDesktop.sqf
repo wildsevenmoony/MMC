@@ -10,7 +10,8 @@ params [
 	["_username", "", [""]],
 	["_title", "Welcome", [""]],
 	["_content", "Select an app on the left.", [""]],
-	["_align", "left", [""]]
+	["_align", "left", [""]],
+	["_script", "", [""]]
 ];
 
 if (isNull _object) exitWith {false};
@@ -21,6 +22,7 @@ if (_username isEqualTo "") exitWith {
 	_data set ["desktopTitle", _title];
 	_data set ["desktopContent", _content];
 	_data set ["desktopAlign", _align];
+	_data set ["desktopScript", _script];
 	_object setVariable [QGVAR(data), _data, true];
 	true
 };
@@ -34,6 +36,7 @@ private _user = _users select _index;
 _user set ["desktopTitle", _title];
 _user set ["desktopContent", _content];
 _user set ["desktopAlign", _align];
+_user set ["desktopScript", _script];
 _users set [_index, _user];
 _data set ["users", _users];
 _object setVariable [QGVAR(data), _data, true];

@@ -35,6 +35,15 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(loginRequired): Checkbox {
+				property = QGVAR(loginRequired);
+				displayName = "Login Screen";
+				tooltip = "If disabled, the computer automatically opens the desktop of the first directly synced Add User module. Additional direct users are ignored for this computer.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class GVAR(closedSystem): Checkbox {
 				property = QGVAR(closedSystem);
 				displayName = "Closed System";
@@ -52,20 +61,56 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(appFilesEnabled): Checkbox {
+				property = QGVAR(appFilesEnabled);
+				displayName = "Files App";
+				tooltip = "If disabled, the Files app is hidden for every user on this computer.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(appMailEnabled): Checkbox {
+				property = QGVAR(appMailEnabled);
+				displayName = "Mail App";
+				tooltip = "If disabled, the Mail app is hidden for every user on this computer.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(appMessagesEnabled): Checkbox {
+				property = QGVAR(appMessagesEnabled);
+				displayName = "Messenger App";
+				tooltip = "If disabled, the Messenger app is hidden for every user on this computer.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(appNotesEnabled): Checkbox {
+				property = QGVAR(appNotesEnabled);
+				displayName = "Notes App";
+				tooltip = "If disabled, the Notes app is hidden for every user on this computer.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class ModuleDescription: ModuleDescription {};
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync any object to this module to make it an MMC computer.";
+			description = "Sync any object to this module to make it an MMC computer. Optionally sync Add User modules for direct computer users.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
-				description[] = {"Synchronise any laptop, PC, or object to this module."};
+				description[] = {"Synchronise any laptop, PC, object, or Add User module to this module."};
 				position = 0;
 				direction = 0;
 				optional = 0;
 				duplicate = 1;
-				synced[] = {"AnyStaticObject", "AnyVehicle"};
+				synced[] = {"AnyStaticObject", "AnyVehicle", QGVAR(addUser)};
 			};
 		};
 	};
@@ -124,20 +169,56 @@ class CfgVehicles {
 				};
 			};
 
+			class GVAR(appFilesEnabled): Checkbox {
+				property = QGVAR(appFilesEnabled);
+				displayName = "Files App";
+				tooltip = "If disabled, the Files app is hidden while this user is logged in.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(appMailEnabled): Checkbox {
+				property = QGVAR(appMailEnabled);
+				displayName = "Mail App";
+				tooltip = "If disabled, the Mail app is hidden while this user is logged in.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(appMessagesEnabled): Checkbox {
+				property = QGVAR(appMessagesEnabled);
+				displayName = "Messenger App";
+				tooltip = "If disabled, the Messenger app is hidden while this user is logged in.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(appNotesEnabled): Checkbox {
+				property = QGVAR(appNotesEnabled);
+				displayName = "Notes App";
+				tooltip = "If disabled, the Notes app is hidden while this user is logged in.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class ModuleDescription: ModuleDescription {};
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync an MMC computer object to add a login user to that computer. If no computer is synced, the user is added to all registered MMC computers.";
+			description = "Sync an MMC computer object or Register Computer module to add a login user to that computer. If no target is synced, the user is added to all registered MMC computers.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
-				description[] = {"Synchronise any registered MMC computer object."};
+				description[] = {"Synchronise any registered MMC computer object or Register Computer module."};
 				position = 0;
 				direction = 0;
 				optional = 0;
 				duplicate = 1;
-				synced[] = {"AnyStaticObject", "AnyVehicle"};
+				synced[] = {"AnyStaticObject", "AnyVehicle", QGVAR(registerComputer)};
 			};
 		};
 	};
@@ -666,20 +747,29 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(desktopScript): Edit {
+				property = QGVAR(desktopScript);
+				displayName = "Desktop Script File";
+				tooltip = "Optional mission or mod script path. If set, the script is called to build the Desktop with MMC_fnc_addAppStructuredText, MMC_fnc_addAppButton, MMC_fnc_addAppLine, MMC_fnc_addAppSpacer, MMC_fnc_addAppBox, and related builder functions.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class ModuleDescription: ModuleDescription {};
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync Add User modules to set that user's Desktop text. If synced to a computer, this changes the computer default Desktop text.";
+			description = "Sync Register Computer modules to change computer default Desktop text, or Add User modules to change that user's Desktop text. Direct computer object sync remains as a fallback.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
-				description[] = {"Synchronise any Add User module or registered MMC computer object."};
+				description[] = {"Synchronise any Register Computer module, Add User module, or registered MMC computer object fallback."};
 				position = 0;
 				direction = 0;
 				optional = 0;
 				duplicate = 1;
-				synced[] = {"AnyStaticObject", "AnyVehicle", QGVAR(addUser)};
+				synced[] = {QGVAR(registerComputer), QGVAR(addUser), "AnyStaticObject", "AnyVehicle"};
 			};
 		};
 	};

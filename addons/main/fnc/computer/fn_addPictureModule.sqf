@@ -56,7 +56,17 @@ if (_userModules isNotEqualTo []) then {
 	{
 		private _userConfig = _x getVariable [QGVAR(userConfig), createHashMap];
 		private _username = _userConfig getOrDefault ["username", ""];
-		private _targets = (synchronizedObjects _x) select {_x getVariable [QGVAR(isComputer), false]};
+		private _userSyncs = synchronizedObjects _x;
+		private _targets = _userSyncs select {_x getVariable [QGVAR(isComputer), false]};
+		private _registerModules = _userSyncs select {typeOf _x isEqualTo QGVAR(registerComputer)};
+		{
+			private _registeredObjects = _x getVariable [QGVAR(registeredComputerObjects), []];
+			if (_registeredObjects isEqualTo []) then {
+				_registeredObjects = (synchronizedObjects _x) select {!(_x isKindOf "Logic")};
+			};
+			_targets append _registeredObjects;
+		} forEach _registerModules;
+		_targets = _targets arrayIntersect _targets;
 		if (_targets isEqualTo []) then {
 			_targets = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
 		};

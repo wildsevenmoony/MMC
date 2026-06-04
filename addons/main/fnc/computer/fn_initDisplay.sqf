@@ -19,6 +19,7 @@ uiNamespace setVariable [QGVAR(display), _display];
 
 private _computer = GVAR(activeComputer);
 private _data = _computer getVariable [QGVAR(data), [createHashMap] call FUNC(createDefaultData)];
+private _loginRequired = _data getOrDefault ["loginRequired", true];
 _display setVariable [QGVAR(computer), _computer];
 _display setVariable [QGVAR(data), _data];
 _display setVariable [QGVAR(currentApp), "desktop"];
@@ -109,7 +110,11 @@ if (_computer getVariable [QGVAR(booting), false]) exitWith {
 };
 
 if (count _activeUser == 0) then {
-	[_display] call FUNC(showLogin);
+	if (_loginRequired) then {
+		[_display] call FUNC(showLogin);
+	} else {
+		[_display] call FUNC(showNoUser);
+	};
 } else {
 	[_display] call FUNC(hideLogin);
 	["desktop"] call FUNC(renderApp);

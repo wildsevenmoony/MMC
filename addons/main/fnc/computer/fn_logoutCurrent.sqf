@@ -9,6 +9,9 @@ private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (isNull _display) exitWith {false};
 
 private _computer = _display getVariable [QGVAR(computer), objNull];
+private _data = _computer getVariable [QGVAR(data), createHashMap];
+if !(_data getOrDefault ["loginRequired", true]) exitWith {false};
+
 [_computer] call FUNC(logout);
 
 _display setVariable [QGVAR(startMenuOpen), false];

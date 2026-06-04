@@ -72,3 +72,6 @@ private _themeConfig = [_display] call FUNC(getThemeConfig);
 	IDC_MMC_FRAME_APP_BODY,
 	IDC_MMC_FRAME_START_BUTTON
 ];
+
+[_display] call FUNC(refreshStandardApps);
+[_display] call FUNC(refreshAppButtons);

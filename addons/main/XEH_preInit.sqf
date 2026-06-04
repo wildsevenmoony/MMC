@@ -7,6 +7,7 @@
 
 GVAR(registeredComputers) = [];
 GVAR(registeredUsers) = [];
+GVAR(pendingGlobalUsers) = [];
 
 [
 	QGVAR(logoutOnClose),

@@ -43,13 +43,22 @@ if (_objects isEqualTo []) then {
 };
 
 private _layoutModules = _objects select {typeOf _x isEqualTo QGVAR(customLayout)};
+private _userModules = _objects select {typeOf _x isEqualTo QGVAR(addUser)};
 private _targets = _objects select {!(_x isKindOf "Logic")};
+private _loginRequired = _logic getVariable [QGVAR(loginRequired), true];
+private _disabledApps = [_logic] call FUNC(getDisabledAppsFromConfig);
 
 private _config = createHashMapFromArray [
 	["poweredOn", _logic getVariable [QGVAR(poweredOn), true]],
+	["loginRequired", _loginRequired],
 	["closedSystem", _logic getVariable [QGVAR(closedSystem), false]],
-	["systemName", _logic getVariable [QGVAR(systemName), "MMC Workstation"]]
+	["systemName", _logic getVariable [QGVAR(systemName), "MMC Workstation"]],
+	["disabledApps", _disabledApps]
 ];
+
+if (!_loginRequired && {_userModules isNotEqualTo []}) then {
+	_config set ["autoLoginUsername", (_userModules select 0) getVariable [QGVAR(userName), "operator"]];
+};
 
 private _layout = _logic getVariable [QGVAR(computerLayout), createHashMap];
 if (_layoutModules isNotEqualTo []) then {
@@ -66,9 +75,5 @@ _logic setVariable [QGVAR(registeredComputerObjects), _targets, true];
 		[_x, _config] call FUNC(registerObject);
 	};
 } forEach _targets;
-
-if (!is3DEN) then {
-	deleteVehicle _logic;
-};
 
 true
