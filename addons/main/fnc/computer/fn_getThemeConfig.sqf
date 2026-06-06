@@ -26,6 +26,14 @@ if (!isNull _display) then {
 };
 
 private _computerLayout = createHashMap;
+if (!isNull _computer) then {
+	private _data = _computer getVariable [QGVAR(data), createHashMap];
+	_computerLayout = _data getOrDefault ["layout", _computer getVariable [QGVAR(computerLayout), createHashMap]];
+	if !(_computerLayout isEqualType createHashMap) then {
+		_computerLayout = createHashMap;
+	};
+};
+
 if (count _activeUser == 0 && {!isNull _computer}) then {
 	private _data = _computer getVariable [QGVAR(data), createHashMap];
 	private _users = (_data getOrDefault ["users", []]) select {_x isEqualType createHashMap};
@@ -41,11 +49,6 @@ if (count _activeUser == 0 && {!isNull _computer}) then {
 			_preferredIndex = 0;
 		};
 		_activeUser = _directUsers select _preferredIndex;
-	} else {
-		_computerLayout = _data getOrDefault ["layout", _computer getVariable [QGVAR(computerLayout), createHashMap]];
-		if !(_computerLayout isEqualType createHashMap) then {
-			_computerLayout = createHashMap;
-		};
 	};
 };
 
@@ -55,7 +58,8 @@ if !(_customLayout isEqualType createHashMap) then {
 	_customLayout = createHashMap;
 };
 
-if (count _activeUser == 0 && {count _computerLayout > 0}) then {
+private _userThemeValue = toLowerANSI _theme;
+if (count _customLayout == 0 && {count _computerLayout > 0 && {_userThemeValue in ["", "default"]}}) then {
 	_customLayout = _computerLayout;
 	_theme = _customLayout getOrDefault ["preset", "default"];
 };

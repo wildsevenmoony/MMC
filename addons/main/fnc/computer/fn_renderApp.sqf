@@ -301,11 +301,16 @@ switch (_app) do {
 
 			private _scriptCode = compile preprocessFileLineNumbers _desktopScript;
 			private _result = [_computer, _activeUser, _app, _display] call _scriptCode;
-			if (!isNil "_result" && {_result isNotEqualTo ""}) then {
-				if !(_result isEqualType "") then {
-					_result = str _result;
+			if (!isNil "_result") then {
+				if (_result isEqualType "") then {
+					if (_result isNotEqualTo "") then {
+						[_result] call FUNC(addAppStructuredText);
+					};
+				} else {
+					if (_result isEqualType []) then {
+						[_result] call FUNC(runAppBuilderContent);
+					};
 				};
-				[_result] call FUNC(addAppStructuredText);
 			};
 
 			uiNamespace setVariable [QGVAR(appBuilderDisplay), displayNull];
