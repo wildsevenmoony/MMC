@@ -92,7 +92,7 @@ private _scope = "direct";
 if (_computerObjects isEqualTo []) then {
 	if (!_hasComputerTarget) then {
 		_scope = "global";
-		_computerObjects = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
+		_computerObjects = [] call FUNC(getRegisteredComputers);
 	} else {
 		_computerObjects = [];
 	};

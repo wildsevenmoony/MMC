@@ -34,7 +34,7 @@ private _used = [];
 			_used pushBackUnique _existing;
 		};
 	};
-} forEach (GVAR(registeredUsers) select {_x isEqualType createHashMap});
+} forEach (([] call FUNC(getRegisteredUsers)) select {_x isEqualType createHashMap});
 
 private _candidate = _email;
 private _suffix = 1;

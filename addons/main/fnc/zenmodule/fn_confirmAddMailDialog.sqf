@@ -41,9 +41,9 @@ if (_attachment isNotEqualTo "" && {!fileExists _attachment}) exitWith {
 {
 	private _computer = _x;
 	{
-		[_computer, _x select 0, _direction, _counterpart, _cc, _subject, _body, _date, _time, _attachment, _attachmentDescription, _recipientRead, _senderRead, _ccRead] remoteExecCall [QFUNC(seedMail), 0, true];
+		[_computer, _x select 0, _direction, _counterpart, _cc, _subject, _body, _date, _time, _attachment, _attachmentDescription, _recipientRead, _senderRead, _ccRead] remoteExecCall [QFUNC(seedMail), 2];
 	} forEach _selected;
-} forEach GVAR(registeredComputers);
+} forEach ([] call FUNC(getRegisteredComputers));
 
 [objNull, "MAIL ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
 true

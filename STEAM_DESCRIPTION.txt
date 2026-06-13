@@ -11,12 +11,15 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [list]
 [*]Register objects as computers in Eden, Zeus, or script.
 [*]Open computers through ACE interaction.
+[*]Open or start any registered computer from the ACE Zeus self-action.
 [*]Use user accounts with usernames, passwords, e-mail addresses, and themes.
 [*]Create closed systems that only allow explicitly added users.
 [*]Add text files, picture files, mail, and custom desktop text through Eden and Zeus modules.
 [*]Use a Files app with folders for text files, pictures, and audio files.
 [*]Use a Mail app with inbox, outbox, unread/read state, reply, forward, CC, and picture attachments.
 [*]Customize the look with Default, NATO, CSAT, and AAF themes, or use the Eden Layout module for custom colors and a desktop picture.
+[*]Use in-world screen textures for supported laptop, PC, and TV objects.
+[*]Add scripted custom apps with structured text, buttons, inputs, checkboxes, combo boxes, progress bars, boxes, lines, spacers, and live unit/UAV/vehicle camera feeds.
 [/list]
 
 [b]Mission Maker Notes[/b]
@@ -25,6 +28,7 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [*]The Register Computer module makes synced objects usable as MMC computers.
 [*]Users can be added to specific computers or globally.
 [*]The Layout Eden module syncs to Register Computer modules or registered computers and controls the pre-login computer look.
+[*]Zeus operators can use ACE Zeus Actions > Computer to list all registered computers and open/start them remotely.
 [*]Text fields support structured text. Use [code]\n[/code] or [code]<br/>[/code] for line breaks.
 [*]Picture textures should use valid Arma texture paths, preferably [code].paa[/code].
 [*]Video support is not included for now because it is not reliable enough inside the dialog.

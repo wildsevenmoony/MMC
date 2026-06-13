@@ -21,6 +21,21 @@ params [
 
 if (isNull _display) exitWith {};
 
+if (_clearActions) then {
+	{
+		if (_x isEqualType []) then {
+			private _cleanup = _x param [0, {}, [{}]];
+			private _args = _x param [1, []];
+			[_display, _args] call _cleanup;
+		} else {
+			if (_x isEqualType {}) then {
+				[_display, []] call _x;
+			};
+		};
+	} forEach (_display getVariable [QGVAR(appCleanupHandlers), []]);
+	_display setVariable [QGVAR(appCleanupHandlers), []];
+};
+
 private _deleteControls = {
 	params ["_controls"];
 	{

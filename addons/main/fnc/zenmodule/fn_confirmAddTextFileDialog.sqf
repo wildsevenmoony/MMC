@@ -27,9 +27,9 @@ if (_selected isEqualTo []) exitWith {
 {
 	private _computer = _x;
 	{
-		[_computer, _x select 0, _name, _content, "text", _path] remoteExecCall [QFUNC(addFileToUser), 0, true];
+		[_computer, _x select 0, _name, _content, "text", _path] remoteExecCall [QFUNC(addFileToUser), 2];
 	} forEach _selected;
-} forEach GVAR(registeredComputers);
+} forEach ([] call FUNC(getRegisteredComputers));
 
 [objNull, "TEXT FILE ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
 true

@@ -64,6 +64,16 @@ uiNamespace setVariable [QGVAR(appBuilderY), 0.015];
 	};
 } forEach (_app getOrDefault ["actions", []]);
 
+private _contentH = (uiNamespace getVariable [QGVAR(appBuilderY), 0.015]) + 0.025;
+private _scrollMarker = _display ctrlCreate ["RscText", [_display] call FUNC(nextDynamicIdc), _group];
+_scrollMarker ctrlSetPosition [0, _contentH max 0.001, 0.001, 0.001];
+_scrollMarker ctrlSetText "";
+_scrollMarker ctrlSetBackgroundColor [0, 0, 0, 0];
+_scrollMarker ctrlCommit 0;
+private _controls = _display getVariable [QGVAR(customActionControls), []];
+_controls pushBack _scrollMarker;
+_display setVariable [QGVAR(customActionControls), _controls];
+
 uiNamespace setVariable [QGVAR(appBuilderDisplay), displayNull];
 uiNamespace setVariable [QGVAR(appBuilderComputer), objNull];
 uiNamespace setVariable [QGVAR(appBuilderUser), createHashMap];

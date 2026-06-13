@@ -6,6 +6,7 @@
  */
 
 private _users = +GVAR(registeredUsers);
+private _computers = [] call FUNC(getRegisteredComputers);
 
 {
 	private _data = _x getVariable [QGVAR(data), createHashMap];
@@ -15,6 +16,6 @@ private _users = +GVAR(registeredUsers);
 			_users pushBack _x;
 		};
 	} forEach (_data getOrDefault ["users", []]);
-} forEach GVAR(registeredComputers);
+} forEach _computers;
 
 _users

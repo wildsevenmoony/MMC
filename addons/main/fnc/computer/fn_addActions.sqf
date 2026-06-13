@@ -16,6 +16,7 @@ params [["_object", objNull, [objNull]]];
 if (isNull _object) exitWith {};
 if !(_object getVariable [QGVAR(isComputer), false]) exitWith {};
 if (_object getVariable [QGVAR(actionsAdded), false]) exitWith {};
+if (isNil "ace_interact_menu_fnc_createAction" || {isNil "ace_interact_menu_fnc_addActionToObject"}) exitWith {};
 
 _object setVariable [QGVAR(actionsAdded), true];
 

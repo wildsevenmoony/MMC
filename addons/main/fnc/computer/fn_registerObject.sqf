@@ -98,5 +98,6 @@ if (GVAR(pendingGlobalUsers) isEqualType []) then {
 };
 
 [_object] call FUNC(addActions);
+[_object] remoteExecCall [QFUNC(addActions), 0, _object];
 
 _object

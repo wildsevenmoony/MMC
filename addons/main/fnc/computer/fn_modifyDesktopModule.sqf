@@ -70,7 +70,7 @@ if (_userModules isNotEqualTo []) then {
 		_targets append (_synced select {_x getVariable [QGVAR(isComputer), false]});
 		_targets = _targets arrayIntersect _targets;
 		if (_targets isEqualTo []) then {
-			_targets = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
+			_targets = [] call FUNC(getRegisteredComputers);
 		};
 		{
 			[_x, _username, _title, _content, _align, _script] call FUNC(modifyDesktop);

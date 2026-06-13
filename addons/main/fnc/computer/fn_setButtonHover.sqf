@@ -11,6 +11,7 @@ params [
 ];
 
 if (isNull _control) exitWith {};
+if (!isNull (_control getVariable [QGVAR(launcherBackground), controlNull])) exitWith {};
 
 private _themeConfig = [ctrlParent _control] call FUNC(getThemeConfig);
 private _button = _themeConfig getOrDefault ["button", [0.028, 0.032, 0.042, 0.98]];

@@ -6,6 +6,7 @@ Moony's Magnificent Computers, or MMC, is an Arma 3 framework for interactive in
 
 - Register objects as computers through Eden modules, Zeus modules, or script.
 - Open registered computers through ACE interaction.
+- Zeus operators get an ACE Zeus action that lists all registered computers and can open or start them remotely.
 - Power states with startup, shutdown, login, desktop, and powered-off flows.
 - PC-style screen with desktop background, taskbar, clock/date, start menu, and app buttons.
 - User accounts with username, password, e-mail address, theme, and closed-system support.
@@ -16,7 +17,7 @@ Moony's Magnificent Computers, or MMC, is an Arma 3 framework for interactive in
 - Picture files support a texture path and description shown below the image.
 - Mail app with inbox, outbox, unread/read state, reply, forward, CC, picture attachment support, and mission-time timestamps.
 - Standard apps can be hidden per computer or per user.
-- Scripted custom apps that mission makers can add to individual computers.
+- Scripted custom apps that mission makers can add to individual computers, including structured text, buttons, fields, checkboxes, combo boxes, progress bars, raw controls, and live camera feeds.
 - Zeus modules for adding users, text files, pictures, mail, registering computers, changing power state, and modifying desktop text.
 - Eden modules for registering computers, adding users, layouts, adding text files, adding pictures, adding mail, and modifying desktop text.
 
@@ -29,6 +30,7 @@ Messenger, notes, richer media handling, and more polished computer-screen objec
 ## Mission-Maker Notes
 
 - The `Register Computer` module turns synced objects into MMC computers.
+- Zeus operators can use `ACE Zeus Actions > Computer` to list every registered computer, including computers created during the mission. The action opens powered computers and starts powered-off computers before opening them.
 - The `Add User` module can be synced to specific registered computers. If it is not synced to a computer, the user is treated as globally available to registered computers unless a computer is marked as a closed system.
 - Text, picture, mail, and desktop modules can target users or computers depending on their sync setup.
 - `Modify Desktop` should normally be synced to a `Register Computer` module for computer defaults, or to an `Add User` module for user-specific desktop text. Direct object sync still works as a fallback.
@@ -115,6 +117,12 @@ Available app builder helpers:
 ["fieldId", "Field Label", "Default text"] call MMC_fnc_addAppEdit;
 ["checkId", "Checkbox Label", true] call MMC_fnc_addAppCheckbox;
 ["comboId", "Combo Label", [["a", "Option A"], ["b", "Option B"]], "a"] call MMC_fnc_addAppCombo;
+["progressId", "Signal Strength", 0.65] call MMC_fnc_addAppProgressBar;
+["progressId", 0.8, "80% / nominal"] call MMC_fnc_setAppProgressBar;
+["rawId", "RscPicture", 0.2, {_this#0 ctrlSetText "#(argb,8,8,3)color(0,0,0,1)"}] call MMC_fnc_addAppControl;
+["helmetFeed", alpha_1, 0.38, "Alpha 1"] call MMC_fnc_addAppUnitFeed;
+["feedId", uav_1, 0.38, "UAV Feed"] call MMC_fnc_addAppUavFeed;
+["vehicleFeed", hunter_1, 0.38, "Hunter Turret", "gunner"] call MMC_fnc_addAppVehicleFeed;
 ["#88ccff", 0.003] call MMC_fnc_addAppLine;
 [0.035] call MMC_fnc_addAppSpacer;
 [
@@ -130,6 +138,14 @@ Available app builder helpers:
 ```
 
 Buttons can also use dynamic labels by passing code as the first argument. If you pass a value id as the sixth argument, `MMC_fnc_setAppControlText` can change that button later.
+
+`MMC_fnc_addAppControl` is the escape hatch for mission-specific controls. It creates a raw UI control inside the app body and calls your setup code with `[control, display, group, computer, activeUser, app]`.
+
+`MMC_fnc_addAppUnitFeed`, `MMC_fnc_addAppUavFeed`, and `MMC_fnc_addAppVehicleFeed` create local render-to-texture picture-in-picture feeds and clean them up when the app changes or the computer is closed. See [docs/examples/uavInfoApp.sqf](docs/examples/uavInfoApp.sqf) for a selectable UAV screen, or [docs/examples/tacticalFeedsApp.sqf](docs/examples/tacticalFeedsApp.sqf) for unit, UAV, and vehicle feeds in one app.
+
+Feed helpers accept an optional options hash map. Useful keys are `widthRatio`, `width`, `align`, `renderSize`, `updateInterval`, `fov`, and `pipEffect`. Vehicle and UAV feeds can also take `turretPath`; for example `["turretPath", [0]]` follows the main gunner turret on most vanilla vehicles. If a specific vehicle uses unusual memory points, pass `positionMemory` and `directionMemory` as well. If the model's camera axis is rotated, use `directionYaw` to nudge it in degrees.
+
+To find turret paths while testing, sit a unit in the relevant seat and run `systemChat str ((gunner myVehicle) call CBA_fnc_turretPath);` or `systemChat str ((commander myVehicle) call CBA_fnc_turretPath);`. For many vanilla vehicles the main gunner is `[0]`, but modded vehicles can differ.
 
 For very simple apps, the content can still be a structured text string or a code block that returns structured text. Use `[_computer, "generator"] call MMC_fnc_removeApp;` to remove an app again. A final `true` parameter on add/remove publishes the app list as an object variable, but use that only for network-safe app configs without code callbacks.
 

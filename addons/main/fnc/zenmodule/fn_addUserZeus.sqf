@@ -46,14 +46,14 @@ if (!isNull _objectUnderCursor && {!(_objectUnderCursor getVariable [QGVAR(isCom
 		if (!_notesEnabled) then {_disabledApps pushBack "notes"};
 
 		private _targets = if (isNull _object) then {
-			if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]}
+			[] call FUNC(getRegisteredComputers)
 		} else {
 			[_object]
 		};
 		private _scope = ["direct", "global"] select (isNull _object);
 
 		{
-			[_x, _username, _password, _email, _theme, createHashMap, _scope, _disabledApps] remoteExecCall [QFUNC(addUser), 0, true];
+			[_x, _username, _password, _email, _theme, createHashMap, _scope, _disabledApps] remoteExecCall [QFUNC(addUser), 2];
 		} forEach _targets;
 		[objNull, "USER ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
 	},

@@ -31,9 +31,9 @@ if (_selected isEqualTo []) exitWith {
 {
 	private _computer = _x;
 	{
-		[_computer, _x select 0, _title, _content, _align] remoteExecCall [QFUNC(modifyDesktop), 0, true];
+		[_computer, _x select 0, _title, _content, _align] remoteExecCall [QFUNC(modifyDesktop), 2];
 	} forEach _selected;
-} forEach GVAR(registeredComputers);
+} forEach ([] call FUNC(getRegisteredComputers));
 
 [objNull, "DESKTOP MODIFIED"] call BIS_fnc_showCuratorFeedbackMessage;
 true

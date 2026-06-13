@@ -63,7 +63,7 @@ if (_userModules isNotEqualTo []) then {
 		} forEach _registerModules;
 		_targets = _targets arrayIntersect _targets;
 		if (_targets isEqualTo []) then {
-			_targets = if (GVAR(registeredComputers) isEqualType []) then {GVAR(registeredComputers)} else {[]};
+			_targets = [] call FUNC(getRegisteredComputers);
 		};
 
 		{

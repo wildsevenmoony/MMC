@@ -109,6 +109,6 @@ private _ccNames = [];
 			};
 		};
 	};
-} forEach (GVAR(registeredComputers) select {!isNull _x});
+} forEach (([] call FUNC(getRegisteredComputers)) select {!isNull _x});
 
 true

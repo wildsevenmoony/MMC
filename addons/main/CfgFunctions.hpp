@@ -19,12 +19,19 @@ class CfgFunctions {
 			class addApp {};
 			class addAppButton {};
 			class addAppCheckbox {};
+			class addAppCleanup {};
 			class addAppCombo {};
+			class addAppControl {};
 			class addAppEdit {};
 			class addAppBox {};
 			class addAppLine {};
+			class addAppProgressBar {};
 			class addAppSpacer {};
 			class addAppStructuredText {};
+			class addAppUnitFeed {};
+			class addAppUavFeed {};
+			class addAppVehicleFeed {};
+			class addZeusActions {};
 			class clearCustomControls {};
 			class canOpen {};
 			class createDefaultData {};
@@ -38,6 +45,7 @@ class CfgFunctions {
 			class getAppControlValue {};
 			class getAudioFiles {};
 			class getLayoutFromModule {};
+			class getRegisteredComputers {};
 			class getRegisteredUsers {};
 			class getScreenDeviceConfig {};
 			class getScreenTexture {};
@@ -63,6 +71,7 @@ class CfgFunctions {
 			class logout {};
 			class mailCompose {};
 			class mailSelect {};
+			class mailSendResult {};
 			class mailSendFromComposer {};
 			class markMailRead {};
 			class makeUniqueEmail {};
@@ -70,6 +79,7 @@ class CfgFunctions {
 			class mediaPlaySelected {};
 			class mediaStop {};
 			class open {};
+			class openFromZeus {};
 			class playAudio {};
 			class playAudioLocal {};
 			class registerComputerModule {};
@@ -84,9 +94,11 @@ class CfgFunctions {
 			class runAppBuilderContent {};
 			class parseAppColor {};
 			class setAppControlText {};
+			class setAppProgressBar {};
 			class resizeMailBody {};
 			class restoreStandardApp {};
 			class sendMail {};
+			class sendMailRequest {};
 			class seedMail {};
 			class setScreenState {};
 			class setComputerLayout {};
@@ -106,6 +118,7 @@ class CfgFunctions {
 			class setButtonHover {};
 			class updatePasswordInput {};
 			class updateClock {};
+			class zeusComputerChildren {};
 		};
 
 		class ZeusModules {
