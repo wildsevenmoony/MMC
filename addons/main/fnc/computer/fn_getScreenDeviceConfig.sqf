@@ -2,13 +2,13 @@
 
 /*
  * Author: Moony
- * Resolves the object screen aspect and setObjectTexture selection.
+ * Resolves the object screen aspect and setObjectTexture selections.
  *
  * Arguments:
  * 0: Computer object <OBJECT>
  *
  * Return Value:
- * [Aspect <STRING>, Texture selection <NUMBER>]
+ * [Aspect <STRING>, Texture selections <ARRAY>]
  */
 
 params [["_object", objNull, [objNull]]];
@@ -40,17 +40,22 @@ private _selectionOneClasses = [
 ];
 
 private _aspect = "1x1";
+private _knownDevice = true;
 if (_aspect2x1Classes findIf {_object isKindOf _x} >= 0) then {
 	_aspect = "2x1";
 } else {
 	if (_aspect1x1Classes findIf {_object isKindOf _x} < 0) then {
-		_aspect = "1x1";
+		_knownDevice = false;
 	};
 };
 
-private _selection = 0;
+private _selections = [];
 if (_selectionOneClasses findIf {_object isKindOf _x} >= 0) then {
-	_selection = 1;
+	_selections = [1];
+} else {
+	if (_knownDevice) then {
+		_selections = [0];
+	};
 };
 
-[_aspect, _selection]
+[_aspect, _selections]

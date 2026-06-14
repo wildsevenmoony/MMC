@@ -32,12 +32,14 @@ Messenger, notes, richer media handling, and more polished computer-screen objec
 - The `Register Computer` module turns synced objects into MMC computers.
 - Zeus operators can use `ACE Zeus Actions > Computer` to list every registered computer, including computers created during the mission. The action opens powered computers and starts powered-off computers before opening them.
 - The `Add User` module can be synced to specific registered computers. If it is not synced to a computer, the user is treated as globally available to registered computers unless a computer is marked as a closed system.
-- Text, picture, mail, and desktop modules can target users or computers depending on their sync setup.
+- Text, picture, and mail modules can be synced to an `Add User` module for user content, a registered computer object for one computer, or a `Register Computer` module for every computer registered by that module.
+- Desktop modules can target users or computers depending on their sync setup.
 - `Modify Desktop` should normally be synced to a `Register Computer` module for computer defaults, or to an `Add User` module for user-specific desktop text. Direct object sync still works as a fallback.
 - Startup and login screens use a direct user layout first. If no user is added directly to that computer, they use a synced `Layout` module on the `Register Computer` module or computer object, then fall back to the client default.
 - The `Layout` module syncs to `Register Computer` modules or registered computers and can set preset colors/backgrounds or custom mission-specific colors and a desktop picture.
 - Uncheck standard app boxes on `Register Computer` to hide apps for the whole computer, or on `Add User` to hide apps only while that user is logged in.
-- In-world screen textures are applied automatically for supported 1x1 and 2x1 laptop/PC/TV objects. Add more supported device classes in `fn_getScreenDeviceConfig.sqf`.
+- In-world screen textures are applied automatically only for supported 1x1 and 2x1 laptop/PC/TV objects. Add more supported device classes in `fn_getScreenDeviceConfig.sqf`.
+- The `Layout` module can disable in-world screen texture application, or override the `setObjectTexture` selections with a comma-separated list such as `0` or `0,1`.
 - Picture texture paths should point to valid `.paa` textures from the mission or a mod.
 - The file path fields are paths inside the computer's file browser, not necessarily real filesystem paths.
 - Audio playback currently relies on configured mod sounds. Mission-file audio is not treated as a reliable general-purpose file format yet.

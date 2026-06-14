@@ -251,6 +251,24 @@ class CfgVehicles {
 				};
 			};
 
+			class GVAR(customLayoutApplyScreenTextures): Checkbox {
+				property = QGVAR(customLayoutApplyScreenTextures);
+				displayName = "Apply Screen Textures";
+				tooltip = "If disabled, MMC will not use setObjectTextureGlobal for this layout. Use this for objects that have no usable screen texture selection.";
+				typeName = "BOOL";
+				defaultValue = "true";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(customLayoutScreenSelections): Edit {
+				property = QGVAR(customLayoutScreenSelections);
+				displayName = "Screen Texture Selections";
+				tooltip = "Optional comma-separated setObjectTexture selections, e.g. 0 or 0,1. Leave empty to use MMC's built-in device detection. Unsupported objects are ignored unless this field is filled.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class GVAR(customLayoutUseCustomColors): Checkbox {
 				property = QGVAR(customLayoutUseCustomColors);
 				displayName = "Custom Color Scheme";
@@ -473,16 +491,16 @@ class CfgVehicles {
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync an MMC computer object to add a text file to its file browser.";
+			description = "Sync an MMC computer object or Register Computer module to add a text file to its file browser.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
-				description[] = {"Synchronise any registered MMC computer object."};
+				description[] = {"Synchronise any registered MMC computer object or Register Computer module."};
 				position = 0;
 				direction = 0;
 				optional = 0;
 				duplicate = 1;
-				synced[] = {"AnyStaticObject", "AnyVehicle"};
+				synced[] = {QGVAR(registerComputer), "AnyStaticObject", "AnyVehicle"};
 			};
 		};
 	};
@@ -538,16 +556,16 @@ class CfgVehicles {
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync an MMC computer object or Add User module to add a picture to the file browser.";
+			description = "Sync an MMC computer object, Register Computer module, or Add User module to add a picture to the file browser.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
-				description[] = {"Synchronise any registered MMC computer object or Add User module."};
+				description[] = {"Synchronise any registered MMC computer object, Register Computer module, or Add User module."};
 				position = 0;
 				direction = 0;
 				optional = 0;
 				duplicate = 1;
-				synced[] = {"AnyStaticObject", "AnyVehicle", QGVAR(addUser)};
+				synced[] = {QGVAR(registerComputer), "AnyStaticObject", "AnyVehicle", QGVAR(addUser)};
 			};
 		};
 	};
@@ -681,16 +699,16 @@ class CfgVehicles {
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync Add User modules to add an email to user inboxes or outboxes. Matching sender, recipient, and CC users receive mirrored mail copies.";
+			description = "Sync Add User modules to add an email to user inboxes or outboxes. Sync Register Computer modules or computer objects to seed computer-level mail. Matching sender, recipient, and CC users receive mirrored mail copies.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
-				description[] = {"Synchronise any Add User module or registered MMC computer object."};
+				description[] = {"Synchronise any Add User module, Register Computer module, or registered MMC computer object."};
 				position = 0;
 				direction = 0;
 				optional = 0;
 				duplicate = 1;
-				synced[] = {"AnyStaticObject", "AnyVehicle", QGVAR(addUser)};
+				synced[] = {QGVAR(registerComputer), "AnyStaticObject", "AnyVehicle", QGVAR(addUser)};
 			};
 		};
 	};

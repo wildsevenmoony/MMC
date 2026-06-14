@@ -133,6 +133,19 @@ private _setBody = {
 	_body ctrlSetStructuredText parseText _text;
 };
 
+private _setScrollableBody = {
+	params ["_text"];
+	_body ctrlSetStructuredText parseText "";
+	_desktopGroup ctrlShow true;
+	_desktopBody ctrlShow true;
+	_desktopBody ctrlSetStructuredText parseText _text;
+	private _contentHeight = 0.2 max ((ctrlTextHeight _desktopBody) + 0.03);
+	private _bodyPos = ctrlPosition _desktopBody;
+	_bodyPos set [3, _contentHeight];
+	_desktopBody ctrlSetPosition _bodyPos;
+	_desktopBody ctrlCommit 0;
+};
+
 private _noContent = "<t size='1.25'>No Content available</t>";
 
 [_display] call FUNC(refreshStandardApps);
@@ -242,19 +255,33 @@ switch (_app) do {
 				};
 				default {""};
 			};
-			private _content = if (_type isEqualTo "picture") then {
-				""
-			} else {
-				format ["<br/><br/>%1", [_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText)]
-			};
-			[format [
-				"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t>%3%4%5",
+
+			private _header = format [
+				"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t>",
 				_file getOrDefault ["name", "No file selected"],
-				_file getOrDefault ["path", ""],
-				_content,
-				_assetInfo,
-				_mediaHint
-			]] call _setBody;
+				_file getOrDefault ["path", ""]
+			];
+
+			if (_type isEqualTo "text") then {
+				[format [
+					"%1<br/><br/>%2",
+					_header,
+					[_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText)
+				]] call _setScrollableBody;
+			} else {
+				private _content = if (_type isEqualTo "picture") then {
+					""
+				} else {
+					format ["<br/><br/>%1", [_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText)]
+				};
+				[format [
+					"%1%2%3%4",
+					_header,
+					_content,
+					_assetInfo,
+					_mediaHint
+				]] call _setBody;
+			};
 		};
 	};
 	case "mail": {

@@ -86,11 +86,22 @@ if (_userModules isNotEqualTo []) then {
 	private _from = _logic getVariable [QGVAR(mailFrom), _counterpart];
 	private _to = _logic getVariable [QGVAR(mailTo), "operator@mmc.local"];
 	private _dateTime = format ["%1 %2", _date, _time];
+	private _targets = _objects select {_x getVariable [QGVAR(isComputer), false]};
+	private _registerModules = _objects select {typeOf _x isEqualTo QGVAR(registerComputer)};
+	{
+		private _registeredObjects = _x getVariable [QGVAR(registeredComputerObjects), []];
+		if (_registeredObjects isEqualTo []) then {
+			_registeredObjects = (synchronizedObjects _x) select {_x getVariable [QGVAR(isComputer), false]};
+		};
+		_targets append _registeredObjects;
+	} forEach _registerModules;
+	_targets = _targets arrayIntersect _targets;
+
 	{
 		if (!isNull _x) then {
 			[_x, _from, _to, _subject, _body, _dateTime] call FUNC(addMail);
 		};
-	} forEach (_objects select {_x getVariable [QGVAR(isComputer), false]});
+	} forEach _targets;
 };
 
 if (!is3DEN) then {

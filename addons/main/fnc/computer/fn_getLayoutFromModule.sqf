@@ -40,11 +40,28 @@ private _screenTextures2x1 = createHashMapFromArray [
 	["shutdown", _logic getVariable [QGVAR(customLayoutScreen2x1Shutdown), ""]]
 ];
 
+private _screenSelections = [];
+private _screenSelectionsText = _logic getVariable [QGVAR(customLayoutScreenSelections), ""];
+if (_screenSelectionsText isEqualType "" && {_screenSelectionsText isNotEqualTo ""}) then {
+	{
+		private _part = [_x] call CBA_fnc_trim;
+		private _digits = toArray _part;
+		if (_digits isNotEqualTo [] && {_digits findIf {_x < 48 || {_x > 57}} < 0}) then {
+			private _selection = floor (parseNumber _part);
+			if (_selection >= 0) then {
+				_screenSelections pushBackUnique _selection;
+			};
+		};
+	} forEach (_screenSelectionsText splitString ",");
+};
+
 createHashMapFromArray [
 	["preset", _logic getVariable [QGVAR(customLayoutPreset), "default"]],
 	["useCustomColors", _logic getVariable [QGVAR(customLayoutUseCustomColors), false]],
 	["background", _logic getVariable [QGVAR(customLayoutBackground), ""]],
 	["colors", _colors],
+	["applyScreenTextures", _logic getVariable [QGVAR(customLayoutApplyScreenTextures), true]],
+	["screenSelections", _screenSelections],
 	["screenTextures1x1", _screenTextures1x1],
 	["screenTextures2x1", _screenTextures2x1]
 ]

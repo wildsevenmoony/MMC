@@ -71,11 +71,22 @@ if (_userModules isNotEqualTo []) then {
 		} forEach _targets;
 	} forEach _userModules;
 } else {
+	private _targets = _objects select {_x getVariable [QGVAR(isComputer), false]};
+	private _registerModules = _objects select {typeOf _x isEqualTo QGVAR(registerComputer)};
+	{
+		private _registeredObjects = _x getVariable [QGVAR(registeredComputerObjects), []];
+		if (_registeredObjects isEqualTo []) then {
+			_registeredObjects = (synchronizedObjects _x) select {_x getVariable [QGVAR(isComputer), false]};
+		};
+		_targets append _registeredObjects;
+	} forEach _registerModules;
+	_targets = _targets arrayIntersect _targets;
+
 	{
 		if (!isNull _x) then {
 			[_x, _name, _content, "text", _path] call FUNC(addFile);
 		};
-	} forEach (_objects select {_x getVariable [QGVAR(isComputer), false]});
+	} forEach _targets;
 };
 
 if (!is3DEN) then {

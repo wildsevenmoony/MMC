@@ -33,4 +33,6 @@ if !(_data isEqualType createHashMap) then {
 _data set ["layout", _layout];
 _object setVariable [QGVAR(data), _data, true];
 
+[_object, _object getVariable [QGVAR(screenState), "login"]] call FUNC(setScreenState);
+
 true
