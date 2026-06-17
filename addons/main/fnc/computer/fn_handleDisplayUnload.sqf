@@ -14,7 +14,7 @@ if (!isNull _display) then {
 	[_display, true, true] call FUNC(clearCustomControls);
 };
 
-if (!isNull _display && {GVAR(logoutOnClose)}) then {
+if (!isNull _display && GVAR(logoutOnClose)) then {
 	private _computer = _display getVariable [QGVAR(computer), objNull];
 	private _data = _computer getVariable [QGVAR(data), createHashMap];
 	private _loginRequired = _data getOrDefault ["loginRequired", true];

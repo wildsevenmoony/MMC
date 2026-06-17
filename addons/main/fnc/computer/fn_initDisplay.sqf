@@ -20,10 +20,38 @@ uiNamespace setVariable [QGVAR(display), _display];
 private _computer = GVAR(activeComputer);
 private _data = _computer getVariable [QGVAR(data), [createHashMap] call FUNC(createDefaultData)];
 private _loginRequired = _data getOrDefault ["loginRequired", true];
+private _isMobileDisplay = (_computer getVariable [QGVAR(isMobileComputer), false]) || {missionNamespace getVariable [QGVAR(openingMobile), false]};
+missionNamespace setVariable [QGVAR(openingMobile), false];
 _display setVariable [QGVAR(computer), _computer];
 _display setVariable [QGVAR(data), _data];
 _display setVariable [QGVAR(currentApp), "desktop"];
 _display setVariable [QGVAR(startMenuOpen), false];
+_display setVariable [QGVAR(isMobileDisplay), _isMobileDisplay];
+private _mobileOrientation = if (_isMobileDisplay) then {
+	_computer getVariable [QGVAR(mobileDefaultOrientation), GVAR(mobileOrientation)]
+} else {
+	GVAR(mobileOrientation)
+};
+if !(_mobileOrientation in ["horizontal", "vertical"]) then {
+	_mobileOrientation = "horizontal";
+};
+_display setVariable [QGVAR(mobileOrientation), _mobileOrientation];
+
+private _revealMobileDisplay = {
+	if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+		{
+			_x ctrlSetFade 0;
+			_x ctrlCommit 0;
+		} forEach allControls _display;
+	};
+};
+
+if (_isMobileDisplay) then {
+	{
+		_x ctrlSetFade 1;
+		_x ctrlCommit 0;
+	} forEach allControls _display;
+};
 
 private _activeUser = [_computer] call FUNC(getActiveUser);
 _display setVariable [QGVAR(activeUser), _activeUser];
@@ -63,8 +91,14 @@ private _themeConfig = [_display] call FUNC(getThemeConfig);
 	IDC_MMC_MAIL_HEADER,
 	IDC_MMC_MAIL_TABLE,
 	IDC_MMC_FRAME_MAIL_TABLE,
+	IDC_MMC_MAIL_SCROLL_LEFT,
+	IDC_MMC_MAIL_SCROLL_RIGHT,
+	IDC_MMC_FRAME_MAIL_SCROLL_LEFT,
+	IDC_MMC_FRAME_MAIL_SCROLL_RIGHT,
 	IDC_MMC_MAIL_REPLY,
 	IDC_MMC_MAIL_FORWARD,
+	IDC_MMC_MAIL_FROM_LABEL,
+	IDC_MMC_MAIL_FROM,
 	IDC_MMC_MAIL_RECIPIENT_LABEL,
 	IDC_MMC_MAIL_RECIPIENT,
 	IDC_MMC_MAIL_CC_LABEL,
@@ -107,6 +141,8 @@ private _themeConfig = [_display] call FUNC(getThemeConfig);
 
 if (_computer getVariable [QGVAR(booting), false]) exitWith {
 	[_display, true, ["MMC", "Starting system...", "Powering hardware interfaces"], 0.08] call FUNC(setSystemOverlay);
+	[_display] call FUNC(applyMobileDisplayLayout);
+	call _revealMobileDisplay;
 };
 
 if (count _activeUser == 0) then {
@@ -120,10 +156,25 @@ if (count _activeUser == 0) then {
 	["desktop"] call FUNC(renderApp);
 };
 
+if (_isMobileDisplay) then {
+	[_display] call FUNC(applyMobileDisplayLayout);
+	call _revealMobileDisplay;
+};
+
 [_display] spawn {
 	params ["_display"];
 	while {!isNull _display} do {
 		[] call MMC_fnc_updateClock;
 		uiSleep 15;
+	};
+};
+
+if (_isMobileDisplay) then {
+	[_display] spawn {
+		params ["_display"];
+		while {!isNull _display && {_display getVariable [QGVAR(isMobileDisplay), false]}} do {
+			[_display] call MMC_fnc_applyMobileDisplayLayout;
+			uiSleep 0.2;
+		};
 	};
 };

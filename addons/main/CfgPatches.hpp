@@ -9,6 +9,11 @@ class CfgPatches {
 		author = "Moony";
 		requiredAddons[] = {
 			"mmb_main",
+			"A3_Props_F_Enoch_Military_Camps",
+			"A3_Props_F_Exp_A_Military_Equipment",
+			"A3_Structures_F_Heli_Items_Electronics",
+			"A3_Structures_F_Items_Electronics",
+			"ace_common",
 			"ace_interact_menu",
 			"CBA_Main",
 			"cba_events",
@@ -21,13 +26,26 @@ class CfgPatches {
 		requiredVersion = 2.14;
 		units[] = {
 			QGVAR(registerComputer),
+			QGVAR(mobileProfile),
+			QGVAR(assignMobileProfile),
 			QGVAR(addUser),
 			QGVAR(customLayout),
 			QGVAR(addTextFile),
 			QGVAR(addPicture),
 			QGVAR(modifyDesktop),
-			QGVAR(addMail)
+			QGVAR(addMail),
+			QGVAR(deviceSmartphone),
+			QGVAR(deviceRuggedTabletBlack),
+			QGVAR(deviceRuggedTabletGreen),
+			QGVAR(deviceRuggedTabletSand),
+			QGVAR(deviceTablet)
 		};
-		weapons[] = {};
+		weapons[] = {
+			QGVAR(smartphone),
+			QGVAR(ruggedTabletBlack),
+			QGVAR(ruggedTabletGreen),
+			QGVAR(ruggedTabletSand),
+			QGVAR(tablet)
+		};
 	};
 };

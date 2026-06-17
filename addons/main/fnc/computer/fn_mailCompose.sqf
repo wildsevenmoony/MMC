@@ -9,17 +9,26 @@ params [["_mode", "new", [""]]];
 
 private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (isNull _display) exitWith {false};
+if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+	_display setVariable [QGVAR(startMenuOpen), false];
+	_display setVariable [QGVAR(mobileNavOpen), false];
+	_display setVariable [QGVAR(mobileCustomAppsOpen), false];
+};
 
 private _mail = _display getVariable [QGVAR(selectedMail), createHashMap];
+private _computer = _display getVariable [QGVAR(computer), objNull];
+private _activeUser = [_computer] call FUNC(getActiveUser);
 private _recipient = "";
 private _cc = "";
 private _subject = "";
 private _body = "";
+private _sendFrom = _activeUser getOrDefault ["email", ""];
 
 switch (_mode) do {
 	case "reply": {
 		_recipient = _mail getOrDefault ["from", ""];
 		_cc = _mail getOrDefault ["cc", ""];
+		_sendFrom = _mail getOrDefault ["to", _sendFrom];
 		_subject = _mail getOrDefault ["subject", ""];
 		if ((_subject select [0, 4]) isNotEqualTo "Re: ") then {
 			_subject = format ["Re: %1", _subject];
@@ -51,6 +60,7 @@ switch (_mode) do {
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetText "";
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_DESC) ctrlSetText "";
 (_display displayCtrl IDC_MMC_MAIL_ERROR) ctrlSetText "";
+_display setVariable [QGVAR(mailFrom), _sendFrom];
 _display setVariable [QGVAR(mailMode), "compose"];
 _display setVariable [QGVAR(composeMode), _mode];
 ["compose"] call FUNC(renderMail);

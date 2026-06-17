@@ -230,7 +230,7 @@ private _eh = addMissionEventHandler ["Draw3D", {
 		};
 	};
 
-	if (!_posFound && {_hasPilotCamera} && {_cameraMode in ["auto", "turret", "pilot", "memory"]}) then {
+	if (!_posFound && _hasPilotCamera && {_cameraMode in ["auto", "turret", "pilot", "memory"]}) then {
 		private _pilotPosModel = getPilotCameraPosition _uav;
 		if (_pilotPosModel isNotEqualTo [0, 0, 0]) then {
 			_posModel = _pilotPosModel;
@@ -243,7 +243,7 @@ private _eh = addMissionEventHandler ["Draw3D", {
 	private _up = vectorUpVisual _uav;
 	private _directionYawApplied = false;
 
-	if (_preferPilotCamera && {_cameraMode isEqualTo "pilot"} && {_hasPilotCamera}) then {
+	if (_preferPilotCamera && {_cameraMode isEqualTo "pilot"} && _hasPilotCamera) then {
 		([_uav, getPilotCameraDirection _uav, _directionYaw] call _fnc_modelDirectionToWorld) params ["_pilotDir", "_pilotUp"];
 		[_camera, _posASL, _pilotDir, _pilotUp] call _fnc_applyCamera;
 	} else {
@@ -273,14 +273,14 @@ private _eh = addMissionEventHandler ["Draw3D", {
 		};
 	};
 
-	if (_dir isEqualTo [0, 0, 0] && {_hasPilotCamera} && {_cameraMode in ["auto", "turret"]}) then {
+	if (_dir isEqualTo [0, 0, 0] && _hasPilotCamera && {_cameraMode in ["auto", "turret"]}) then {
 		([_uav, getPilotCameraDirection _uav, _directionYaw] call _fnc_modelDirectionToWorld) params ["_pilotDir", "_pilotUp"];
 		_dir = _pilotDir;
 		_up = _pilotUp;
 		_directionYawApplied = true;
 	};
 
-	if (_dir isEqualTo [0, 0, 0] && {_useMemoryPoints} && {_cameraMode in ["auto", "turret", "memory"]}) then {
+	if (_dir isEqualTo [0, 0, 0] && _useMemoryPoints && {_cameraMode in ["auto", "turret", "memory"]}) then {
 		private _posModel = _uav selectionPosition [_posMem, "Memory"];
 		private _dirPosModel = _uav selectionPosition [_dirMem, "Memory"];
 		private _dirModel = _posModel vectorFromTo _dirPosModel;
@@ -295,7 +295,7 @@ private _eh = addMissionEventHandler ["Draw3D", {
 		};
 	};
 
-	if (_dir isEqualTo [0, 0, 0] && {_preferPilotCamera} && {_cameraMode in ["auto", "pilot"]} && {_hasPilotCamera}) then {
+	if (_dir isEqualTo [0, 0, 0] && _preferPilotCamera && {_cameraMode in ["auto", "pilot"]} && _hasPilotCamera) then {
 		([_uav, getPilotCameraDirection _uav, _directionYaw] call _fnc_modelDirectionToWorld) params ["_pilotDir", "_pilotUp"];
 		_dir = _pilotDir;
 		_up = _pilotUp;

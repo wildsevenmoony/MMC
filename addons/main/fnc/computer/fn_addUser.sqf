@@ -24,6 +24,11 @@ private _disabledApps = if (_disabledAppsProvided) then {
 } else {
 	[]
 };
+private _metadata = if ((count _this) > 8 && {(_this select 8) isEqualType createHashMap}) then {
+	_this select 8
+} else {
+	createHashMap
+};
 
 if (_email isEqualTo "") then {
 	_email = format ["%1@mmcsystems.com", _username];
@@ -54,7 +59,18 @@ if (!_loginRequired) then {
 	};
 };
 
-if (!_allowed) exitWith {false};
+if (!_allowed) exitWith {
+	["User", "Rejected computer user", createHashMapFromArray [
+		["object", _object],
+		["username", _username],
+		["email", _email],
+		["scope", _scope],
+		["loginRequired", _loginRequired],
+		["closedSystem", _data getOrDefault ["closedSystem", false]],
+		["autoLoginUsername", _autoLoginUsername]
+	]] call FUNC(debugLog);
+	false
+};
 
 private _users = _data getOrDefault ["users", []];
 private _lookup = toLowerANSI _username;
@@ -65,6 +81,10 @@ private _user = createHashMapFromArray [
 	["theme", _theme],
 	["scope", _scope],
 	["disabledApps", _disabledApps],
+	["displayName", _metadata getOrDefault ["displayName", _username]],
+	["messengerName", _metadata getOrDefault ["messengerName", _metadata getOrDefault ["displayName", _username]]],
+	["side", _metadata getOrDefault ["side", ""]],
+	["messengerSide", _metadata getOrDefault ["messengerSide", _metadata getOrDefault ["side", ""]]],
 	["files", []],
 	["mail", []],
 	["source", "module"]
@@ -82,6 +102,12 @@ if (_index < 0) then {
 	_user set ["files", _existing getOrDefault ["files", []]];
 	_user set ["mail", _existing getOrDefault ["mail", []]];
 	_user set ["outbox", _existing getOrDefault ["outbox", []]];
+	_user set ["messages", _existing getOrDefault ["messages", []]];
+	_user set ["displayName", _existing getOrDefault ["displayName", _user getOrDefault ["displayName", ""]]];
+	_user set ["messengerName", _existing getOrDefault ["messengerName", _user getOrDefault ["messengerName", ""]]];
+	_user set ["side", _existing getOrDefault ["side", _user getOrDefault ["side", ""]]];
+	_user set ["messengerSide", _existing getOrDefault ["messengerSide", _user getOrDefault ["messengerSide", ""]]];
+	_user set ["emailAliases", _existing getOrDefault ["emailAliases", _user getOrDefault ["emailAliases", []]]];
 	_user set ["desktopTitle", _existing getOrDefault ["desktopTitle", _user getOrDefault ["desktopTitle", ""]]];
 	_user set ["desktopContent", _existing getOrDefault ["desktopContent", _user getOrDefault ["desktopContent", ""]]];
 	_user set ["desktopAlign", _existing getOrDefault ["desktopAlign", _user getOrDefault ["desktopAlign", "left"]]];
@@ -115,5 +141,16 @@ if (_globalIndex < 0) then {
 } else {
 	GVAR(registeredUsers) set [_globalIndex, _user];
 };
+
+["User", "Added or updated computer user", createHashMapFromArray [
+	["object", _object],
+	["username", _username],
+	["email", _email],
+	["theme", _theme],
+	["scope", _scope],
+	["disabledApps", _disabledApps],
+	["userCountOnObject", count _users],
+	["globalUserCount", count GVAR(registeredUsers)]
+]] call FUNC(debugLog);
 
 true

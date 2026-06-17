@@ -8,6 +8,16 @@
 if (!hasInterface) exitWith {};
 
 [] call FUNC(addZeusActions);
+[] call FUNC(addMobileActions);
+
+[] spawn {
+	waitUntil {!isNull player};
+
+	while {true} do {
+		call FUNC(ensureUniqueMobileDevicesLocal);
+		uiSleep 2;
+	};
+};
 
 [] spawn {
 	waitUntil {

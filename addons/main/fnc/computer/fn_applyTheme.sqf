@@ -25,6 +25,7 @@ private _tint = _themeConfig getOrDefault ["tint", [0, 0, 0, 0]];
 private _button = _themeConfig getOrDefault ["button", [0.028, 0.032, 0.042, 0.98]];
 private _buttonText = _themeConfig getOrDefault ["buttonText", _text];
 private _bootAccent = _themeConfig getOrDefault ["bootAccent", [0.13, 0.54, 0.21, 0.95]];
+private _scrollbar = _themeConfig getOrDefault ["scrollbar", _bootAccent];
 private _border = _themeConfig getOrDefault ["border", [0, 0, 0, 0.85]];
 private _bootBarBg = _themeConfig getOrDefault ["bootBarBg", [1, 1, 1, 0.22]];
 
@@ -42,6 +43,7 @@ private _bootBarBg = _themeConfig getOrDefault ["bootBarBg", [1, 1, 1, 0.22]];
 (_display displayCtrl IDC_MMC_MAIL_TABLE) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_MAIL_TABLE) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_HEADER) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_FROM_LABEL) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_RECIPIENT_LABEL) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_CC_LABEL) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_SUBJECT_LABEL) ctrlSetTextColor _text;
@@ -49,6 +51,8 @@ private _bootBarBg = _themeConfig getOrDefault ["bootBarBg", [1, 1, 1, 0.22]];
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_DESC_LABEL) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_BODY_LABEL) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_BODY_HINT) ctrlSetTextColor _text;
+(_display displayCtrl IDC_MMC_MAIL_FROM) ctrlSetBackgroundColor _panel;
+(_display displayCtrl IDC_MMC_MAIL_FROM) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetBackgroundColor _panel;
 (_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetTextColor _text;
 (_display displayCtrl IDC_MMC_MAIL_CC) ctrlSetBackgroundColor _panel;
@@ -94,6 +98,7 @@ private _bootBarBg = _themeConfig getOrDefault ["bootBarBg", [1, 1, 1, 0.22]];
 	_ctrl ctrlSetTextColor _buttonText;
 	_ctrl ctrlSetActiveColor _buttonText;
 } forEach [
+	IDC_MMC_BTN_DESKTOP,
 	IDC_MMC_BTN_FILES,
 	IDC_MMC_BTN_MAIL,
 	IDC_MMC_BTN_MESSAGES,
@@ -105,6 +110,8 @@ private _bootBarBg = _themeConfig getOrDefault ["bootBarBg", [1, 1, 1, 0.22]];
 	IDC_MMC_MEDIA_NEXT,
 	IDC_MMC_MAIL_REPLY,
 	IDC_MMC_MAIL_FORWARD,
+	IDC_MMC_MAIL_SCROLL_LEFT,
+	IDC_MMC_MAIL_SCROLL_RIGHT,
 	IDC_MMC_MAIL_SEND,
 	IDC_MMC_MAIL_CANCEL,
 	IDC_MMC_START_BUTTON,
@@ -122,11 +129,21 @@ private _powerBackground = _themeConfig getOrDefault ["powerBackground", if (_is
 (_display displayCtrl IDC_MMC_BOOT_BAR_FILL) ctrlSetBackgroundColor _bootAccent;
 
 {
+	(_display displayCtrl _x) ctrlSetForegroundColor _scrollbar;
+} forEach [
+	IDC_MMC_APP_LIST,
+	IDC_MMC_MAIL_TABLE,
+	IDC_MMC_DESKTOP_CONTENT_GROUP,
+	IDC_MMC_FILE_DESCRIPTION_GROUP,
+	IDC_MMC_MAIL_BODY_GROUP,
+	IDC_MMC_MAIL_READ_GROUP
+];
+
+{
 	(_display displayCtrl _x) ctrlSetForegroundColor _border;
 } forEach [
 	IDC_MMC_TASKBAR,
 	IDC_MMC_APP_TITLE,
-	IDC_MMC_APP_LIST,
 	IDC_MMC_APP_BODY,
 	IDC_MMC_MEDIA_BAR,
 	IDC_MMC_MEDIA_PREV,
@@ -134,11 +151,14 @@ private _powerBackground = _themeConfig getOrDefault ["powerBackground", if (_is
 	IDC_MMC_MEDIA_STOP,
 	IDC_MMC_MEDIA_NEXT,
 	IDC_MMC_START_MENU,
+	IDC_MMC_BTN_DESKTOP,
 	IDC_MMC_BTN_FILES,
 	IDC_MMC_BTN_MAIL,
 	IDC_MMC_BTN_MESSAGES,
 	IDC_MMC_BTN_NOTES,
 	IDC_MMC_BTN_CLOSE_APP,
+	IDC_MMC_MAIL_SCROLL_LEFT,
+	IDC_MMC_MAIL_SCROLL_RIGHT,
 	IDC_MMC_START_BUTTON,
 	IDC_MMC_START_BOOT,
 	IDC_MMC_START_LOGOUT,
@@ -157,6 +177,7 @@ private _powerBackground = _themeConfig getOrDefault ["powerBackground", if (_is
 	(_display displayCtrl _x) ctrlSetTextColor _border;
 } forEach [
 	IDC_MMC_FRAME_TASKBAR,
+	IDC_MMC_FRAME_BTN_DESKTOP,
 	IDC_MMC_FRAME_BTN_FILES,
 	IDC_MMC_FRAME_BTN_MAIL,
 	IDC_MMC_FRAME_BTN_MESSAGES,
@@ -168,6 +189,8 @@ private _powerBackground = _themeConfig getOrDefault ["powerBackground", if (_is
 	IDC_MMC_FRAME_FILE_PREVIEW_IMAGE,
 	IDC_MMC_FRAME_FILE_DESCRIPTION,
 	IDC_MMC_FRAME_MAIL_TABLE,
+	IDC_MMC_FRAME_MAIL_SCROLL_LEFT,
+	IDC_MMC_FRAME_MAIL_SCROLL_RIGHT,
 	IDC_MMC_FRAME_MEDIA_BAR,
 	IDC_MMC_FRAME_MEDIA_PREV,
 	IDC_MMC_FRAME_MEDIA_PLAY,

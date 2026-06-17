@@ -25,8 +25,14 @@ private _allControls = [
 	IDC_MMC_MAIL_HEADER,
 	IDC_MMC_MAIL_TABLE,
 	IDC_MMC_FRAME_MAIL_TABLE,
+	IDC_MMC_MAIL_SCROLL_LEFT,
+	IDC_MMC_MAIL_SCROLL_RIGHT,
+	IDC_MMC_FRAME_MAIL_SCROLL_LEFT,
+	IDC_MMC_FRAME_MAIL_SCROLL_RIGHT,
 	IDC_MMC_MAIL_REPLY,
 	IDC_MMC_MAIL_FORWARD,
+	IDC_MMC_MAIL_FROM_LABEL,
+	IDC_MMC_MAIL_FROM,
 	IDC_MMC_MAIL_RECIPIENT_LABEL,
 	IDC_MMC_MAIL_RECIPIENT,
 	IDC_MMC_MAIL_CC_LABEL,
@@ -70,10 +76,12 @@ if (_fromNav) then {
 	if (_navAction isEqualTo "folder") then {
 		_display setVariable [QGVAR(mailFolder), _selected getOrDefault ["folder", "inbox"]];
 		_display setVariable [QGVAR(mailMode), "table"];
+		_display setVariable [QGVAR(mobileMailTablePage), 0];
 	};
 	if (_navAction isEqualTo "compose") then {
 		_display setVariable [QGVAR(mailMode), "compose"];
 		_display setVariable [QGVAR(composeMode), "new"];
+		_display setVariable [QGVAR(mailFrom), ""];
 		{
 			(_display displayCtrl _x) ctrlSetText "";
 		} forEach [IDC_MMC_MAIL_RECIPIENT, IDC_MMC_MAIL_CC, IDC_MMC_MAIL_SUBJECT, IDC_MMC_MAIL_ATTACHMENT, IDC_MMC_MAIL_ATTACHMENT_DESC, IDC_MMC_MAIL_BODY, IDC_MMC_MAIL_ERROR];
@@ -85,9 +93,27 @@ if (_action isEqualTo "table") then {
 };
 
 private _mode = _display getVariable [QGVAR(mailMode), "table"];
+_display setVariable [QGVAR(mailMode), _mode];
 private _folder = _display getVariable [QGVAR(mailFolder), "inbox"];
 private _email = _activeUser getOrDefault ["email", ""];
-(_display displayCtrl IDC_MMC_APP_TITLE) ctrlSetText format ["Mail - %1", _email];
+private _aliases = _activeUser getOrDefault ["emailAliases", []];
+if !(_aliases isEqualType []) then {
+	_aliases = [];
+};
+private _senderAddresses = [];
+{
+	private _address = [_x] call CBA_fnc_trim;
+	if (_address isNotEqualTo "" && {!((toLowerANSI _address) in (_senderAddresses apply {toLowerANSI _x}))}) then {
+		_senderAddresses pushBack _address;
+	};
+} forEach ([_email] + _aliases);
+private _title = _display displayCtrl IDC_MMC_APP_TITLE;
+_title ctrlSetText format ["Mail - %1", _email];
+if (_aliases isNotEqualTo []) then {
+	_title ctrlSetTooltip format ["Aliases: %1", _aliases joinString ", "];
+} else {
+	_title ctrlSetTooltip _email;
+};
 
 if (_mode isEqualTo "compose") exitWith {
 	_body ctrlSetStructuredText parseText "";
@@ -114,7 +140,30 @@ if (_mode isEqualTo "compose") exitWith {
 		IDC_MMC_MAIL_CANCEL,
 		IDC_MMC_MAIL_ERROR
 	];
+	private _showFrom = (_display getVariable [QGVAR(isMobileDisplay), false]) && {(count _senderAddresses) > 1};
+	if (_showFrom) then {
+		private _fromCombo = _display displayCtrl IDC_MMC_MAIL_FROM;
+		private _selectedFrom = _display getVariable [QGVAR(mailFrom), _email];
+		lbClear _fromCombo;
+		private _selectedIndex = -1;
+		{
+			private _row = _fromCombo lbAdd _x;
+			_fromCombo lbSetData [_row, _x];
+			if (toLowerANSI _x isEqualTo toLowerANSI _selectedFrom) then {
+				_selectedIndex = _row;
+			};
+		} forEach _senderAddresses;
+		_fromCombo lbSetCurSel (_selectedIndex max 0);
+		(_display displayCtrl IDC_MMC_MAIL_FROM_LABEL) ctrlShow true;
+		_fromCombo ctrlShow true;
+	} else {
+		(_display displayCtrl IDC_MMC_MAIL_FROM_LABEL) ctrlShow false;
+		(_display displayCtrl IDC_MMC_MAIL_FROM) ctrlShow false;
+	};
 	call FUNC(resizeMailBody);
+	if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+		[_display] call FUNC(applyMobileDisplayLayout);
+	};
 };
 
 if (_mode isEqualTo "read") exitWith {
@@ -136,14 +185,16 @@ if (_mode isEqualTo "read") exitWith {
 	]] select (_attachment isNotEqualTo "");
 	private _bodyText = [_mail getOrDefault ["body", ""]] call FUNC(normalizeStructuredText);
 	_body ctrlSetStructuredText parseText "";
+	private _metaSize = [1.25, 1.06] select (_display getVariable [QGVAR(isMobileDisplay), false]);
 	_readMeta ctrlSetStructuredText parseText format [
-		"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>From: %2<br/>To: %3<br/>CC: %4<br/>Date: %5 %6</t>",
+		"<t size='%7'>%1</t><br/><t color='#9fb6d8' size='0.92'>From: %2<br/>To: %3<br/>CC: %4<br/>Date: %5 %6</t>",
 		_mail getOrDefault ["subject", "No subject"],
 		_mail getOrDefault ["from", ""],
 		_mail getOrDefault ["to", ""],
 		_mail getOrDefault ["cc", ""],
 		_mail getOrDefault ["date", ""],
-		_mail getOrDefault ["time", ""]
+		_mail getOrDefault ["time", ""],
+		_metaSize
 	];
 	_readBody ctrlSetStructuredText parseText format ["%1%2", _bodyText, _attachmentText];
 	private _readHeight = 0.12 max ((ctrlTextHeight _readBody) + 0.02);
@@ -151,15 +202,19 @@ if (_mode isEqualTo "read") exitWith {
 	_pos set [3, _readHeight];
 	_readBody ctrlSetPosition _pos;
 	_readBody ctrlCommit 0;
+	if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+		[_display] call FUNC(applyMobileDisplayLayout);
+	};
 };
 
 private _mail = if (_folder isEqualTo "outbox") then {
 	_activeUser getOrDefault ["outbox", []]
 } else {
 	private _computerData = _display getVariable [QGVAR(data), createHashMap];
+	private _recipientAddresses = _senderAddresses apply {toLowerANSI ([_x] call CBA_fnc_trim)};
 	((_computerData getOrDefault ["mail", []]) + (_activeUser getOrDefault ["mail", []])) select {
 		private _to = toLowerANSI (_x getOrDefault ["to", ""]);
-		_to in ["", "*"] || {_to isEqualTo toLowerANSI _email}
+		_to in ["", "*"] || {_to in _recipientAddresses}
 	}
 };
 
@@ -180,6 +235,7 @@ lnbClear _table;
 
 private _themeConfig = [_display] call FUNC(getThemeConfig);
 private _isLight = _themeConfig getOrDefault ["isLight", false];
+private _textColor = _themeConfig getOrDefault ["text", [[1, 1, 1, 1], [0, 0, 0, 1]] select _isLight];
 private _readIcon = [PATHTOF(img\mail_read_white.paa), PATHTOF(img\mail_read_black.paa)] select _isLight;
 private _unreadIcon = [PATHTOF(img\mail_unread_white.paa), PATHTOF(img\mail_unread_black.paa)] select _isLight;
 private _unreadColor = [[1, 1, 1, 1], [0, 0, 0, 1]] select _isLight;
@@ -205,9 +261,16 @@ for "_column" from 0 to 5 do {
 		_attachmentName
 	];
 	_table lnbSetPicture [[_row, 0], [_unreadIcon, _readIcon] select _isRead];
-	if (!_isRead) then {
+	if (_isLight) then {
 		for "_column" from 1 to 5 do {
-			_table lnbSetColor [[_row, _column], _unreadColor];
+			_table lnbSetColor [[_row, _column], _textColor];
+		};
+	};
+	if (!_isRead) then {
+		if (_isLight) then {
+			for "_column" from 1 to 5 do {
+				_table lnbSetColor [[_row, _column], _unreadColor];
+			};
 		};
 	};
 	_table lnbSetTooltip [[_row, 3], _x getOrDefault ["subject", "No subject"]];
@@ -217,3 +280,6 @@ for "_column" from 0 to 5 do {
 
 _display setVariable [QGVAR(mailRows), [createHashMap] + _mail];
 _display setVariable [QGVAR(mailFolder), _folder];
+if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+	[_display] call FUNC(applyMobileDisplayLayout);
+};

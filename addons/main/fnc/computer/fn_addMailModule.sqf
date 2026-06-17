@@ -38,9 +38,8 @@ if ((_this param [0, objNull]) isEqualType "") then {
 
 if (!_activated || {isNull _logic}) exitWith {true};
 
-if (_objects isEqualTo []) then {
-	_objects = synchronizedObjects _logic;
-};
+_objects append (synchronizedObjects _logic);
+_objects = _objects arrayIntersect _objects;
 
 private _direction = _logic getVariable [QGVAR(mailDirection), "inbox"];
 private _counterpart = _logic getVariable [QGVAR(mailCounterpart), _logic getVariable [QGVAR(mailFrom), "sender@mmc.local"]];
@@ -54,7 +53,58 @@ private _attachmentDescription = _logic getVariable [QGVAR(mailAttachmentDescrip
 private _recipientRead = _logic getVariable [QGVAR(mailRecipientRead), false];
 private _senderRead = _logic getVariable [QGVAR(mailSenderRead), true];
 private _ccRead = _logic getVariable [QGVAR(mailCcRead), false];
+private _profileModules = _objects select {
+	private _type = typeOf _x;
+	(_x getVariable [QGVAR(isMobileProfileModule), false]) || {_type in [QGVAR(mobileProfile), QGVAR(assignMobileProfile)]}
+};
 private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), false]};
+
+["Modules", "Add Mail module resolving targets", createHashMapFromArray [
+	["module", _logic],
+	["direction", _direction],
+	["counterpart", _counterpart],
+	["cc", _cc],
+	["subject", _subject],
+	["synced", _objects apply {format ["%1:%2", typeOf _x, _x]}],
+	["profileModules", count _profileModules],
+	["userModules", count _userModules]
+]] call FUNC(debugLog);
+
+{
+	private _profile = _x getVariable [QGVAR(mobileProfileConfig), createHashMap];
+	if !(_profile isEqualType createHashMap) then {
+		_profile = createHashMap;
+	};
+	private _sourceModule = netId _logic;
+	private _mails = _profile getOrDefault ["mails", []];
+	_mails = _mails select {!(_x isEqualType createHashMap) || {_x getOrDefault ["sourceModule", ""] isNotEqualTo _sourceModule}};
+	_mails pushBack createHashMapFromArray [
+		["sourceModule", _sourceModule],
+		["direction", _direction],
+		["counterpart", _counterpart],
+		["cc", _cc],
+		["subject", _subject],
+		["body", _body],
+		["date", _date],
+		["time", _time],
+		["attachment", _attachment],
+		["attachmentDescription", _attachmentDescription],
+		["recipientRead", _recipientRead],
+		["senderRead", _senderRead],
+		["ccRead", _ccRead]
+	];
+	_profile set ["mails", _mails];
+	_x setVariable [QGVAR(mobileProfileConfig), _profile, true];
+	private _profileId = _profile getOrDefault ["id", _x getVariable [QGVAR(mobileProfileId), "mobile_profile"]];
+	[_profileId, _profile] call FUNC(registerMobileProfile);
+	[_profileId, _profile] remoteExecCall [QFUNC(registerMobileProfile), 0, format [QGVAR(mobileProfile_%1), _profileId]];
+	["Modules", "Add Mail enriched mobile profile", createHashMapFromArray [
+		["profileModule", _x],
+		["profileId", _profileId],
+		["subject", _subject],
+		["mailCount", count _mails]
+	]] call FUNC(debugLog);
+} forEach _profileModules;
 
 if (_userModules isNotEqualTo []) then {
 	{
@@ -98,8 +148,20 @@ if (_userModules isNotEqualTo []) then {
 	_targets = _targets arrayIntersect _targets;
 
 	{
-		if (!isNull _x) then {
-			[_x, _from, _to, _subject, _body, _dateTime] call FUNC(addMail);
+		private _target = _x;
+		if (!isNull _target) then {
+			private _data = _target getVariable [QGVAR(data), createHashMap];
+			private _users = (_data getOrDefault ["users", []]) select {_x isEqualType createHashMap};
+			if (_users isEqualTo []) then {
+				[_target, _from, _to, _subject, _body, _dateTime, _cc, _attachment, _attachmentDescription] call FUNC(addMail);
+			} else {
+				{
+					private _username = _x getOrDefault ["username", ""];
+					if (_username isNotEqualTo "") then {
+						[_target, _username, _direction, _counterpart, _cc, _subject, _body, _date, _time, _attachment, _attachmentDescription, _recipientRead, _senderRead, _ccRead] call FUNC(seedMail);
+					};
+				} forEach _users;
+			};
 		};
 	} forEach _targets;
 };

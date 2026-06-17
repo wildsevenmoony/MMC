@@ -12,12 +12,18 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [*]Register objects as computers in Eden, Zeus, or script.
 [*]Open computers through ACE interaction.
 [*]Open or start any registered computer from the ACE Zeus self-action.
+[*]Give players personal mobile computers through an ACE self-action when they carry MMC phone/tablet items.
+[*]Use MMC Smartphone, Tablet, and Rugged Tablet ACE misc items as ready-made mobile access devices.
+[*]Arsenal mobile items are prepared into hidden unique device items, so their mail, files, apps, and desktop data can follow the physical phone/tablet when it is looted or stolen.
+[*]Place physical MMC phone/tablet devices from Things > MMC Devices, configure their built-in user, e-mail, login behavior, theme, and apps through Eden attributes, then let players pick them up as inventory items.
+[*]Use Eden or script-registered mobile profiles to give arsenal devices synced-unit, side, role, UID, faction, or item-specific aliases, files, mail, layouts, and custom apps.
 [*]Use user accounts with usernames, passwords, e-mail addresses, and themes.
 [*]Create closed systems that only allow explicitly added users.
 [*]Add text files, picture files, mail, and custom desktop text through Eden and Zeus modules.
 [*]Use a Files app with folders for text files, pictures, and audio files.
-[*]Use a Mail app with inbox, outbox, unread/read state, reply, forward, CC, and picture attachments.
-[*]Customize the look with Default, NATO, CSAT, and AAF themes, or use the Eden Layout module for custom colors and a desktop picture.
+[*]Use a Mail app with inbox, outbox, unread/read state, reply, forward, CC, linked mobile sender identities, and picture attachments.
+[*]Use a Messenger app with side-filtered device contacts and scrollable device-to-device chat history.
+[*]Customize the look with Default, NATO, CSAT, and AAF themes, or use the MMC: Layout Eden module for custom colors and a desktop picture.
 [*]Use in-world screen textures for supported laptop, PC, and TV objects.
 [*]Add scripted custom apps with structured text, buttons, inputs, checkboxes, combo boxes, progress bars, boxes, lines, spacers, and live unit/UAV/vehicle camera feeds.
 [/list]
@@ -28,9 +34,20 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [*]The Register Computer module makes synced objects usable as MMC computers.
 [*]Users can be added to specific computers or globally.
 [*]Text, picture, and mail modules can sync to users, individual computers, or Register Computer modules.
-[*]The Layout Eden module syncs to Register Computer modules or registered computers and controls the pre-login computer look.
-[*]The Layout module can disable in-world screen texture application or override the setObjectTexture selections with comma-separated numbers.
+[*]The MMC: Layout Eden module syncs to Register Computer modules, registered computers, or mobile profile modules and controls the pre-login computer look.
+[*]The MMC: Layout module can disable in-world screen texture application or override the setObjectTexture selections with comma-separated numbers.
+[*]Mobile devices use the included MMC device items: [code]MMC_main_smartphone[/code], [code]MMC_main_ruggedTabletBlack[/code], [code]MMC_main_ruggedTabletGreen[/code], [code]MMC_main_ruggedTabletSand[/code], and [code]MMC_main_tablet[/code].
+[*]When one of these prototype items is taken from an arsenal, MMC replaces it with a hidden unique subclass and uses that item as the persistent device id.
+[*]Mobile devices use icon buttons for built-in apps and a collapsible Apps drawer for scripted custom apps.
+[*]Mission makers can assign role-address aliases through Mobile: Assign Profile, Mobile: Profile, synced modules, or script.
+[*]Mobile profiles can be created with the simple Mobile: Assign Profile module, the advanced Mobile: Profile module, or script for PvP-safe arsenal devices. Sync MMC: Layout, MMC: Modify Desktop, MMC: Add Text File, MMC: Add Picture, and MMC: Add Mail modules to either mobile profile module to enrich matching devices.
+[*]Profiles match by source, item class, side, faction, UID, player name, unit variable, unit class, group, or custom condition, and stack by priority.
+[*]Placed MMC device objects behave as compact computers and can be used for desk phones, tablets, or small mission terminals. Picked-up placed devices preserve their configured data on the item, separately from the player's personal phone/tablet.
+[*]On mobile devices, linked e-mail addresses appear in a From dropdown when composing mail.
+[*]Messenger Username fields let mission makers show contacts as callsigns or role names instead of device names, account usernames, or e-mail prefixes.
+[*]Messenger contacts are filtered to own-side devices by default. CBA settings can allow friendly-side devices and hide civilian devices. Desktop users use the Add User Messenger Side field, where Auto derives the side from the theme and Hidden keeps the user out of contact lists. Placed devices can use Messenger Side attributes; mobile profiles use the synced unit/player side.
 [*]Zeus operators can use ACE Zeus Actions > Computer to list all registered computers and open/start them remotely.
+[*]Enable the CBA Debug Logging setting while testing to write MMC module, mobile profile, and mail diagnostics to the RPT.
 [*]Text fields support structured text. Use [code]\n[/code] or [code]<br/>[/code] for line breaks.
 [*]Picture textures should use valid Arma texture paths, preferably [code].paa[/code].
 [*]Video support is not included for now because it is not reliable enough inside the dialog.

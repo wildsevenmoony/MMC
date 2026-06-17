@@ -21,7 +21,6 @@ private _rowWField = 0.42;
 private _columnGapW = 0.012;
 private _rowH = 0.04;
 private _rowGap = 0.006;
-private _savedValues = [];
 private _y = _contentPaddingY;
 
 private _addControl = {

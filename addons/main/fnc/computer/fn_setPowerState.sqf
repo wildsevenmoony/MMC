@@ -24,13 +24,12 @@ if (!alive _object || {_object getVariable [QGVAR(destroyed), false]}) exitWith 
 };
 
 _object setVariable [QGVAR(poweredOn), _poweredOn, true];
-if (!_poweredOn) then {
+if (_poweredOn) then {
+	[_object, ["desktop", "login"] select (count ([_object] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);
+} else {
 	_object setVariable [QGVAR(booting), false, true];
 	_object setVariable [QGVAR(activeUser), createHashMap, true];
 	[_object] call FUNC(stopAudio);
 	[_object, "powered_off"] call FUNC(setScreenState);
-} else {
-	private _data = _object getVariable [QGVAR(data), createHashMap];
-	[_object, ["desktop", "login"] select (count ([_object] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);
 };
 _poweredOn

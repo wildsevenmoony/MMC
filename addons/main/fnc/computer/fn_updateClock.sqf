@@ -24,11 +24,25 @@ private _pad = {
 	_text
 };
 
-_clock ctrlSetText format [
-	"%1:%2  %3.%4.%5",
-	[_hour] call _pad,
-	[_minute] call _pad,
-	[_day] call _pad,
-	[_month] call _pad,
-	_year
-];
+private _isVerticalMobile = (_display getVariable [QGVAR(isMobileDisplay), false])
+	&& {(_display getVariable [QGVAR(mobileOrientation), "horizontal"]) isEqualTo "vertical"};
+
+if (_isVerticalMobile) then {
+	_clock ctrlSetText format [
+		"%1:%2  %3.%4.%5",
+		[_hour] call _pad,
+		[_minute] call _pad,
+		[_day] call _pad,
+		[_month] call _pad,
+		_year
+	];
+} else {
+	_clock ctrlSetText format [
+		"%1:%2  %3.%4.%5",
+		[_hour] call _pad,
+		[_minute] call _pad,
+		[_day] call _pad,
+		[_month] call _pad,
+		_year
+	];
+};

@@ -21,7 +21,16 @@ private _data = _object getVariable [QGVAR(data), [createHashMap] call FUNC(crea
 private _users = _data getOrDefault ["users", []];
 private _lookup = toLowerANSI _username;
 private _index = _users findIf {toLowerANSI (_x getOrDefault ["username", ""]) isEqualTo _lookup};
-if (_index < 0) exitWith {false};
+if (_index < 0) exitWith {
+	["Files", "Add file failed because user was not found", createHashMapFromArray [
+		["object", _object],
+		["username", _username],
+		["name", _name],
+		["type", _type],
+		["knownUsers", _users apply {_x getOrDefault ["username", ""]}]
+	]] call FUNC(debugLog);
+	false
+};
 
 private _user = _users select _index;
 private _files = _user getOrDefault ["files", []];
@@ -36,4 +45,12 @@ _user set ["files", _files];
 _users set [_index, _user];
 _data set ["users", _users];
 _object setVariable [QGVAR(data), _data, true];
+["Files", "Added file to user", createHashMapFromArray [
+	["object", _object],
+	["username", _username],
+	["name", _name],
+	["type", _type],
+	["path", _path],
+	["fileCount", count _files]
+]] call FUNC(debugLog);
 true

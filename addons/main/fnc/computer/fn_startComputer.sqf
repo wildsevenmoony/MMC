@@ -91,11 +91,13 @@ _object setVariable [QGVAR(booting), true, true];
 
 	if (_openAfterBoot && {hasInterface}) then {
 		private _display = uiNamespace getVariable [QGVAR(display), displayNull];
-		if (!isNull _display) then {
+		if (isNull _display) then {
+			[_object, ["desktop", "login"] select (count ([_object] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);
+		} else {
 			private _activeUser = [_object] call FUNC(getActiveUser);
 			private _data = _object getVariable [QGVAR(data), createHashMap];
 			private _loginRequired = _data getOrDefault ["loginRequired", true];
-			if (count _activeUser == 0 && {_loginRequired}) then {
+			if (count _activeUser == 0 && _loginRequired) then {
 				[_display] call FUNC(showLogin);
 			} else {
 				if (count _activeUser == 0) then {
@@ -105,8 +107,6 @@ _object setVariable [QGVAR(booting), true, true];
 					["desktop"] call FUNC(renderApp);
 				};
 			};
-		} else {
-			[_object, ["desktop", "login"] select (count ([_object] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);
 		};
 	} else {
 		[_object, ["desktop", "login"] select (count ([_object] call FUNC(getActiveUser)) == 0)] call FUNC(setScreenState);

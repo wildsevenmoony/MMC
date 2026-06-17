@@ -85,7 +85,7 @@ _buttonCtrl ctrlAddEventHandler ["ButtonClick", {
 	private _isActive = _control getVariable [QGVAR(toggleActive), false];
 
 	if !([_computer, _activeUser, _app, _display, _control] call _condition) exitWith {};
-	if (_isToggle && {_isActive}) then {
+	if (_isToggle && _isActive) then {
 		[_computer, _activeUser, _app, _display, _control] call _deactivate;
 		_control setVariable [QGVAR(toggleActive), false];
 	} else {

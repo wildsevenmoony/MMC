@@ -23,6 +23,14 @@ if (isNull _computer) exitWith {};
 private _apps = _computer getVariable [QGVAR(customApps), []];
 if !(_apps isEqualType []) exitWith {};
 
+if (_display getVariable [QGVAR(isMobileDisplay), false]) exitWith {
+	private _validApps = _apps select {
+		_x isEqualType createHashMap
+		&& {(_x getOrDefault ["id", ""]) isNotEqualTo ""}
+	};
+	_display setVariable [QGVAR(customAppButtonCount), count _validApps];
+};
+
 private _themeConfig = [_display] call FUNC(getThemeConfig);
 private _button = _themeConfig getOrDefault ["button", [0.028, 0.032, 0.042, 0.98]];
 private _buttonHover = _themeConfig getOrDefault ["buttonHover", [0.07, 0.078, 0.096, 0.98]];

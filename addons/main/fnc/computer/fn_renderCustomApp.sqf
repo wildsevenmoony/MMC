@@ -35,6 +35,11 @@ _body ctrlSetPosition _bodyPos;
 _body ctrlSetStructuredText parseText "";
 _body ctrlCommit 0;
 
+if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+	[_display] call FUNC(applyMobileDisplayLayout);
+	_bodyPos = ctrlPosition _body;
+};
+
 private _group = _display ctrlCreate [QGVAR(RscComputerAppGroup), [_display] call FUNC(nextDynamicIdc)];
 _group ctrlSetPosition _bodyPos;
 _group ctrlSetText "";
@@ -80,5 +85,10 @@ uiNamespace setVariable [QGVAR(appBuilderUser), createHashMap];
 uiNamespace setVariable [QGVAR(appBuilderApp), createHashMap];
 uiNamespace setVariable [QGVAR(appBuilderGroup), controlNull];
 uiNamespace setVariable [QGVAR(appBuilderY), 0];
+
+if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+	_display setVariable [QGVAR(mobileRecreatePanesOnTop), true];
+	[_display] call FUNC(applyMobileDisplayLayout);
+};
 
 true

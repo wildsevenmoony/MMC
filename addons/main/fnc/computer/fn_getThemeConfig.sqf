@@ -111,6 +111,7 @@ private _config = createHashMapFromArray [
 	["buttonText", [0.92, 0.94, 0.97, 1]],
 	["buttonHoverText", [0.92, 0.94, 0.97, 1]],
 	["bootAccent", [0.13, 0.54, 0.21, 0.95]],
+	["scrollbar", [0.13, 0.54, 0.21, 0.95]],
 	["border", [0, 0, 0, 0.85]],
 	["bootBarBg", [1, 1, 1, 0.22]],
 	["powerBackground", [0, 0, 0, 0.96]]
@@ -127,6 +128,7 @@ switch (_themeName) do {
 		_config set ["buttonText", [0.035, 0.04, 0.05, 1]];
 		_config set ["buttonHoverText", [1, 1, 1, 1]];
 		_config set ["bootAccent", [0.18, 0.24, 0.32, 0.98]];
+		_config set ["scrollbar", [0.18, 0.24, 0.32, 0.98]];
 		_config set ["border", [0.1, 0.12, 0.14, 0.75]];
 		_config set ["bootBarBg", [0.08, 0.1, 0.12, 0.18]];
 		_config set ["powerBackground", [0.9, 0.92, 0.94, 0.96]];
@@ -138,6 +140,7 @@ switch (_themeName) do {
 		_config set ["button", [0, 0.333, 0.706, 0.98]];
 		_config set ["buttonHover", [0.08, 0.42, 0.8, 0.98]];
 		_config set ["bootAccent", [0, 0.333, 0.706, 0.95]];
+		_config set ["scrollbar", [0, 0.333, 0.706, 0.95]];
 		_config set ["border", [0, 0, 0.08, 0.9]];
 	};
 	case "csat": {
@@ -147,6 +150,7 @@ switch (_themeName) do {
 		_config set ["button", [0.886, 0, 0, 0.98]];
 		_config set ["buttonHover", [1, 0.13, 0.13, 0.98]];
 		_config set ["bootAccent", [0.886, 0, 0, 0.95]];
+		_config set ["scrollbar", [0.886, 0, 0, 0.95]];
 		_config set ["border", [0.12, 0, 0, 0.9]];
 	};
 	case "aaf": {
@@ -156,6 +160,7 @@ switch (_themeName) do {
 		_config set ["button", [0, 0.561, 0, 0.98]];
 		_config set ["buttonHover", [0.12, 0.66, 0.12, 0.98]];
 		_config set ["bootAccent", [0, 0.561, 0, 0.95]];
+		_config set ["scrollbar", [0, 0.561, 0, 0.95]];
 		_config set ["border", [0, 0.1, 0, 0.9]];
 	};
 };
@@ -214,6 +219,7 @@ if (_useCustomColors) then {
 		[_config, _colors, "button", "button", 0.98, _parseHexColor] call _applyColor;
 		[_config, _colors, "buttonHover", "buttonHover", 0.98, _parseHexColor] call _applyColor;
 		[_config, _colors, "bootAccent", "accent", 0.95, _parseHexColor] call _applyColor;
+		_config set ["scrollbar", _config getOrDefault ["bootAccent", [0.13, 0.54, 0.21, 0.95]]];
 		[_config, _colors, "text", "text", 1, _parseHexColor] call _applyColor;
 		[_config, _colors, "border", "border", 0.85, _parseHexColor] call _applyColor;
 		_config set ["buttonText", _config getOrDefault ["text", [0.92, 0.94, 0.97, 1]]];

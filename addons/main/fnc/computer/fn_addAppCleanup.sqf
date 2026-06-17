@@ -12,7 +12,7 @@
  * Registered <BOOL>
  *
  * Example:
- * [{params ["_display", "_args"]; systemChat "Cleaning app"}] call MMC_fnc_addAppCleanup
+ * [{params ["_display", "_args"]; systemChat format ["Cleaning %1", _args]}] call MMC_fnc_addAppCleanup
  */
 
 params [

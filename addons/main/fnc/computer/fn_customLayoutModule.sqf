@@ -38,14 +38,44 @@ if ((_this param [0, objNull]) isEqualType "") then {
 
 if (!_activated || {isNull _logic}) exitWith {true};
 
-if (_objects isEqualTo []) then {
-	_objects = synchronizedObjects _logic;
-};
+_objects append (synchronizedObjects _logic);
+_objects = _objects arrayIntersect _objects;
 
 private _layout = [_logic] call FUNC(getLayoutFromModule);
 
+private _profileModules = _objects select {
+	private _type = typeOf _x;
+	(_x getVariable [QGVAR(isMobileProfileModule), false]) || {_type in [QGVAR(mobileProfile), QGVAR(assignMobileProfile)]}
+};
 private _registerModules = _objects select {typeOf _x isEqualTo QGVAR(registerComputer)};
 private _computerObjects = _objects select {_x getVariable [QGVAR(isComputer), false]};
+
+["Modules", "Layout module resolving targets", createHashMapFromArray [
+	["module", _logic],
+	["preset", _layout getOrDefault ["preset", ""]],
+	["applyScreen", _layout getOrDefault ["applyScreen", true]],
+	["synced", _objects apply {format ["%1:%2", typeOf _x, _x]}],
+	["profileModules", count _profileModules],
+	["registerModules", count _registerModules],
+	["computerObjects", count _computerObjects]
+]] call FUNC(debugLog);
+
+{
+	private _profile = _x getVariable [QGVAR(mobileProfileConfig), createHashMap];
+	if !(_profile isEqualType createHashMap) then {
+		_profile = createHashMap;
+	};
+	_profile set ["layout", _layout];
+	_x setVariable [QGVAR(mobileProfileConfig), _profile, true];
+	private _profileId = _profile getOrDefault ["id", _x getVariable [QGVAR(mobileProfileId), "mobile_profile"]];
+	[_profileId, _profile] call FUNC(registerMobileProfile);
+	[_profileId, _profile] remoteExecCall [QFUNC(registerMobileProfile), 0, format [QGVAR(mobileProfile_%1), _profileId]];
+	["Modules", "Layout enriched mobile profile", createHashMapFromArray [
+		["profileModule", _x],
+		["profileId", _profileId],
+		["preset", _layout getOrDefault ["preset", ""]]
+	]] call FUNC(debugLog);
+} forEach _profileModules;
 
 {
 	_x setVariable [QGVAR(computerLayout), _layout, true];

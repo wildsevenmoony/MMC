@@ -2,6 +2,7 @@ class RscText;
 class RscStructuredText;
 class RscButton;
 class RscEdit;
+class RscCombo;
 class RscListbox;
 class RscListNBox;
 class RscPicture;
@@ -12,6 +13,17 @@ class GVAR(RscComputerEditMulti): RscEdit {
 	style = 16;
 	lineSpacing = 1;
 	autoComplete = "";
+	colorScrollbar[] = {1, 1, 1, 1};
+	class ScrollBar {
+		width = 0.009;
+		height = 0.009;
+		scrollSpeed = 0.01;
+		arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+		arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+		border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+		thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+		color[] = {1, 1, 1, 1};
+	};
 };
 
 class GVAR(RscComputerButton): RscButton {
@@ -33,6 +45,33 @@ class GVAR(RscComputerButton): RscButton {
 	onMouseExit = "_this params ['_ctrl']; [_ctrl, false] call MMC_fnc_setButtonHover";
 };
 
+class GVAR(RscComputerTextButton): RscText {
+	shadow = 0;
+	style = 2;
+	text = "";
+	colorText[] = {0.92, 0.94, 0.97, 1};
+	colorBackground[] = {0.028, 0.032, 0.042, 0.98};
+};
+
+class GVAR(RscComputerInvisibleButton): RscButton {
+	shadow = 0;
+	style = 2;
+	text = "";
+	colorText[] = {0, 0, 0, 0};
+	colorDisabled[] = {0, 0, 0, 0};
+	colorBackground[] = {0, 0, 0, 0};
+	colorBackground2[] = {0, 0, 0, 0};
+	colorBackgroundActive[] = {0, 0, 0, 0};
+	colorFocused[] = {0, 0, 0, 0};
+	colorShadow[] = {0, 0, 0, 0};
+	colorBorder[] = {0, 0, 0, 0};
+	borderSize = 0;
+	offsetX = 0;
+	offsetY = 0;
+	offsetPressedX = 0;
+	offsetPressedY = 0;
+};
+
 class GVAR(RscComputerFrame): RscText {
 	shadow = 0;
 	style = 64;
@@ -49,6 +88,23 @@ class GVAR(RscComputerLine): RscText {
 	colorBackground[] = {0, 0, 0, 0.85};
 };
 
+class GVAR(RscMobileNavList): RscListbox {
+	shadow = 0;
+	rowHeight = 0.035;
+	colorBackground[] = {0.02, 0.025, 0.035, 0.94};
+	colorScrollbar[] = {0, 0.333, 0.706, 0.95};
+	class ListScrollBar {
+		width = 0;
+		height = 0;
+		scrollSpeed = 0.01;
+		arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+		arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+		border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+		thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+		color[] = {1, 1, 1, 1};
+	};
+};
+
 class GVAR(RscComputerAppGroup): RscControlsGroup {
 	text = "";
 	x = 0;
@@ -56,11 +112,21 @@ class GVAR(RscComputerAppGroup): RscControlsGroup {
 	w = 1;
 	h = 1;
 	class VScrollbar {
-		width = 0.012;
+		width = 0.009;
 		autoScrollEnabled = 0;
+		arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+		arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+		border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+		thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+		color[] = {0, 0.333, 0.706, 0.95};
+		colorActive[] = {0.08, 0.42, 0.8, 0.98};
+		colorDisabled[] = {0, 0.333, 0.706, 0.25};
 	};
 	class HScrollbar {
 		height = 0;
+		color[] = {0, 0.333, 0.706, 0.95};
+		colorActive[] = {0.08, 0.42, 0.8, 0.98};
+		colorDisabled[] = {0, 0.333, 0.706, 0.25};
 	};
 	class Controls {};
 };
@@ -69,8 +135,8 @@ class GVAR(RscComputer) {
 	idd = IDD_MMC_COMPUTER;
 	movingEnable = 0;
 	enableSimulation = 1;
-	onLoad = "_this call MMC_fnc_initDisplay";
-	onUnload = "_this call MMC_fnc_handleDisplayUnload";
+	onLoad = "call MMC_fnc_initDisplay";
+	onUnload = "call MMC_fnc_handleDisplayUnload";
 	onKeyDown = "false";
 
 	class ControlsBackground {
@@ -116,34 +182,41 @@ class GVAR(RscComputer) {
 	};
 
 	class Controls {
-		class FilesButton: GVAR(RscComputerButton) {
-			idc = IDC_MMC_BTN_FILES;
-			text = "Files";
+		class DesktopButton: GVAR(RscComputerButton) {
+			idc = IDC_MMC_BTN_DESKTOP;
+			text = "Desktop";
 			x = "safeZoneX + 0.035";
 			y = "safeZoneY + 0.09";
 			w = 0.105;
 			h = 0.05;
+			action = "['desktop'] call MMC_fnc_renderApp";
+		};
+
+		class FilesButton: DesktopButton {
+			idc = IDC_MMC_BTN_FILES;
+			text = "Files";
+			y = "safeZoneY + 0.145";
 			action = "['files'] call MMC_fnc_renderApp";
 		};
 
 		class MailButton: FilesButton {
 			idc = IDC_MMC_BTN_MAIL;
 			text = "Mail";
-			y = "safeZoneY + 0.145";
+			y = "safeZoneY + 0.2";
 			action = "['mail'] call MMC_fnc_renderApp";
 		};
 
 		class MessagesButton: FilesButton {
 			idc = IDC_MMC_BTN_MESSAGES;
 			text = "Messenger";
-			y = "safeZoneY + 0.2";
+			y = "safeZoneY + 0.255";
 			action = "['messages'] call MMC_fnc_renderApp";
 		};
 
 		class NotesButton: FilesButton {
 			idc = IDC_MMC_BTN_NOTES;
 			text = "Notes";
-			y = "safeZoneY + 0.255";
+			y = "safeZoneY + 0.31";
 			action = "['notes'] call MMC_fnc_renderApp";
 		};
 
@@ -165,7 +238,7 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + 0.09";
 			w = 0.042;
 			h = 0.04;
-			action = "['desktop'] call MMC_fnc_renderApp";
+			action = "closeDialog 0";
 		};
 
 		class AppList: RscListbox {
@@ -176,6 +249,17 @@ class GVAR(RscComputer) {
 			w = 0.24;
 			h = "(safeZoneH - 0.245) * 0.25";
 			colorBackground[] = {0.02, 0.025, 0.035, 0.88};
+			colorScrollbar[] = {0, 0.333, 0.706, 0.95};
+			class ListScrollBar {
+				width = 0;
+				height = 0;
+				scrollSpeed = 0.01;
+				arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+				color[] = {1, 1, 1, 1};
+			};
 			onLBSelChanged = "['select', _this] call MMC_fnc_renderApp";
 		};
 
@@ -197,11 +281,21 @@ class GVAR(RscComputer) {
 			w = "safeZoneW - 0.66";
 			h = "safeZoneH - 0.365";
 			class VScrollbar {
-				width = 0.012;
+				width = 0.009;
 				autoScrollEnabled = 0;
+				arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+				color[] = {0, 0.333, 0.706, 0.95};
+				colorActive[] = {0.08, 0.42, 0.8, 0.98};
+				colorDisabled[] = {0, 0.333, 0.706, 0.25};
 			};
 			class HScrollbar {
 				height = 0;
+				color[] = {0, 0.333, 0.706, 0.95};
+				colorActive[] = {0.08, 0.42, 0.8, 0.98};
+				colorDisabled[] = {0, 0.333, 0.706, 0.25};
 			};
 			class Controls {
 				class DesktopContentBody: RscStructuredText {
@@ -233,11 +327,21 @@ class GVAR(RscComputer) {
 			w = "safeZoneW - 0.98";
 			h = 0.14;
 			class VScrollbar {
-				width = 0.012;
+				width = 0.009;
 				autoScrollEnabled = 0;
+				arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+				color[] = {0, 0.333, 0.706, 0.95};
+				colorActive[] = {0.08, 0.42, 0.8, 0.98};
+				colorDisabled[] = {0, 0.333, 0.706, 0.25};
 			};
 			class HScrollbar {
 				height = 0;
+				color[] = {0, 0.333, 0.706, 0.95};
+				colorActive[] = {0.08, 0.42, 0.8, 0.98};
+				colorDisabled[] = {0, 0.333, 0.706, 0.25};
 			};
 			class Controls {
 				class FileDescriptionBody: RscStructuredText {
@@ -279,12 +383,42 @@ class GVAR(RscComputer) {
 			idcLeft = -1;
 			idcRight = -1;
 			colorBackground[] = {0.02, 0.025, 0.035, 0.72};
-			colorSelectBackground[] = {0.86, 0.88, 0.92, 1};
-			colorSelectBackground2[] = {0.86, 0.88, 0.92, 1};
-			colorPictureSelected[] = {0, 0, 0, 1};
-			colorSelect[] = {0, 0, 0, 1};
-			colorSelect2[] = {0, 0, 0, 1};
+			colorSelectBackground[] = {0.06, 0.075, 0.095, 1};
+			colorSelectBackground2[] = {0.06, 0.075, 0.095, 1};
+			colorScrollbar[] = {0, 0.333, 0.706, 0.95};
+			class ListScrollBar {
+				width = 0;
+				height = 0;
+				scrollSpeed = 0.01;
+				arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+				color[] = {1, 1, 1, 1};
+			};
+			colorPictureSelected[] = {1, 1, 1, 1};
+			colorSelect[] = {1, 1, 1, 1};
+			colorSelect2[] = {1, 1, 1, 1};
 			onLBSelChanged = "call MMC_fnc_mailSelect";
+		};
+
+		class MailScrollLeft: GVAR(RscComputerButton) {
+			idc = IDC_MMC_MAIL_SCROLL_LEFT;
+			text = "<";
+			tooltip = "Scroll mail columns left.";
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + safeZoneH - 0.215";
+			w = 0.035;
+			h = 0.034;
+			action = "-1 call MMC_fnc_scrollMailTable";
+		};
+
+		class MailScrollRight: MailScrollLeft {
+			idc = IDC_MMC_MAIL_SCROLL_RIGHT;
+			text = ">";
+			tooltip = "Scroll mail columns right.";
+			x = "safeZoneX + safeZoneW - 0.215";
+			action = "1 call MMC_fnc_scrollMailTable";
 		};
 
 		class MailReply: GVAR(RscComputerButton) {
@@ -305,6 +439,28 @@ class GVAR(RscComputer) {
 			x = "safeZoneX + safeZoneW - 0.265";
 			w = 0.085;
 			action = "['forward'] call MMC_fnc_mailCompose";
+		};
+
+		class MailFromLabel: RscText {
+			idc = IDC_MMC_MAIL_FROM_LABEL;
+			shadow = 0;
+			text = "From";
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + 0.163";
+			w = 0.11;
+			h = 0.032;
+			colorBackground[] = {0, 0, 0, 0};
+		};
+
+		class MailFrom: RscCombo {
+			idc = IDC_MMC_MAIL_FROM;
+			shadow = 0;
+			x = "safeZoneX + 0.56";
+			y = "safeZoneY + 0.163";
+			w = 0.34;
+			h = 0.036;
+			tooltip = "Choose which linked mobile e-mail address to send from.";
+			colorBackground[] = {1, 1, 1, 0.08};
 		};
 
 		class MailRecipientLabel: RscText {
@@ -405,11 +561,21 @@ class GVAR(RscComputer) {
 			w = "safeZoneW - 0.64";
 			h = "safeZoneH - 0.675";
 			class VScrollbar {
-				width = 0.012;
+				width = 0.009;
 				autoScrollEnabled = 0;
+				arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+				color[] = {0, 0.333, 0.706, 0.95};
+				colorActive[] = {0.08, 0.42, 0.8, 0.98};
+				colorDisabled[] = {0, 0.333, 0.706, 0.25};
 			};
 			class HScrollbar {
 				height = 0;
+				color[] = {0, 0.333, 0.706, 0.95};
+				colorActive[] = {0.08, 0.42, 0.8, 0.98};
+				colorDisabled[] = {0, 0.333, 0.706, 0.25};
 			};
 			class Controls {
 				class MailBody: RscEdit {
@@ -444,11 +610,21 @@ class GVAR(RscComputer) {
 			w = "safeZoneW - 0.64";
 			h = "safeZoneH - 0.618";
 			class VScrollbar {
-				width = 0.012;
+				width = 0.009;
 				autoScrollEnabled = 0;
+				arrowEmpty = "\A3\ui_f\data\gui\cfg\scrollbar\arrowEmpty_ca.paa";
+				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
+				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
+				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
+				color[] = {0, 0.333, 0.706, 0.95};
+				colorActive[] = {0.08, 0.42, 0.8, 0.98};
+				colorDisabled[] = {0, 0.333, 0.706, 0.25};
 			};
 			class HScrollbar {
 				height = 0;
+				color[] = {0, 0.333, 0.706, 0.95};
+				colorActive[] = {0.08, 0.42, 0.8, 0.98};
+				colorDisabled[] = {0, 0.333, 0.706, 0.25};
 			};
 			class Controls {
 				class MailReadBody: RscStructuredText {
@@ -812,27 +988,32 @@ class GVAR(RscComputer) {
 			h = 0.055;
 		};
 
-		class FrameFilesButton: GVAR(RscComputerFrame) {
-			idc = IDC_MMC_FRAME_BTN_FILES;
+		class FrameDesktopButton: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_BTN_DESKTOP;
 			x = "safeZoneX + 0.035";
 			y = "safeZoneY + 0.09";
 			w = 0.105;
 			h = 0.05;
 		};
 
-		class FrameMailButton: FrameFilesButton {
-			idc = IDC_MMC_FRAME_BTN_MAIL;
+		class FrameFilesButton: FrameDesktopButton {
+			idc = IDC_MMC_FRAME_BTN_FILES;
 			y = "safeZoneY + 0.145";
 		};
 
-		class FrameMessagesButton: FrameFilesButton {
-			idc = IDC_MMC_FRAME_BTN_MESSAGES;
+		class FrameMailButton: FrameDesktopButton {
+			idc = IDC_MMC_FRAME_BTN_MAIL;
 			y = "safeZoneY + 0.2";
 		};
 
-		class FrameNotesButton: FrameFilesButton {
-			idc = IDC_MMC_FRAME_BTN_NOTES;
+		class FrameMessagesButton: FrameDesktopButton {
+			idc = IDC_MMC_FRAME_BTN_MESSAGES;
 			y = "safeZoneY + 0.255";
+		};
+
+		class FrameNotesButton: FrameDesktopButton {
+			idc = IDC_MMC_FRAME_BTN_NOTES;
+			y = "safeZoneY + 0.31";
 		};
 
 		class FrameAppTitle: GVAR(RscComputerFrame) {
@@ -889,6 +1070,19 @@ class GVAR(RscComputer) {
 			y = "safeZoneY + 0.19";
 			w = "safeZoneW - 0.64";
 			h = "safeZoneH - 0.37";
+		};
+
+		class FrameMailScrollLeft: GVAR(RscComputerFrame) {
+			idc = IDC_MMC_FRAME_MAIL_SCROLL_LEFT;
+			x = "safeZoneX + 0.445";
+			y = "safeZoneY + safeZoneH - 0.215";
+			w = 0.035;
+			h = 0.034;
+		};
+
+		class FrameMailScrollRight: FrameMailScrollLeft {
+			idc = IDC_MMC_FRAME_MAIL_SCROLL_RIGHT;
+			x = "safeZoneX + safeZoneW - 0.215";
 		};
 
 		class FrameMediaBar: GVAR(RscComputerFrame) {
@@ -1003,6 +1197,11 @@ class GVAR(RscComputer) {
 			h = 0.052;
 		};
 	};
+};
+
+class GVAR(RscMobileComputer): GVAR(RscComputer) {
+	idd = IDD_MMC_MOBILE_COMPUTER;
+	onKeyDown = "if ((_this select 1) in [15]) then {true} else {false}";
 };
 
 class GVAR(RscAddTextFileDialog): MMB_main_RscBaseDisplay {

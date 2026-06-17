@@ -11,6 +11,17 @@ if (isNull _display) exitWith {false};
 private _computer = _display getVariable [QGVAR(computer), objNull];
 private _activeUser = [_computer] call FUNC(getActiveUser);
 private _from = _activeUser getOrDefault ["email", ""];
+private _fromCombo = _display displayCtrl IDC_MMC_MAIL_FROM;
+if (!isNull _fromCombo && {ctrlShown _fromCombo}) then {
+	private _selected = lbCurSel _fromCombo;
+	if (_selected >= 0) then {
+		private _selectedFrom = [_fromCombo lbData _selected] call CBA_fnc_trim;
+		if (_selectedFrom isNotEqualTo "") then {
+			_from = _selectedFrom;
+			_display setVariable [QGVAR(mailFrom), _from];
+		};
+	};
+};
 private _to = [ctrlText (_display displayCtrl IDC_MMC_MAIL_RECIPIENT)] call CBA_fnc_trim;
 private _cc = [ctrlText (_display displayCtrl IDC_MMC_MAIL_CC)] call CBA_fnc_trim;
 private _subject = ctrlText (_display displayCtrl IDC_MMC_MAIL_SUBJECT);

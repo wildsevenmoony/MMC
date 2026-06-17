@@ -46,11 +46,19 @@ private _username = _logic getVariable [QGVAR(userName), "operator"];
 private _password = _logic getVariable [QGVAR(userPassword), ""];
 private _email = _logic getVariable [QGVAR(userEmail), "operator@mmcsystems.com"];
 private _theme = _logic getVariable [QGVAR(userTheme), _logic getVariable [QGVAR(userBackground), "default"]];
-private _disabledApps = [_logic] call FUNC(getDisabledAppsFromConfig);
 private _customLayout = _logic getVariable [QGVAR(customLayout), createHashMap];
 if !(_customLayout isEqualType createHashMap) then {
 	_customLayout = createHashMap;
 };
+private _messengerName = [_logic getVariable [QGVAR(messengerName), ""]] call CBA_fnc_trim;
+if (_messengerName isEqualTo "") then {
+	_messengerName = _username;
+};
+private _messengerSide = _logic getVariable [QGVAR(messengerSide), ""];
+if (_messengerSide isEqualTo "") then {
+	_messengerSide = [_theme, _customLayout] call FUNC(getMessengerSideFromTheme);
+};
+private _disabledApps = [_logic] call FUNC(getDisabledAppsFromConfig);
 
 private _legacyBackgroundCustom = _logic getVariable [QGVAR(userBackgroundCustom), ""];
 if (_legacyBackgroundCustom isNotEqualTo "" && {count _customLayout == 0}) then {
@@ -68,6 +76,10 @@ private _userConfig = createHashMapFromArray [
 	["password", _password],
 	["email", _email],
 	["theme", _theme],
+	["displayName", _messengerName],
+	["messengerName", _messengerName],
+	["side", _messengerSide],
+	["messengerSide", _messengerSide],
 	["scope", "pending"],
 	["disabledApps", _disabledApps]
 ];
@@ -90,11 +102,11 @@ _computerObjects = _computerObjects arrayIntersect _computerObjects;
 
 private _scope = "direct";
 if (_computerObjects isEqualTo []) then {
-	if (!_hasComputerTarget) then {
+	if (_hasComputerTarget) then {
+		_computerObjects = [];
+	} else {
 		_scope = "global";
 		_computerObjects = [] call FUNC(getRegisteredComputers);
-	} else {
-		_computerObjects = [];
 	};
 };
 _userConfig set ["scope", _scope];
@@ -115,7 +127,12 @@ if (_scope isEqualTo "global") then {
 
 {
 	if (!isNull _x) then {
-		[_x, _username, _password, _email, _theme, _customLayout, _scope, _disabledApps] call FUNC(addUser);
+		[_x, _username, _password, _email, _theme, _customLayout, _scope, _disabledApps, createHashMapFromArray [
+			["displayName", _messengerName],
+			["messengerName", _messengerName],
+			["side", _messengerSide],
+			["messengerSide", _messengerSide]
+		]] call FUNC(addUser);
 	};
 } forEach _computerObjects;
 

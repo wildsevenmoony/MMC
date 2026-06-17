@@ -65,7 +65,16 @@ private _attachmentDescriptionNormalized = [_attachmentDescription] call FUNC(no
 private _data = _object getVariable [QGVAR(data), [createHashMap] call FUNC(createDefaultData)];
 private _users = _data getOrDefault ["users", []];
 private _selectedIndex = _users findIf {toLowerANSI (_x getOrDefault ["username", ""]) isEqualTo toLowerANSI _username};
-if (_selectedIndex < 0) exitWith {false};
+if (_selectedIndex < 0) exitWith {
+	["Mail", "Seed mail failed because user was not found", createHashMapFromArray [
+		["object", _object],
+		["username", _username],
+		["subject", _subject],
+		["direction", _direction],
+		["knownUsers", _users apply {_x getOrDefault ["username", ""]}]
+	]] call FUNC(debugLog);
+	false
+};
 
 private _selectedUser = _users select _selectedIndex;
 private _selectedEmail = _selectedUser getOrDefault ["email", ""];
@@ -128,9 +137,9 @@ private _changed = false;
 	private _isPrimaryRecipient = (_isSelected && {_direction isEqualTo "inbox"}) || {_email isEqualTo _primaryRecipientAddress};
 	private _isCcRecipient = _email in _ccAddresses;
 
-	if (_isPrimaryRecipient || {_isCcRecipient}) then {
+	if (_isPrimaryRecipient || _isCcRecipient) then {
 		private _inboxMail = +_mail;
-		_inboxMail set ["read", [_recipientRead, _ccRead] select (!_isPrimaryRecipient && {_isCcRecipient})];
+		_inboxMail set ["read", [_recipientRead, _ccRead] select (!_isPrimaryRecipient && _isCcRecipient)];
 		private _inbox = _user getOrDefault ["mail", []];
 		_inbox pushBack _inboxMail;
 		_user set ["mail", _inbox];
@@ -150,8 +159,38 @@ private _changed = false;
 	};
 } forEach _users;
 
-if (!_changed) exitWith {false};
+if (!_changed) exitWith {
+	["Mail", "Seed mail did not match any mailbox", createHashMapFromArray [
+		["object", _object],
+		["username", _username],
+		["direction", _direction],
+		["from", _from],
+		["to", _to],
+		["cc", _cc],
+		["subject", _subject],
+		["users", _users apply {createHashMapFromArray [
+			["username", _x getOrDefault ["username", ""]],
+			["email", _x getOrDefault ["email", ""]]
+		]}]
+	]] call FUNC(debugLog);
+	false
+};
 
 _data set ["users", _users];
 _object setVariable [QGVAR(data), _data, true];
+["Mail", "Seeded mail", createHashMapFromArray [
+	["object", _object],
+	["username", _username],
+	["direction", _direction],
+	["from", _from],
+	["to", _to],
+	["cc", _cc],
+	["subject", _subject],
+	["users", _users apply {createHashMapFromArray [
+		["username", _x getOrDefault ["username", ""]],
+		["email", _x getOrDefault ["email", ""]],
+		["inbox", count (_x getOrDefault ["mail", []])],
+		["outbox", count (_x getOrDefault ["outbox", []])]
+	]}]
+]] call FUNC(debugLog);
 true

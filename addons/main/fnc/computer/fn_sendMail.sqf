@@ -17,7 +17,15 @@ params [
 
 private _fromUser = [_fromEmail] call FUNC(findUserByEmail);
 private _toUser = [_toEmail] call FUNC(findUserByEmail);
-if (count _fromUser == 0 || {count _toUser == 0}) exitWith {false};
+if (count _fromUser == 0 || {count _toUser == 0}) exitWith {
+	["Mail", "Send mail delivery failed during sender/recipient lookup", createHashMapFromArray [
+		["from", _fromEmail],
+		["to", _toEmail],
+		["fromFound", count _fromUser > 0],
+		["toFound", count _toUser > 0]
+	]] call FUNC(debugLog);
+	false
+};
 
 (call FUNC(formatMailDate)) params ["_date", "_time"];
 _body = [_body] call FUNC(normalizeStructuredText);
@@ -50,6 +58,16 @@ private _ccNames = [];
 		_ccNames pushBackUnique (_ccUser getOrDefault ["username", ""]);
 	};
 } forEach (_cc splitString ",");
+
+["Mail", "Delivering mail to registered computers", createHashMapFromArray [
+	["fromEmail", _fromEmail],
+	["toEmail", _toEmail],
+	["fromUser", _fromName],
+	["toUser", _toName],
+	["ccNames", _ccNames],
+	["subject", _subject],
+	["computerCount", count (([] call FUNC(getRegisteredComputers)) select {!isNull _x})]
+]] call FUNC(debugLog);
 
 {
 	private _computer = _x;
@@ -94,6 +112,13 @@ private _ccNames = [];
 	if (_changed) then {
 		_data set ["users", _users];
 		_computer setVariable [QGVAR(data), _data, true];
+		["Mail", "Delivered mail on computer", createHashMapFromArray [
+			["computer", _computer],
+			["systemName", _data getOrDefault ["systemName", ""]],
+			["fromUser", _fromName],
+			["toUser", _toName],
+			["ccNames", _ccNames]
+		]] call FUNC(debugLog);
 		private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 		if (!isNull _display) then {
 			if (_computer isEqualTo (_display getVariable [QGVAR(computer), objNull])) then {

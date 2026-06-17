@@ -22,3 +22,12 @@ private _hoverText = _themeConfig getOrDefault ["buttonHoverText", _buttonText];
 _control ctrlSetBackgroundColor ([_button, _hover] select _hovered);
 _control ctrlSetTextColor ([_buttonText, _hoverText] select _hovered);
 _control ctrlSetActiveColor ([_buttonText, _hoverText] select _hovered);
+
+private _icon = _control getVariable [QGVAR(mobileIconControl), controlNull];
+if (!isNull _icon) then {
+	private _iconPath = _control getVariable [[QGVAR(mobileIconPath), QGVAR(mobileIconHoverPath)] select _hovered, ""];
+	if (_iconPath isNotEqualTo "") then {
+		_icon ctrlSetText _iconPath;
+	};
+	_icon ctrlSetTextColor ([_buttonText, _hoverText] select _hovered);
+};

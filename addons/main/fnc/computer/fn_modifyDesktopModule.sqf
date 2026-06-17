@@ -37,15 +37,28 @@ if ((_this param [0, objNull]) isEqualType "") then {
 };
 
 if (!_activated || {isNull _logic}) exitWith {true};
-if (_objects isEqualTo []) then {
-	_objects = synchronizedObjects _logic;
-};
+_objects append (synchronizedObjects _logic);
+_objects = _objects arrayIntersect _objects;
 
 private _title = _logic getVariable [QGVAR(desktopTitle), "Welcome"];
 private _content = _logic getVariable [QGVAR(desktopContent), "Select an app on the left."];
 private _align = _logic getVariable [QGVAR(desktopAlign), "left"];
 private _script = _logic getVariable [QGVAR(desktopScript), ""];
+private _profileModules = _objects select {
+	private _type = typeOf _x;
+	(_x getVariable [QGVAR(isMobileProfileModule), false]) || {_type in [QGVAR(mobileProfile), QGVAR(assignMobileProfile)]}
+};
 private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), false]};
+
+["Modules", "Modify Desktop module resolving targets", createHashMapFromArray [
+	["module", _logic],
+	["title", _title],
+	["align", _align],
+	["script", _script],
+	["synced", _objects apply {format ["%1:%2", typeOf _x, _x]}],
+	["profileModules", count _profileModules],
+	["userModules", count _userModules]
+]] call FUNC(debugLog);
 
 private _getRegisterTargets = {
 	params [["_registerModule", objNull, [objNull]]];
@@ -57,6 +70,27 @@ private _getRegisterTargets = {
 
 	_targets
 };
+
+{
+	private _profile = _x getVariable [QGVAR(mobileProfileConfig), createHashMap];
+	if !(_profile isEqualType createHashMap) then {
+		_profile = createHashMap;
+	};
+	_profile set ["desktopTitle", _title];
+	_profile set ["desktopContent", _content];
+	_profile set ["desktopAlign", _align];
+	_profile set ["desktopScript", _script];
+	_x setVariable [QGVAR(mobileProfileConfig), _profile, true];
+	private _profileId = _profile getOrDefault ["id", _x getVariable [QGVAR(mobileProfileId), "mobile_profile"]];
+	[_profileId, _profile] call FUNC(registerMobileProfile);
+	[_profileId, _profile] remoteExecCall [QFUNC(registerMobileProfile), 0, format [QGVAR(mobileProfile_%1), _profileId]];
+	["Modules", "Modify Desktop enriched mobile profile", createHashMapFromArray [
+		["profileModule", _x],
+		["profileId", _profileId],
+		["title", _title],
+		["script", _script]
+	]] call FUNC(debugLog);
+} forEach _profileModules;
 
 if (_userModules isNotEqualTo []) then {
 	{

@@ -18,7 +18,36 @@ private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (isNull _display) exitWith {};
 
 private _computer = _display getVariable [QGVAR(computer), objNull];
-private _data = _display getVariable [QGVAR(data), createHashMap];
+private _data = if (isNull _computer) then {
+	_display getVariable [QGVAR(data), createHashMap]
+} else {
+	_computer getVariable [QGVAR(data), _display getVariable [QGVAR(data), createHashMap]]
+};
+_display setVariable [QGVAR(data), _data];
+private _applyMobileNow = {
+	if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+		[_display] call FUNC(applyMobileDisplayLayout);
+	};
+};
+if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+	private _mobilePaneSelection = _display getVariable [QGVAR(mobilePaneSelection), ""];
+	_display setVariable [QGVAR(mobilePaneSelection), ""];
+	_display setVariable [QGVAR(startMenuOpen), false];
+	if (_mobilePaneSelection isEqualTo "nav") then {
+		_display setVariable [QGVAR(mobileNavOpen), true];
+		_display setVariable [QGVAR(mobileCustomAppsOpen), false];
+		_display setVariable [QGVAR(mobileRecreatePanesOnTop), true];
+	} else {
+		if (_mobilePaneSelection isEqualTo "customApps") then {
+			_display setVariable [QGVAR(mobileNavOpen), false];
+			_display setVariable [QGVAR(mobileCustomAppsOpen), true];
+			_display setVariable [QGVAR(mobileRecreatePanesOnTop), true];
+		} else {
+			_display setVariable [QGVAR(mobileNavOpen), false];
+			_display setVariable [QGVAR(mobileCustomAppsOpen), false];
+		};
+	};
+};
 private _poweredOn = _computer getVariable [QGVAR(poweredOn), true];
 private _activeUser = [_computer] call FUNC(getActiveUser);
 private _loginRequired = _data getOrDefault ["loginRequired", true];
@@ -53,8 +82,14 @@ private _mailControls = [
 	IDC_MMC_MAIL_HEADER,
 	IDC_MMC_MAIL_TABLE,
 	IDC_MMC_FRAME_MAIL_TABLE,
+	IDC_MMC_MAIL_SCROLL_LEFT,
+	IDC_MMC_MAIL_SCROLL_RIGHT,
+	IDC_MMC_FRAME_MAIL_SCROLL_LEFT,
+	IDC_MMC_FRAME_MAIL_SCROLL_RIGHT,
 	IDC_MMC_MAIL_REPLY,
 	IDC_MMC_MAIL_FORWARD,
+	IDC_MMC_MAIL_FROM_LABEL,
+	IDC_MMC_MAIL_FROM,
 	IDC_MMC_MAIL_RECIPIENT_LABEL,
 	IDC_MMC_MAIL_RECIPIENT,
 	IDC_MMC_MAIL_CC_LABEL,
@@ -96,6 +131,7 @@ if (!_poweredOn) exitWith {
 	_title ctrlSetText "";
 	lbClear _list;
 	_body ctrlSetStructuredText parseText "";
+	call _applyMobileNow;
 };
 
 [_display, false] call FUNC(setSystemOverlay);
@@ -106,11 +142,13 @@ if (count _activeUser == 0) exitWith {
 	} else {
 		[_display] call FUNC(showNoUser);
 	};
+	call _applyMobileNow;
 };
 
 private _isSelect = _app isEqualTo "select";
 if (_app isEqualTo "select") then {
 	_app = _display getVariable [QGVAR(currentApp), "desktop"];
+	if (_app isEqualTo "messages" && {_display getVariable [QGVAR(messengerSyncing), false]}) exitWith {};
 } else {
 	_display setVariable [QGVAR(currentApp), _app];
 	if (_app isEqualTo "files") then {
@@ -153,7 +191,9 @@ private _noContent = "<t size='1.25'>No Content available</t>";
 [_display, false, true] call FUNC(clearCustomControls);
 
 if ((_app select [0, 7]) isEqualTo "custom:") exitWith {
-	[_app select [7]] call FUNC(renderCustomApp);
+	private _result = [_app select [7]] call FUNC(renderCustomApp);
+	call _applyMobileNow;
+	_result
 };
 
 switch (_app) do {
@@ -204,7 +244,7 @@ switch (_app) do {
 			_display setVariable [QGVAR(fileListRows), _rows];
 			["<t size='1.25'>Folders</t><br/><br/>Select a folder to view files from the computer and the active user account."] call _setBody;
 		} else {
-			private _backRow = _list lbAdd "<- Back";
+			private _backRow = _list lbAdd "Back";
 			_list lbSetTooltip [_backRow, "Return to file folders."];
 			_rows pushBack createHashMapFromArray [["action", "back"]];
 
@@ -288,15 +328,14 @@ switch (_app) do {
 		["select", _index, _isSelect] call FUNC(renderMail);
 	};
 	case "messages": {
-		_title ctrlSetText "Messenger";
-		["<t size='1.25'>Messenger</t><br/><br/>This function does not work yet."] call _setBody;
+		[_index, _isSelect] call FUNC(renderMessenger);
 	};
 	case "notes": {
 		_title ctrlSetText "Notes";
 		["<t size='1.25'>Notes</t><br/><br/>This function does not work yet."] call _setBody;
 	};
 	default {
-		_title ctrlSetText "Desktop";
+		_title ctrlSetText (["Desktop", "Home Screen"] select (_display getVariable [QGVAR(isMobileDisplay), false]));
 		_desktopGroup ctrlShow true;
 		_body ctrlSetStructuredText parseText "";
 
@@ -315,7 +354,7 @@ switch (_app) do {
 
 			private _app = createHashMapFromArray [
 				["id", "desktop"],
-				["label", "Desktop"],
+				["label", ["Desktop", "Home Screen"] select (_display getVariable [QGVAR(isMobileDisplay), false])],
 				["refreshAfterAction", false]
 			];
 
@@ -375,4 +414,8 @@ switch (_app) do {
 	};
 };
 
-ctrlSetFocus _list;
+if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+	call _applyMobileNow;
+} else {
+	ctrlSetFocus _list;
+};

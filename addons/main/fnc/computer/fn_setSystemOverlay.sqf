@@ -32,6 +32,7 @@ private _desktopControls = [
 	IDC_MMC_START_BUTTON,
 	IDC_MMC_USER,
 	IDC_MMC_CLOCK,
+	IDC_MMC_BTN_DESKTOP,
 	IDC_MMC_BTN_FILES,
 	IDC_MMC_BTN_MAIL,
 	IDC_MMC_BTN_MESSAGES,
@@ -46,6 +47,7 @@ private _desktopControls = [
 	IDC_MMC_FRAME_APP_BODY,
 	IDC_MMC_FRAME_TASKBAR,
 	IDC_MMC_FRAME_START_BUTTON,
+	IDC_MMC_FRAME_BTN_DESKTOP,
 	IDC_MMC_FRAME_BTN_FILES,
 	IDC_MMC_FRAME_BTN_MAIL,
 	IDC_MMC_FRAME_BTN_MESSAGES,
@@ -107,8 +109,14 @@ if (_show) then {
 		IDC_MMC_MAIL_HEADER,
 		IDC_MMC_MAIL_TABLE,
 		IDC_MMC_FRAME_MAIL_TABLE,
+		IDC_MMC_MAIL_SCROLL_LEFT,
+		IDC_MMC_MAIL_SCROLL_RIGHT,
+		IDC_MMC_FRAME_MAIL_SCROLL_LEFT,
+		IDC_MMC_FRAME_MAIL_SCROLL_RIGHT,
 		IDC_MMC_MAIL_REPLY,
 		IDC_MMC_MAIL_FORWARD,
+		IDC_MMC_MAIL_FROM_LABEL,
+		IDC_MMC_MAIL_FROM,
 		IDC_MMC_MAIL_RECIPIENT_LABEL,
 		IDC_MMC_MAIL_RECIPIENT,
 		IDC_MMC_MAIL_CC_LABEL,
@@ -141,10 +149,10 @@ if (_show) then {
 	(_display displayCtrl IDC_MMC_FRAME_START_MENU) ctrlShow _menuOpen;
 	(_display displayCtrl IDC_MMC_START_BOOT) ctrlShow (_menuOpen && {!_poweredOn} && {!_booting});
 	(_display displayCtrl IDC_MMC_FRAME_START_BOOT) ctrlShow (_menuOpen && {!_poweredOn} && {!_booting});
-	(_display displayCtrl IDC_MMC_START_LOGOUT) ctrlShow (_menuOpen && {_showLogout});
-	(_display displayCtrl IDC_MMC_FRAME_START_LOGOUT) ctrlShow (_menuOpen && {_showLogout});
-	(_display displayCtrl IDC_MMC_START_SHUTDOWN) ctrlShow (_menuOpen && {_poweredOn});
-	(_display displayCtrl IDC_MMC_FRAME_START_SHUTDOWN) ctrlShow (_menuOpen && {_poweredOn});
+	(_display displayCtrl IDC_MMC_START_LOGOUT) ctrlShow (_menuOpen && _showLogout);
+	(_display displayCtrl IDC_MMC_FRAME_START_LOGOUT) ctrlShow (_menuOpen && _showLogout);
+	(_display displayCtrl IDC_MMC_START_SHUTDOWN) ctrlShow (_menuOpen && _poweredOn);
+	(_display displayCtrl IDC_MMC_FRAME_START_SHUTDOWN) ctrlShow (_menuOpen && _poweredOn);
 	if (count ([_computer] call FUNC(getActiveUser)) > 0) then {
 		[_display] call FUNC(refreshStandardApps);
 	};
@@ -205,4 +213,8 @@ if (_show) then {
 	_title ctrlSetText "";
 	_status ctrlSetText "";
 	_stage ctrlSetText "";
+};
+
+if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+	[_display] call FUNC(applyMobileDisplayLayout);
 };
