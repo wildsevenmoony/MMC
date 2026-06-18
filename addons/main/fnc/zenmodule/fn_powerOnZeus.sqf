@@ -22,5 +22,5 @@ if (_objectUnderCursor getVariable [QGVAR(poweredOn), false]) exitWith {
 	[objNull, "COMPUTER IS ALREADY ON"] call BIS_fnc_showCuratorFeedbackMessage;
 };
 
-[_objectUnderCursor, false] remoteExecCall [QFUNC(startComputer), 0];
+[_objectUnderCursor, false] remoteExecCall [QFUNC(startComputer), 2];
 [objNull, "COMPUTER STARTING"] call BIS_fnc_showCuratorFeedbackMessage;

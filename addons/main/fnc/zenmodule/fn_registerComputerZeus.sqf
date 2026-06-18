@@ -106,7 +106,7 @@ if (_objectUnderCursor isKindOf "CAManBase") exitWith {
 			["disabledApps", _disabledApps]
 		];
 
-		[_object, _config] remoteExecCall [QFUNC(registerObject), 0, true];
+		[_object, _config] remoteExecCall [QFUNC(registerObject), 2];
 		[objNull, "COMPUTER REGISTERED"] call BIS_fnc_showCuratorFeedbackMessage;
 	},
 	{},
