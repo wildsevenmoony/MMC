@@ -69,6 +69,27 @@ lbClear _list;
 	_list lbSetTooltip [_row, _x getOrDefault ["label", ""]];
 } forEach _rows;
 _display setVariable [QGVAR(mailNavRows), _rows];
+_display setVariable [QGVAR(mailTableClickValid), false];
+
+_table ctrlRemoveAllEventHandlers "MouseButtonDown";
+_table ctrlAddEventHandler ["MouseButtonDown", {
+	params ["_control", "_button", "_mouseX", "_mouseY"];
+	private _display = ctrlParent _control;
+	private _rows = _display getVariable [QGVAR(mailRows), []];
+	private _tablePos = ctrlPosition _control;
+	private _localY = _mouseY;
+	if (_mouseY >= (_tablePos select 1) && {_mouseY <= ((_tablePos select 1) + (_tablePos select 3))}) then {
+		_localY = _mouseY - (_tablePos select 1);
+	};
+	private _rowHeight = 0.035;
+	private _visibleRows = floor (((_tablePos select 3) max 0) / _rowHeight);
+	private _clickableRows = (count _rows) min (_visibleRows max 0);
+	private _clickedRow = floor (_localY / _rowHeight);
+	_display setVariable [
+		QGVAR(mailTableClickValid),
+		_button isEqualTo 0 && {_localY >= 0 && {_clickedRow >= 0 && {_clickedRow < _clickableRows}}}
+	];
+}];
 
 if (_fromNav) then {
 	private _selected = _rows param [_index, createHashMap];

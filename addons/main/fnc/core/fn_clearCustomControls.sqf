@@ -89,6 +89,16 @@ if (_clearActions) then {
 
 	[_display getVariable [QGVAR(customActionControls), []]] call _deleteControls;
 	_display setVariable [QGVAR(customActionControls), []];
+	[_display getVariable [QGVAR(notesControls), []]] call _deleteControls;
+	_display setVariable [QGVAR(notesControls), []];
+	_display setVariable [QGVAR(notesTitleControl), controlNull];
+	_display setVariable [QGVAR(notesBodyGroupControl), controlNull];
+	_display setVariable [QGVAR(notesBodyControl), controlNull];
+	{
+		if (_x getVariable [QGVAR(notesDynamicControl), false]) then {
+			ctrlDelete _x;
+		};
+	} forEach (allControls _display);
 	[_display getVariable [QGVAR(messengerDynamicControls), []]] call _deleteControls;
 	_display setVariable [QGVAR(messengerDynamicControls), []];
 	[

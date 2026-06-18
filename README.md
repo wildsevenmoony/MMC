@@ -21,16 +21,17 @@ Moony's Magnificent Computers, or MMC, is an Arma 3 framework for interactive in
 - Picture files support a texture path and description shown below the image.
 - Mail app with inbox, outbox, unread/read state, reply, forward, CC, linked mobile sender identities, picture attachment support, and mission-time timestamps.
 - Messenger app with side-filtered device contacts and a scrollable chat history for registered desktop and mobile devices.
+- Notes app for multiple personal note files per user, with save/delete editing and a handoff into the mail composer.
 - Standard apps can be hidden per computer or per user.
 - Scripted custom apps that mission makers can add to individual computers, including structured text, buttons, fields, checkboxes, combo boxes, progress bars, raw controls, and live camera feeds.
-- Zeus modules for adding users, text files, pictures, mail, registering computers, changing power state, and modifying desktop text.
+- Zeus modules for registering computers, changing power state, adding users, assigning live mobile profiles, adding text files, pictures, notes, mail, and modifying desktop/home text.
 - Eden modules for registering computers, adding users, layouts, adding text files, adding pictures, adding mail, and modifying desktop text.
 
 ## Current State
 
-MMC is playable as a mission-maker tool, but it is still under active development. The current focus is the computer shell, user system, files, pictures, and mail workflow.
+MMC is playable as a mission-maker tool, but it is still under active development. The current focus is the computer shell, user system, files, pictures, mail, messenger, and notes workflow.
 
-Notes, richer media handling, and more polished computer-screen object textures are still future work. Video support was investigated and intentionally left out for now because Arma UI playback behavior is not reliable enough for the intended workflow.
+Richer media handling and more polished computer-screen object textures are still future work. Video support was investigated and intentionally left out for now because Arma UI playback behavior is not reliable enough for the intended workflow.
 
 ## Mission-Maker Notes
 
@@ -49,6 +50,8 @@ Notes, richer media handling, and more polished computer-screen object textures 
 - Use `Messenger Username` fields when a contact should appear under a mission-specific callsign or role name instead of the device name, account username, or e-mail prefix.
 - Desktop users use `Messenger Side` in the `Computer: Add User` module. `Auto (Theme)` derives NATO as BLUFOR, CSAT as OPFOR, and AAF as Independent; use `Hidden` to keep a user out of Messenger contact lists. Physical mobile devices can set a `Messenger Side` in their Eden attributes, while mobile profile devices receive their side from the synced unit or from the player opening an arsenal/personal device.
 - Messenger sends with Enter. Use Shift+Enter for line breaks inside a longer message.
+- Notes are stored on the active user account. Users can create multiple notes, save/delete them, and open a note as a prefilled e-mail draft.
+- Script-created mobile profiles can include a `notes` array with `title` and `body` fields to seed personal notes on matching devices.
 - Picture texture paths should point to valid `.paa` textures from the mission or a mod.
 - The file path fields are paths inside the computer's file browser, not necessarily real filesystem paths.
 - Audio playback currently relies on configured mod sounds. Mission-file audio is not treated as a reliable general-purpose file format yet.
@@ -56,10 +59,11 @@ Notes, richer media handling, and more polished computer-screen object textures 
 - The `Mobile: Assign Profile` module is the simple route for player slots: sync it to playable or AI units, optionally give them a phone/tablet item, set their primary and linked e-mail addresses, theme, app scripts, and visible apps.
 - The advanced `Mobile: Profile` module configures personal/arsenal mobile devices without requiring one preplaced device per player. Use its selector fields to target a side, faction, UID, player name, unit variable, unit class, group, item class, device id, or picked-up device source.
 - Sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, and `MMC: Add Mail` modules to `Mobile: Assign Profile` or `Mobile: Profile` to give matching devices the same kind of layout, desktop, files, pictures, and mail content as desktop computers.
+- Zeus can assign a compact live mobile profile to a unit with `Assign Mobile Profile`. This is intended for ad-hoc mission control during play; use the Eden `Mobile: Assign Profile` or `Mobile: Profile` modules for preplanned profile content and synced layout/file/mail setup.
 
 ## Debugging
 
-MMC has an optional CBA debug setting at `Moony's Magnificent Computers > Debug > Debug Logging`. It is disabled by default. When enabled, MMC writes detailed `[MMC DEBUG]` lines to the RPT for module sync resolution, mobile profile selection and application, unique mobile device preparation, file/mail seeding, custom app script loading, and mail recipient lookup.
+MMC has an optional CBA debug setting at `Moony's Magnificent Computers > Debug > Debug Logging`. It is disabled by default. When enabled, MMC writes detailed `[MMC DEBUG]` lines to the RPT for module sync resolution, mobile profile selection and application, unique mobile device preparation, file/mail/note seeding, custom app script loading, and mail recipient lookup.
 
 Enable this only while testing a mission. For mobile profile issues, open the affected device once, then search the RPT for `[MMC DEBUG]`, `AssignProfile`, `MobileProfile`, `Modules`, and `Mail`.
 
@@ -73,7 +77,7 @@ MMC_main_smartphone, MMC_main_ruggedTabletBlack, MMC_main_ruggedTabletGreen, MMC
 
 Players open mobile devices through `ACE Self Actions > Mobile Computer`. If a player carries more than one MMC device, every available device appears as a separate child action. Arsenal/prototype inventory phones and tablets are automatically replaced with hidden unique subclasses such as `MMC_main_smartphone_1`. That unique classname is used as the device id, so the phone/tablet keeps its own mail, files, apps, and desktop data if it is dropped, looted, stolen, or moved to another player.
 
-The personal mobile device is backed by a server-registered hidden MMC computer, so mail validation, delivery, and Messenger contacts still work on dedicated servers. It opens straight to a personal desktop and uses the same Files, Mail, Messenger, and custom app renderer as normal computers. The dialog is constrained into a compact mobile surface and includes a `Rotate` button to switch between horizontal and vertical layouts. Smartphones start in vertical orientation; tablets start horizontal.
+The personal mobile device is backed by a server-registered hidden MMC computer, so mail validation, delivery, and Messenger contacts still work on dedicated servers. It opens straight to a personal desktop and uses the same Files, Mail, Messenger, Notes, and custom app renderer as normal computers. The dialog is constrained into a compact mobile surface and includes a `Rotate` button to switch between horizontal and vertical layouts. Smartphones start in vertical orientation; tablets start horizontal.
 
 On mobile, the built-in apps stay on the icon dock. Scripted custom apps appear in a collapsible `Apps` drawer so long app names do not have to fit into the compact icon buttons. In vertical mode the drawer opens from the right side of the content area; in horizontal mode it opens from the bottom.
 
@@ -98,7 +102,7 @@ Aliases behave like real addresses for mail lookup. A player keeps their generat
 
 ### Mobile Profiles
 
-Inventory mobile devices from the arsenal can be configured through mobile profiles. Profiles are matched when the player opens the device and can add primary e-mail addresses, aliases, themes, layout, desktop text, files, mail, and local scripted apps. This keeps arsenal devices dynamic without blindly giving every side the same apps in PvP.
+Inventory mobile devices from the arsenal can be configured through mobile profiles. Profiles are matched when the player opens the device and can add primary e-mail addresses, aliases, themes, layout, desktop text, files, mail, notes, and local scripted apps. This keeps arsenal devices dynamic without blindly giving every side the same apps in PvP.
 
 For ordinary player-slot setup, use `Mobile: Assign Profile`:
 
@@ -110,6 +114,8 @@ For ordinary player-slot setup, use `Mobile: Assign Profile`:
 - Sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, and `MMC: Add Mail` modules to the assign module to seed that profile.
 
 The assigned profile applies when a personal MMC inventory device is first prepared, including devices taken from an arsenal after mission start. After that, the unique device keeps its own data. If an enemy steals the phone from a corpse, they open that phone's existing data rather than getting their own profile on it. Physical placed devices picked up from the world keep their own configured data from the start, which is usually what you want for stealable intel devices.
+
+During a live mission, Zeus can use the `Assign Mobile Profile` Zeus module on a unit to set a simple personal profile, optionally give a device, set a primary address, linked addresses, Messenger username/side, theme, custom app script files, and visible apps. It does not replace the full Eden profile module surface, but it is useful for quick role handoff or emergency devices.
 
 The advanced route is the `Mobile: Profile` Eden module. Configure its selectors, then sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, and `MMC: Add Mail` modules to it. The module broadcasts the profile to clients/JIP, while app script files listed in `Custom App Script Files` are still executed locally and therefore need to exist in the mission or a loaded mod.
 
@@ -151,10 +157,10 @@ Useful content keys:
 ```sqf
 "systemName", "theme", "layout", "disabledApps",
 "desktopTitle", "desktopContent", "desktopAlign", "desktopScript",
-"aliases", "files", "mails", "apps", "appScripts"
+"aliases", "files", "mails", "notes", "apps", "appScripts"
 ```
 
-Files and mails are seeded once per device/profile so reopening the same arsenal device does not duplicate content. Set `reapplyContent = true` on a profile only when repeated seeding is intentional.
+Files, mails, and notes are seeded once per device/profile so reopening the same arsenal device does not duplicate content. Set `reapplyContent = true` on a profile only when repeated seeding is intentional.
 
 Local app scripts are called as:
 

@@ -331,8 +331,7 @@ switch (_app) do {
 		[_index, _isSelect] call FUNC(renderMessenger);
 	};
 	case "notes": {
-		_title ctrlSetText "Notes";
-		["<t size='1.25'>Notes</t><br/><br/>This function does not work yet."] call _setBody;
+		["select", _index, _isSelect] call FUNC(renderNotes);
 	};
 	default {
 		_title ctrlSetText (["Desktop", "Home Screen"] select (_display getVariable [QGVAR(isMobileDisplay), false]));

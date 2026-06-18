@@ -317,7 +317,7 @@ _customApps = _customApps select {
 };
 private _hasCustomApps = !_systemOverlayVisible && {_customApps isNotEqualTo []};
 private _customOpen = _display getVariable [QGVAR(mobileCustomAppsOpen), false];
-private _hasNavPane = !_systemOverlayVisible && {(lbSize _list > 0) && {_currentApp in ["files", "mail", "messages"]}};
+private _hasNavPane = !_systemOverlayVisible && {(lbSize _list > 0) && {_currentApp in ["files", "mail", "messages", "notes"]}};
 private _contentLeft = _screenX + _gap + _railW + ([0, _navHandleW + _navHandleGap] select (_orientation isEqualTo "horizontal"));
 private _contentRight = _screenX + _screenW - _gap - (_navHandleW + _navHandleGap);
 private _contentTop = _screenY + _gap;
@@ -486,6 +486,17 @@ for "_i" from 0 to ((lbSize _list) - 1) do {
 };
 private _navSignature = str _navEntries;
 private _sourceIndex = lbCurSel _list;
+if (_currentApp isEqualTo "mail") then {
+	private _mailMode = _display getVariable [QGVAR(mailMode), "table"];
+	private _mailFolder = _display getVariable [QGVAR(mailFolder), "inbox"];
+	_sourceIndex = switch (_mailMode) do {
+		case "compose": {2};
+		default {["inbox", "outbox"] find _mailFolder};
+	};
+	if (_sourceIndex < 0) then {
+		_sourceIndex = 0;
+	};
+};
 private _previousNavSignature = _display getVariable [QGVAR(mobileNavSignature), ""];
 private _navNeedsContentSync = (lbSize _navList) isNotEqualTo (count _navEntries);
 if (_navSignature isNotEqualTo _previousNavSignature || _navNeedsContentSync) then {
@@ -509,6 +520,17 @@ if (_navSignature isNotEqualTo _previousNavSignature || _navNeedsContentSync) th
 			_display setVariable [QGVAR(mobileNavSyncing), false];
 		};
 	}, [_display], 0] call CBA_fnc_waitAndExecute;
+} else {
+	if (_sourceIndex >= 0 && {_sourceIndex < lbSize _navList && {(lbCurSel _navList) isNotEqualTo _sourceIndex}}) then {
+		_display setVariable [QGVAR(mobileNavSyncing), true];
+		_navList lbSetCurSel _sourceIndex;
+		[{
+			params ["_display"];
+			if (!isNull _display) then {
+				_display setVariable [QGVAR(mobileNavSyncing), false];
+			};
+		}, [_display], 0] call CBA_fnc_waitAndExecute;
+	};
 };
 
 private _navTogglePos = [0, 0, 0, 0];
@@ -968,7 +990,7 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table"]})
 		private _mailBodyH = ((_bodyY + _bodyH - 0.01) - _y - _bottomReserve) max 0.11;
 		[IDC_MMC_MAIL_BODY_GROUP, [_innerX, _y, _innerW, _mailBodyH]] call _set;
 		private _mailBody = _display displayCtrl IDC_MMC_MAIL_BODY;
-		_mailBody ctrlSetPosition [0, 0, _innerW - 0.014, _mailBodyH max ((ctrlPosition _mailBody) select 3)];
+		_mailBody ctrlSetPosition [0, 0, _innerW - 0.014, _mailBodyH];
 		_mailBody ctrlCommit 0;
 		_y = _y + _mailBodyH + _rowGap;
 		{

@@ -2,7 +2,15 @@
 
 /*
  * Author: Moony
- * Confirms the Modify Desktop dynamic dialog.
+ * Confirms the Add Note dynamic dialog.
+ *
+ * Arguments:
+ * 0: Dynamic dialog display <DISPLAY>
+ * 1: Parsed field values <ARRAY>
+ * 2: Dialog arguments <ANY>
+ *
+ * Return Value:
+ * Confirmed <BOOL>
  */
 
 params ["_display", "_values", "_arguments"];
@@ -14,15 +22,9 @@ private _getValue = {
 	(_values select _index) select 3
 };
 
-private _title = ["desktopTitle", "Welcome"] call _getValue;
-private _content = ["desktopContent", "Select an app on the left."] call _getValue;
-private _align = toLowerANSI (["desktopAlign", "left"] call _getValue);
-private _script = ["desktopScript", ""] call _getValue;
+private _title = ["title", "Personal Note"] call _getValue;
+private _body = ["body", ""] call _getValue;
 private _selected = (_display getVariable [QGVAR(userCheckboxes), []]) select {cbChecked (_x select 1)};
-
-if !(_align in ["left", "center", "right"]) then {
-	_align = "left";
-};
 
 if (_selected isEqualTo []) exitWith {
 	[objNull, "NO USERS SELECTED"] call BIS_fnc_showCuratorFeedbackMessage;
@@ -32,9 +34,9 @@ if (_selected isEqualTo []) exitWith {
 {
 	private _computer = _x;
 	{
-		[_computer, _x select 0, _title, _content, _align, _script] remoteExecCall [QFUNC(modifyDesktop), 2];
+		[_computer, _title, _body, (_x select 0)] remoteExecCall [QFUNC(addNote), 2];
 	} forEach _selected;
 } forEach ([] call FUNC(getRegisteredComputers));
 
-[objNull, "DESKTOP MODIFIED"] call BIS_fnc_showCuratorFeedbackMessage;
+[objNull, "NOTE ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
 true

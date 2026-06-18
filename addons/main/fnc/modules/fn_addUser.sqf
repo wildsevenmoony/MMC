@@ -87,6 +87,7 @@ private _user = createHashMapFromArray [
 	["messengerSide", _metadata getOrDefault ["messengerSide", _metadata getOrDefault ["side", ""]]],
 	["files", []],
 	["mail", []],
+	["notes", []],
 	["source", "module"]
 ];
 
@@ -103,6 +104,7 @@ if (_index < 0) then {
 	_user set ["mail", _existing getOrDefault ["mail", []]];
 	_user set ["outbox", _existing getOrDefault ["outbox", []]];
 	_user set ["messages", _existing getOrDefault ["messages", []]];
+	_user set ["notes", _existing getOrDefault ["notes", []]];
 	_user set ["displayName", _existing getOrDefault ["displayName", _user getOrDefault ["displayName", ""]]];
 	_user set ["messengerName", _existing getOrDefault ["messengerName", _user getOrDefault ["messengerName", ""]]];
 	_user set ["side", _existing getOrDefault ["side", _user getOrDefault ["side", ""]]];

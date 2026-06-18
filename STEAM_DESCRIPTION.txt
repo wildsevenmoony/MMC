@@ -2,7 +2,7 @@
 
 [b]Moony's Magnificent Computers[/b], or [b]MMC[/b], adds interactive computer systems for Arma 3 missions.
 
-It lets mission makers turn laptops, PCs, or other objects into usable in-game computers with a desktop, login screen, file browser, pictures, mail accounts, startup/shutdown sequences, and a bit of mission-intel nonsense on top.
+It lets mission makers turn laptops, PCs, or other objects into usable in-game computers with a desktop, login screen, file browser, pictures, mail accounts, notes, startup/shutdown sequences, and a bit of mission-intel nonsense on top.
 
 This is mainly built for my friends and me, so expect the usual: useful, probably weird in places, and definitely still growing.
 
@@ -19,10 +19,11 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [*]Use Eden or script-registered mobile profiles to give arsenal devices synced-unit, side, role, UID, faction, or item-specific aliases, files, mail, layouts, and custom apps.
 [*]Use user accounts with usernames, passwords, e-mail addresses, and themes.
 [*]Create closed systems that only allow explicitly added users.
-[*]Add text files, picture files, mail, and custom desktop text through Eden and Zeus modules.
+[*]Add text files, picture files, mail, and custom desktop text through Eden and Zeus modules, plus seed user notes from Zeus.
 [*]Use a Files app with folders for text files, pictures, and audio files.
 [*]Use a Mail app with inbox, outbox, unread/read state, reply, forward, CC, linked mobile sender identities, and picture attachments.
 [*]Use a Messenger app with side-filtered device contacts and scrollable device-to-device chat history.
+[*]Use a Notes app for multiple personal note files per user, with save/delete editing and a quick handoff into the mail composer.
 [*]Customize the look with Default, NATO, CSAT, and AAF themes, or use the MMC: Layout Eden module for custom colors and a desktop picture.
 [*]Use in-world screen textures for supported laptop, PC, and TV objects.
 [*]Add scripted custom apps with structured text, buttons, inputs, checkboxes, combo boxes, progress bars, boxes, lines, spacers, and live unit/UAV/vehicle camera feeds.
@@ -40,14 +41,16 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [*]When one of these prototype items is taken from an arsenal, MMC replaces it with a hidden unique subclass and uses that item as the persistent device id.
 [*]Mobile devices use icon buttons for built-in apps and a collapsible Apps drawer for scripted custom apps.
 [*]Mission makers can assign role-address aliases through Mobile: Assign Profile, Mobile: Profile, synced modules, or script.
-[*]Mobile profiles can be created with the simple Mobile: Assign Profile module, the advanced Mobile: Profile module, or script for PvP-safe arsenal devices. Sync MMC: Layout, MMC: Modify Desktop, MMC: Add Text File, MMC: Add Picture, and MMC: Add Mail modules to either mobile profile module to enrich matching devices.
+[*]Mobile profiles can be created with the simple Mobile: Assign Profile module, the advanced Mobile: Profile module, or script for PvP-safe arsenal devices. Sync MMC: Layout, MMC: Modify Desktop, MMC: Add Text File, MMC: Add Picture, and MMC: Add Mail modules to either mobile profile module to enrich matching devices. Script profiles can also seed notes with [code]notes[/code] entries.
+[*]Zeus can assign a compact live mobile profile to a unit, optionally give a device, set linked addresses, choose Messenger identity, and toggle visible apps.
 [*]Profiles match by source, item class, side, faction, UID, player name, unit variable, unit class, group, or custom condition, and stack by priority.
 [*]Placed MMC device objects behave as compact computers and can be used for desk phones, tablets, or small mission terminals. Picked-up placed devices preserve their configured data on the item, separately from the player's personal phone/tablet.
 [*]On mobile devices, linked e-mail addresses appear in a From dropdown when composing mail.
 [*]Messenger Username fields let mission makers show contacts as callsigns or role names instead of device names, account usernames, or e-mail prefixes.
 [*]Messenger contacts are filtered to own-side devices by default. CBA settings can allow friendly-side devices and hide civilian devices. Desktop users use the Add User Messenger Side field, where Auto derives the side from the theme and Hidden keeps the user out of contact lists. Placed devices can use Messenger Side attributes; mobile profiles use the synced unit/player side.
+[*]Notes are saved on the active user account, so shared computers keep the currently logged-in user's notes with that account.
 [*]Zeus operators can use ACE Zeus Actions > Computer to list all registered computers and open/start them remotely.
-[*]Enable the CBA Debug Logging setting while testing to write MMC module, mobile profile, and mail diagnostics to the RPT.
+[*]Enable the CBA Debug Logging setting while testing to write MMC module, mobile profile, note, and mail diagnostics to the RPT.
 [*]Text fields support structured text. Use [code]\n[/code] or [code]<br/>[/code] for line breaks.
 [*]Picture textures should use valid Arma texture paths, preferably [code].paa[/code].
 [*]Video support is not included for now because it is not reliable enough inside the dialog.

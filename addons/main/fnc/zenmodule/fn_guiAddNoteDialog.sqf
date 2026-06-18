@@ -4,12 +4,19 @@
 
 /*
  * Author: Moony
- * Populates the MMB dynamic dialog for modifying user desktop text.
+ * Populates the MMB dynamic dialog for adding notes to users.
+ *
+ * Arguments:
+ * 0: Dynamic dialog display <DISPLAY>
+ * 1: Content controls group <CONTROL>
+ *
+ * Return Value:
+ * None
  */
 
 params ["_display", "_content"];
 
-(_display displayCtrl IDC_TITLE) ctrlSetText "Modify Desktop";
+(_display displayCtrl IDC_TITLE) ctrlSetText "Add Note";
 
 private _controls = [];
 private _fields = [];
@@ -61,41 +68,12 @@ private _addEdit = {
 	_edit
 };
 
-private _addCombo = {
-	params ["_label", "_comboIdc", "_values", ["_default", ""], ["_key", ""], ["_tooltip", ""]];
-	(call _addRowBackground) params ["_labelTextX", "_fieldX"];
-	private _labelControl = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], _label] call _addControl;
-	if (_tooltip isNotEqualTo "") then {
-		_labelControl ctrlSetTooltip _tooltip;
-	};
-	private _combo = ["RscCombo", _comboIdc, [_fieldX, _y, _rowWField, _rowH], ""] call _addControl;
-	{
-		_x params ["_text", "_data"];
-		private _index = _combo lbAdd _text;
-		_combo lbSetData [_index, _data];
-		if (_data isEqualTo _default) then {
-			_combo lbSetCurSel _index;
-		};
-	} forEach _values;
-	if (lbCurSel _combo < 0 && {lbSize _combo > 0}) then {
-		_combo lbSetCurSel 0;
-	};
-	if (_tooltip isNotEqualTo "") then {
-		_combo ctrlSetTooltip _tooltip;
-	};
-	_fields pushBack [_key, _comboIdc, "combo"];
-	_y = _y + _rowH + _rowGap;
-	_combo
-};
-
-["Desktop Title", -1, IDC_MMC_DLG_DESKTOP_TITLE, "Welcome", "desktopTitle", "Title shown on the user's Desktop screen."] call _addEdit;
-["Alignment", IDC_MMC_DLG_DESKTOP_ALIGN, [["Left", "left"], ["Center", "center"], ["Right", "right"]], "left", "desktopAlign", "Text alignment on the Desktop/Home screen."] call _addCombo;
-["Desktop Text", -1, IDC_MMC_DLG_DESKTOP_CONTENT, "Select an app on the left.", "desktopContent", "Structured text is supported. Use \n or <br/> for line breaks.", _rowH * 5, QGVAR(RscComputerEditMulti)] call _addEdit;
-["Desktop Script File", -1, IDC_MMC_DLG_DESKTOP_SCRIPT, "", "desktopScript", "Optional mission or mod script path. If set, the script builds the Desktop/Home screen with MMC app building blocks."] call _addEdit;
+["Name", -1, IDC_MMC_DLG_NOTE_TITLE, "Personal Note", "title", "Name shown in the Notes app."] call _addEdit;
+["Note", -1, IDC_MMC_DLG_NOTE_BODY, "", "body", "Note text. Shift+Enter adds a line break. Structured text is kept for later mail or desktop reuse.", _rowH * 5, QGVAR(RscComputerEditMulti)] call _addEdit;
 
 (call _addRowBackground) params ["_labelTextX", "_fieldX"];
 private _label = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], "User"] call _addControl;
-_label ctrlSetTooltip "Select the Users to modify.";
+_label ctrlSetTooltip "Select the Users to add the note to.";
 
 private _groupH = _rowH * 3;
 private _selectionBackground = ["RscText", -1, [_fieldX, _y, _rowWField, _groupH], ""] call _addControl;
@@ -125,7 +103,7 @@ private _checkboxes = [];
 _display setVariable [QGVAR(userCheckboxes), _checkboxes];
 _y = _y + _groupH + _rowGap;
 
-_display setVariable ["MMB_main_onConfirm", QFUNC(confirmModifyDesktopDialog)];
+_display setVariable ["MMB_main_onConfirm", QFUNC(confirmAddNoteDialog)];
 _display setVariable ["MMB_main_controls", _controls];
 _display setVariable ["MMB_main_fields", _fields];
 _display setVariable ["MMB_main_contentHeight", _y + _contentPaddingY];

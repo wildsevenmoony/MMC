@@ -69,7 +69,8 @@ if (_device getVariable [QGVAR(isMobileComputer), false]) then {
 	["disabledApps", _disabledApps],
 	["applySeedContent", _applySeedContent],
 	["profileFiles", count (_profile getOrDefault ["files", []])],
-	["profileMails", count (_profile getOrDefault ["mails", _profile getOrDefault ["mail", []]])]
+	["profileMails", count (_profile getOrDefault ["mails", _profile getOrDefault ["mail", []]])],
+	["profileNotes", count (_profile getOrDefault ["notes", []])]
 ]] call FUNC(debugLog);
 
 private _addUserResult = [_device, _username, _user getOrDefault ["password", ""], _email, _theme, _layout, "direct", _disabledApps] call FUNC(addUser);
@@ -160,6 +161,7 @@ if (_aliases isNotEqualTo []) then {
 
 private _filesAdded = 0;
 private _mailsSeeded = 0;
+private _notesSeeded = 0;
 if (_applySeedContent) then {
 	{
 		private _file = if (_x isEqualType createHashMap) then {_x} else {createHashMapFromArray _x};
@@ -195,6 +197,17 @@ if (_applySeedContent) then {
 		] call FUNC(seedMail);
 		_mailsSeeded = _mailsSeeded + 1;
 	} forEach (_profile getOrDefault ["mails", _profile getOrDefault ["mail", []]]);
+
+	{
+		private _note = if (_x isEqualType createHashMap) then {_x} else {createHashMapFromArray _x};
+		[
+			_device,
+			_note getOrDefault ["title", "Untitled note"],
+			_note getOrDefault ["body", _note getOrDefault ["content", ""]],
+			_username
+		] call FUNC(addNote);
+		_notesSeeded = _notesSeeded + 1;
+	} forEach (_profile getOrDefault ["notes", []]);
 };
 
 _data = _device getVariable [QGVAR(data), _data];
@@ -210,9 +223,11 @@ if (_userIndex >= 0) then {
 		["theme", _finalUser getOrDefault ["theme", ""]],
 		["filesAddedThisPass", _filesAdded],
 		["mailsSeededThisPass", _mailsSeeded],
+		["notesSeededThisPass", _notesSeeded],
 		["filesTotal", count (_finalUser getOrDefault ["files", []])],
 		["inboxTotal", count (_finalUser getOrDefault ["mail", []])],
-		["outboxTotal", count (_finalUser getOrDefault ["outbox", []])]
+		["outboxTotal", count (_finalUser getOrDefault ["outbox", []])],
+		["notesTotal", count (_finalUser getOrDefault ["notes", []])]
 	]] call FUNC(debugLog);
 };
 

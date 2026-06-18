@@ -14,8 +14,10 @@ if !(isClass (configFile >> "CfgPatches" >> "zen_custom_modules")) exitWith {};
 		["Power On Computer", {_this call FUNC(powerOnZeus)}],
 		["Power Off Computer", {_this call FUNC(powerOffZeus)}],
 		["Add User", {_this call FUNC(addUserZeus)}],
+		["Assign Mobile Profile", {_this call FUNC(assignMobileProfileZeus)}],
 		["Add Text File", {_this call FUNC(addTextFileZeus)}],
 		["Add Picture", {_this call FUNC(addPictureZeus)}],
+		["Add Note", {_this call FUNC(addNoteZeus)}],
 		["Modify Desktop", {_this call FUNC(modifyDesktopZeus)}],
 		["Add Mail", {_this call FUNC(addMailZeus)}]
 	];

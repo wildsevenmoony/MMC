@@ -1219,3 +1219,7 @@ class GVAR(RscModifyDesktopDialog): MMB_main_RscBaseDisplay {
 class GVAR(RscAddMailDialog): MMB_main_RscBaseDisplay {
 	onLoad = "(_this select 0) setVariable ['MMB_main_populateFunction', 'MMC_fnc_guiAddMailDialog']; call MMB_fnc_initDisplay";
 };
+
+class GVAR(RscAddNoteDialog): MMB_main_RscBaseDisplay {
+	onLoad = "(_this select 0) setVariable ['MMB_main_populateFunction', 'MMC_fnc_guiAddNoteDialog']; call MMB_fnc_initDisplay";
+};
