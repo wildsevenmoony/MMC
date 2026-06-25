@@ -135,7 +135,7 @@ if (_desktopTitle isNotEqualTo "" || {_desktopContent isNotEqualTo "" || {_deskt
 	if (_userIndex >= 0) then {
 		private _currentUser = _users select _userIndex;
 		if (_desktopTitle isEqualTo "") then {
-			_desktopTitle = _currentUser getOrDefault ["desktopTitle", _data getOrDefault ["desktopTitle", "Mobile Computer"]];
+			_desktopTitle = _currentUser getOrDefault ["desktopTitle", _data getOrDefault ["desktopTitle", "Mobile Device"]];
 		};
 		if (_desktopContent isEqualTo "") then {
 			_desktopContent = _currentUser getOrDefault ["desktopContent", _data getOrDefault ["desktopContent", ""]];

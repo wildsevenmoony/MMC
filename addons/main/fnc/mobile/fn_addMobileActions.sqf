@@ -27,7 +27,7 @@ missionNamespace setVariable [QGVAR(mobileActionRegistering), true];
 
 	private _action = [
 		QGVAR(openMobileDevice),
-		"Mobile Computer",
+		"Mobile Device",
 		"\a3\ui_f\data\IGUI\Cfg\simpleTasks\types\documents_ca.paa",
 		{[] call MMC_fnc_openMobile},
 		{call MMC_fnc_hasMobileDeviceItem},

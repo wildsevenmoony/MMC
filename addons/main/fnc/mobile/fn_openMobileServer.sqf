@@ -149,7 +149,7 @@ if (_sourceData isEqualType createHashMap && {count _sourceData > 0} && {!_usesP
 			["closedSystem", true],
 			["loginRequired", false],
 			["autoLoginUsername", _username],
-			["desktopTitle", "Mobile Computer"],
+			["desktopTitle", "Mobile Device"],
 			["desktopContent", "Personal mobile MMC session.<br/><br/>Files and mail linked to this player are available here."],
 			["disabledApps", []]
 		]] call FUNC(createDefaultData);

@@ -75,7 +75,7 @@ MMC can also create a personal mobile computer for each player carrying one of M
 MMC_main_smartphone, MMC_main_ruggedTabletBlack, MMC_main_ruggedTabletGreen, MMC_main_ruggedTabletSand, MMC_main_tablet
 ```
 
-Players open mobile devices through `ACE Self Actions > Mobile Computer`. If a player carries more than one MMC device, every available device appears as a separate child action. Arsenal/prototype inventory phones and tablets are automatically replaced with hidden unique subclasses such as `MMC_main_smartphone_1`. That unique classname is used as the device id, so the phone/tablet keeps its own mail, files, apps, and desktop data if it is dropped, looted, stolen, or moved to another player.
+Players open mobile devices through `ACE Self Actions > Mobile Device`. If a player carries more than one MMC device, every available device appears as a separate child action. Arsenal/prototype inventory phones and tablets are automatically replaced with hidden unique subclasses such as `MMC_main_smartphone_1`. That unique classname is used as the device id, so the phone/tablet keeps its own mail, files, apps, and desktop data if it is dropped, looted, stolen, or moved to another player.
 
 The personal mobile device is backed by a server-registered hidden MMC computer, so mail validation, delivery, and Messenger contacts still work on dedicated servers. It opens straight to a personal desktop and uses the same Files, Mail, Messenger, Notes, and custom app renderer as normal computers. The dialog is constrained into a compact mobile surface and includes a `Rotate` button to switch between horizontal and vertical layouts. Smartphones start in vertical orientation; tablets start horizontal.
 

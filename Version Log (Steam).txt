@@ -1,0 +1,53 @@
+[h1][b]Moony's Magnificent Computers[/b] - Update DD.MM.YYYY[/h1]
+Version: 1.1.0.2
+
+[h2]Added[/h2]
+[list]
+[*] Mobile device system with smartphone, tablet and rugged tablet items
+[*] Unique mobile device IDs so phones and tablets can keep their data when looted, stolen or dropped
+[*] Mobile profiles for player-linked, arsenal-linked and placed-device workflows
+[*] Mobile Messenger with side-filtered contacts and chat history
+[*] Notes app for multiple personal notes per user
+[*] Zeus action for opening or starting registered computers remotely
+[*] Custom app building blocks, including structured text, buttons, edit fields, checkboxes, combo boxes, progress bars, lines, boxes, spacers and live camera feed controls
+[*] In-world screen state textures and layout-controlled screen selection options
+[/list]
+
+[h2]Removed[/h2]
+[list]
+[*] Experimental video playback support, because it was not reliable enough inside the dialog
+[/list]
+
+[h2]Changed[/h2]
+[list]
+[*] ACE self-action for mobile devices is now called "Mobile Device"
+[*] Mail, file, picture, desktop/home and mobile-profile module syncing was expanded
+[*] Mail system gained read/unread icons, CC, attachments, reply/forward improvements and mission-time timestamps
+[*] Mobile UI was redesigned into a separate compact layout instead of shrinking the desktop layout
+[*] Dedicated server behavior was improved for mail, devices, mobile profiles and Messenger
+[*] Documentation and Steam description were updated for the expanded system
+[/list]
+
+[h1][b]Moony's Magnificent Computers[/b] - Initial Release DD.MM.YYYY[/h1]
+Version: 1.0.0.0
+
+[h2]Added[/h2]
+[list]
+[*] Register laptops, PCs and other objects as in-game computers
+[*] Desktop shell with taskbar, start menu, clock/date, startup, shutdown and login flow
+[*] User accounts with username, password, e-mail address, themes and closed-system support
+[*] File browser for text files, pictures and audio entries
+[*] Mail app with inbox, outbox, reply and forward workflow
+[*] Eden and Zeus modules for registering computers, adding users, adding text files, adding mail and changing power state
+[*] Default, NATO, CSAT and AAF visual themes
+[/list]
+
+[h2]Removed[/h2]
+[list]
+[*] Nothing
+[/list]
+
+[h2]Changed[/h2]
+[list]
+[*] Nothing
+[/list]
