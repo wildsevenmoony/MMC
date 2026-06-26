@@ -43,6 +43,37 @@ private _email = _user getOrDefault ["email", ""];
 private _profileEmail = [_profile getOrDefault ["primaryEmail", _profile getOrDefault ["email", ""]]] call CBA_fnc_trim;
 if (_profileEmail isNotEqualTo "") then {
 	_email = _profileEmail;
+} else {
+	private _emailDomain = [_profile getOrDefault ["emailDomain", ""]] call CBA_fnc_trim;
+	if (_emailDomain isNotEqualTo "" && {!isNull _player}) then {
+		if ((_emailDomain select [0, 1]) isEqualTo "@") then {
+			_emailDomain = _emailDomain select [1];
+		};
+		private _localPart = toLowerANSI (name _player);
+		private _allowed = toArray "abcdefghijklmnopqrstuvwxyz0123456789._-";
+		private _chars = [];
+		{
+			private _char = toLowerANSI toString [_x];
+			if ((toArray _char) param [0, -1] in _allowed) then {
+				_chars pushBack _char;
+			} else {
+				if (_chars isEqualTo [] || {_chars select -1 isNotEqualTo "."}) then {
+					_chars pushBack ".";
+				};
+			};
+		} forEach toArray _localPart;
+		_localPart = _chars joinString "";
+		while {_localPart isNotEqualTo "" && {(_localPart select [0, 1]) isEqualTo "."}} do {
+			_localPart = _localPart select [1];
+		};
+		while {_localPart isNotEqualTo "" && {(_localPart select [((count _localPart) - 1), 1]) isEqualTo "."}} do {
+			_localPart = _localPart select [0, (count _localPart) - 1];
+		};
+		if (_localPart isEqualTo "") then {
+			_localPart = _username;
+		};
+		_email = format ["%1@%2", _localPart, _emailDomain];
+	};
 };
 private _theme = _profile getOrDefault ["theme", _user getOrDefault ["theme", "default"]];
 private _layout = _profile getOrDefault ["layout", _user getOrDefault ["customLayout", createHashMap]];

@@ -12,6 +12,7 @@ Moony's Magnificent Computers, or MMC, is an Arma 3 framework for interactive in
 - ACE self-interaction mobile computers for players carrying MMC phone/tablet items.
 - MMC Smartphone, Tablet, and Rugged Tablet inventory items for mobile computer access.
 - Placeable MMC phone/tablet objects under Eden Things > MMC Devices, with device user and app attributes.
+- Phone-style mobile lock screen with numeric unlock codes from placed-device attributes, mobile profile modules, Zeus-assigned profiles, or the player's CBA fallback.
 - User accounts with username, password, e-mail address, theme, and closed-system support.
 - Eden mobile profiles for PvP-safe arsenal/personal device setup by synced unit, side, role, UID, faction, item class, or picked-up device source.
 - Client CBA settings for default dark/light theme preference and logging out when the computer dialog is closed.
@@ -19,9 +20,9 @@ Moony's Magnificent Computers, or MMC, is an Arma 3 framework for interactive in
 - File browser with folders for text files, pictures, and audio files.
 - Text files and desktop text support structured text, image tags, and `\n` or `<br/>` line breaks.
 - Picture files support a texture path and description shown below the image.
-- Mail app with inbox, outbox, unread/read state, reply, forward, CC, linked mobile sender identities, picture attachment support, and mission-time timestamps.
-- Messenger app with side-filtered device contacts and a scrollable chat history for registered desktop and mobile devices.
-- Notes app for multiple personal note files per user, with save/delete editing and a handoff into the mail composer.
+- Mail app with inbox, outbox, unread/read state, reply, forward, CC, linked mobile sender identities, picture attachment support, address books, and mission-time timestamps.
+- Messenger app with side-filtered device contacts, notifications, overview cards, unread previews, and a scrollable chat history for registered desktop and mobile devices.
+- Notes app for multiple personal note files per user, optional autosave, save/delete editing, and a handoff into the mail composer.
 - Standard apps can be hidden per computer or per user.
 - Scripted custom apps that mission makers can add to individual computers, including structured text, buttons, fields, checkboxes, combo boxes, progress bars, raw controls, and live camera feeds.
 - Zeus modules for registering computers, changing power state, adding users, assigning live mobile profiles, adding text files, pictures, notes, mail, and modifying desktop/home text.
@@ -49,14 +50,16 @@ Richer media handling and more polished computer-screen object textures are stil
 - Messenger lists registered devices on the user's own side by default. A CBA setting can allow friendly-side devices too, and another setting can hide civilian devices from that friendly list.
 - Use `Messenger Username` fields when a contact should appear under a mission-specific callsign or role name instead of the device name, account username, or e-mail prefix.
 - Desktop users use `Messenger Side` in the `Computer: Add User` module. `Auto (Theme)` derives NATO as BLUFOR, CSAT as OPFOR, and AAF as Independent; use `Hidden` to keep a user out of Messenger contact lists. Physical mobile devices can set a `Messenger Side` in their Eden attributes, while mobile profile devices receive their side from the synced unit or from the player opening an arsenal/personal device.
+- New mail and Messenger messages trigger an ACE notification and the MMC mobile notification sound for the relevant device operator/owner. Mail notifications include the subject; Messenger notifications only show the sender. Notification sounds can be disabled in CBA settings.
+- Messenger opens to a home screen with visible contacts, unread counts, latest-message previews, and accent-colored unread contact cards with the unread counter on the right side. Select a contact card or navigator entry to open that chat; use the back arrow in a chat to return home.
 - Messenger sends with Enter. Use Shift+Enter for line breaks inside a longer message.
-- Notes are stored on the active user account. Users can create multiple notes, save/delete them, and open a note as a prefilled e-mail draft.
+- Notes are stored on the active user account. Users can create multiple notes, save/delete them, use optional CBA-controlled autosave, and open a note as a prefilled e-mail draft.
 - Script-created mobile profiles can include a `notes` array with `title` and `body` fields to seed personal notes on matching devices.
 - Picture texture paths should point to valid `.paa` textures from the mission or a mod.
 - The file path fields are paths inside the computer's file browser, not necessarily real filesystem paths.
 - Audio playback currently relies on configured mod sounds. Mission-file audio is not treated as a reliable general-purpose file format yet.
 - Placeable MMC device objects are compact/mobile computers. Their Eden attributes can set powered state, login behavior, the built-in username/password/e-mail, theme, and visible standard apps.
-- The `Mobile: Assign Profile` module is the simple route for player slots: sync it to playable or AI units, optionally give them a phone/tablet item, set their primary and linked e-mail addresses, theme, app scripts, and visible apps.
+- The `Mobile: Assign Profile` module is the simple route for player slots: sync it to playable or AI units, optionally give them a phone/tablet item, set their primary and linked e-mail addresses, lock code, theme, app scripts, and visible apps.
 - The advanced `Mobile: Profile` module configures personal/arsenal mobile devices without requiring one preplaced device per player. Use its selector fields to target a side, faction, UID, player name, unit variable, unit class, group, item class, device id, or picked-up device source.
 - Sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, and `MMC: Add Mail` modules to `Mobile: Assign Profile` or `Mobile: Profile` to give matching devices the same kind of layout, desktop, files, pictures, and mail content as desktop computers.
 - Zeus can assign a compact live mobile profile to a unit with `Assign Mobile Profile`. This is intended for ad-hoc mission control during play; use the Eden `Mobile: Assign Profile` or `Mobile: Profile` modules for preplanned profile content and synced layout/file/mail setup.
@@ -76,6 +79,8 @@ MMC_main_smartphone, MMC_main_ruggedTabletBlack, MMC_main_ruggedTabletGreen, MMC
 ```
 
 Players open mobile devices through `ACE Self Actions > Mobile Device`. If a player carries more than one MMC device, every available device appears as a separate child action. Arsenal/prototype inventory phones and tablets are automatically replaced with hidden unique subclasses such as `MMC_main_smartphone_1`. That unique classname is used as the device id, so the phone/tablet keeps its own mail, files, apps, and desktop data if it is dropped, looted, stolen, or moved to another player.
+
+Mobile devices show a phone-style lock screen before the home screen, with a large mission time/date readout, PIN dots, number buttons, rotate support, and an arrow confirm button. Mission makers can set a numeric lock code on placed device attributes, `Mobile: Assign Profile`, `Mobile: Profile`, or the live Zeus assign profile module. Profile lock codes only override the player's fallback when they are filled; personal inventory/arsenal devices without a filled mission profile code use the client's CBA `Mobile Lock Code` setting when opened. Empty lock codes intentionally unlock with any entry, including leaving the field blank.
 
 The personal mobile device is backed by a server-registered hidden MMC computer, so mail validation, delivery, and Messenger contacts still work on dedicated servers. It opens straight to a personal desktop and uses the same Files, Mail, Messenger, Notes, and custom app renderer as normal computers. The dialog is constrained into a compact mobile surface and includes a `Rotate` button to switch between horizontal and vertical layouts. Smartphones start in vertical orientation; tablets start horizontal.
 
@@ -108,14 +113,15 @@ For ordinary player-slot setup, use `Mobile: Assign Profile`:
 
 - Sync the module to one or more playable or AI units.
 - Enable `Add Device` if those units should receive a chosen MMC phone/tablet at mission start.
-- Leave `E-Mail Address` empty to use the generated `PLAYERNAME@mmcsystems.com` mobile address, or fill it to force a primary address.
+- Leave `E-Mail Address` empty to use the generated `PLAYERNAME@mmcsystems.com` mobile address, or set `Player E-Mail Domain` to generate a slot-specific address such as `PLAYERNAME@aaf.ass`. A filled `E-Mail Address` always overrides the generated address.
 - Use `Link E-Mail to Profile` for comma-separated role/shared addresses such as `overlord@mmcsystems.com` or `bravo1-4@aaf.ass`.
+- Set `Lock Code` to require a numeric unlock code for matching devices. Leave it empty to let personal/arsenal devices use the player's CBA fallback.
 - Use `Messenger Username` if that mobile profile should appear in Messenger as a callsign or role name instead of the synced unit name.
 - Sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, and `MMC: Add Mail` modules to the assign module to seed that profile.
 
 The assigned profile applies when a personal MMC inventory device is first prepared, including devices taken from an arsenal after mission start. After that, the unique device keeps its own data. If an enemy steals the phone from a corpse, they open that phone's existing data rather than getting their own profile on it. Physical placed devices picked up from the world keep their own configured data from the start, which is usually what you want for stealable intel devices.
 
-During a live mission, Zeus can use the `Assign Mobile Profile` Zeus module on a unit to set a simple personal profile, optionally give a device, set a primary address, linked addresses, Messenger username/side, theme, custom app script files, and visible apps. It does not replace the full Eden profile module surface, but it is useful for quick role handoff or emergency devices.
+During a live mission, Zeus can use the `Assign Mobile Profile` Zeus module on a unit to set a simple personal profile, optionally give a device, set a primary address or generated address domain, linked addresses, Messenger username/side, theme, custom app script files, and visible apps. It does not replace the full Eden profile module surface, but it is useful for quick role handoff or emergency devices.
 
 The advanced route is the `Mobile: Profile` Eden module. Configure its selectors, then sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, and `MMC: Add Mail` modules to it. The module broadcasts the profile to clients/JIP, while app script files listed in `Custom App Script Files` are still executed locally and therefore need to exist in the mission or a loaded mod.
 
@@ -314,3 +320,6 @@ Generated build output, releases, private keys, and packed PBO files are ignored
 ## License
 
 See [LICENSE](LICENSE).
+
+
+

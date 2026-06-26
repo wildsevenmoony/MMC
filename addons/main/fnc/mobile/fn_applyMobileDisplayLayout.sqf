@@ -239,6 +239,232 @@ private _setArrowIcon = {
 	_icon ctrlCommit 0;
 };
 
+if (_display getVariable [QGVAR(mobileLockScreen), false]) exitWith {
+	{
+		private _ctrl = _display displayCtrl _x;
+		_ctrl ctrlShow false;
+	} forEach [
+		IDC_MMC_TASKBAR,
+		IDC_MMC_FRAME_TASKBAR,
+		IDC_MMC_START_BUTTON,
+		IDC_MMC_FRAME_START_BUTTON,
+		IDC_MMC_USER,
+		IDC_MMC_CLOCK,
+		IDC_MMC_BTN_DESKTOP,
+		IDC_MMC_FRAME_BTN_DESKTOP,
+		IDC_MMC_BTN_FILES,
+		IDC_MMC_FRAME_BTN_FILES,
+		IDC_MMC_BTN_MAIL,
+		IDC_MMC_FRAME_BTN_MAIL,
+		IDC_MMC_BTN_MESSAGES,
+		IDC_MMC_FRAME_BTN_MESSAGES,
+		IDC_MMC_BTN_NOTES,
+		IDC_MMC_FRAME_BTN_NOTES,
+		IDC_MMC_APP_TITLE,
+		IDC_MMC_FRAME_APP_TITLE,
+		IDC_MMC_BTN_CLOSE_APP,
+		IDC_MMC_FRAME_CLOSE_APP,
+		IDC_MMC_APP_LIST,
+		IDC_MMC_FRAME_APP_LIST,
+		IDC_MMC_APP_BODY,
+		IDC_MMC_FRAME_APP_BODY,
+		IDC_MMC_LOGIN_PANEL,
+		IDC_MMC_FRAME_LOGIN_PANEL,
+		IDC_MMC_POWER_SCREEN
+	];
+	{
+		if (!isNull _x) then {
+			ctrlDelete _x;
+		};
+	} forEach (_display getVariable [QGVAR(standardAppIconControls), []]);
+	_display setVariable [QGVAR(standardAppIconControls), []];
+
+	{
+		private _ctrl = _display getVariable [_x, controlNull];
+		if (!isNull _ctrl) then {
+			_ctrl ctrlShow false;
+			_ctrl ctrlCommit 0;
+		};
+	} forEach [
+		QGVAR(mobileNavBackgroundControl),
+		QGVAR(mobileNavFrameControl),
+		QGVAR(mobileNavListControl),
+		QGVAR(mobileNavToggleControl),
+		QGVAR(mobileNavToggleFrameControl),
+		QGVAR(mobileNavArrowIcon),
+		QGVAR(mobileCustomAppsBackgroundControl),
+		QGVAR(mobileCustomAppsFrameControl),
+		QGVAR(mobileCustomAppsListControl),
+		QGVAR(mobileCustomAppsToggleControl),
+		QGVAR(mobileCustomAppsToggleFrameControl),
+		QGVAR(mobileCustomAppsArrowIcon)
+	];
+
+	private _lockRotateSize = 0.044 min (_screenW * 0.12) min (_screenH * 0.09);
+	private _lockRotatePos = [_screenX + _screenW - _lockRotateSize - _gap, _screenY + _gap, _lockRotateSize, _lockRotateSize];
+	_rotate ctrlSetPosition _lockRotatePos;
+	_rotate ctrlShow true;
+	_rotate ctrlCommit 0;
+	_rotateFrame ctrlSetPosition _lockRotatePos;
+	_rotateFrame ctrlShow true;
+	_rotateFrame ctrlCommit 0;
+	private _lockRotateIconSize = _lockRotateSize * 0.58;
+	_rotateIcon ctrlSetPosition [
+		(_lockRotatePos select 0) + ((_lockRotateSize - _lockRotateIconSize) / 2),
+		(_lockRotatePos select 1) + ((_lockRotateSize - _lockRotateIconSize) / 2),
+		_lockRotateIconSize,
+		_lockRotateIconSize
+	];
+	_rotateIcon ctrlSetAngle [0, 0.5, 0.5, true];
+	_rotateIcon ctrlShow true;
+	_rotateIcon ctrlCommit 0;
+
+	private _map = _display getVariable [QGVAR(mobileLockControlMap), createHashMap];
+	private _lockPanel = _map getOrDefault ["panel", controlNull];
+	private _lockFrame = _map getOrDefault ["frame", controlNull];
+	private _time = _map getOrDefault ["time", controlNull];
+	private _date = _map getOrDefault ["date", controlNull];
+	private _dots = _map getOrDefault ["dots", controlNull];
+	private _prompt = _map getOrDefault ["prompt", controlNull];
+	private _error = _map getOrDefault ["error", controlNull];
+	private _buttons = _map getOrDefault ["buttons", []];
+	private _buttonFrames = _map getOrDefault ["buttonFrames", []];
+	private _confirm = _map getOrDefault ["confirm", controlNull];
+	private _confirmFrame = _map getOrDefault ["confirmFrame", controlNull];
+	private _confirmIcon = _map getOrDefault ["confirmIcon", controlNull];
+	private _delete = _map getOrDefault ["delete", controlNull];
+	private _deleteFrame = _map getOrDefault ["deleteFrame", controlNull];
+
+	private _lockX = _screenX + (_screenW * 0.06);
+	private _lockY = _screenY + (_screenH * 0.055);
+	private _lockW = _screenW * 0.88;
+	private _lockH = _screenH * 0.89;
+	if (!isNull _lockPanel) then {
+		_lockPanel ctrlSetBackgroundColor (_themeConfig getOrDefault ["panel", [0.02, 0.025, 0.035, 0.94]]);
+		_lockPanel ctrlSetPosition [_lockX, _lockY, _lockW, _lockH];
+		_lockPanel ctrlShow true;
+		_lockPanel ctrlCommit 0;
+	};
+	if (!isNull _lockFrame) then {
+		_lockFrame ctrlSetTextColor _border;
+		_lockFrame ctrlSetPosition [_lockX, _lockY, _lockW, _lockH];
+		_lockFrame ctrlShow true;
+		_lockFrame ctrlCommit 0;
+	};
+
+	private _isHorizontalLock = _orientation isEqualTo "horizontal";
+	private _infoX = if (_isHorizontalLock) then {_lockX + (_lockW * 0.49)} else {_lockX + 0.02};
+	private _infoW = if (_isHorizontalLock) then {_lockW * 0.44} else {_lockW - 0.04};
+	private _timeY = _lockY + (_lockH * ([0.055, 0.16] select _isHorizontalLock));
+	private _timeH = _lockH * ([0.12, 0.22] select _isHorizontalLock);
+	private _dateY = _timeY + _timeH - ([0.006, 0.012] select _isHorizontalLock);
+	private _dotsY = _lockY + (_lockH * ([0.27, 0.49] select _isHorizontalLock));
+	private _errorY = _lockY + (_lockH * ([0.335, 0.58] select _isHorizontalLock));
+	{
+		_x params ["_ctrl", "_pos"];
+		if (!isNull _ctrl) then {
+			_ctrl ctrlSetTextColor (_themeConfig getOrDefault ["text", [0.92, 0.94, 0.97, 1]]);
+			_ctrl ctrlSetPosition _pos;
+			_ctrl ctrlShow true;
+			_ctrl ctrlCommit 0;
+		};
+	} forEach [
+		[_time, [_infoX, _timeY, _infoW, _timeH]],
+		[_date, [_infoX, _dateY, _infoW, 0.04]],
+		[_dots, [_infoX, _dotsY, _infoW, 0.055]],
+		[_prompt, [_infoX, _lockY + _lockH - 0.075, _infoW, 0.038]],
+		[_error, [_infoX, _errorY, _infoW, 0.034]]
+	];
+	if (!isNull _error) then {
+		_error ctrlSetTextColor [1, 0.25, 0.25, 1];
+	};
+
+	private _keySize = if (_orientation isEqualTo "vertical") then {
+		((_screenW * 0.18) min (_screenH * 0.075)) max 0.042
+	} else {
+		((_screenH * 0.115) min (_screenW * 0.08)) max 0.045
+	};
+	private _keyGap = (_keySize * 0.22) max 0.008;
+	private _gridW = (_keySize * 3) + (_keyGap * 2);
+	private _gridX = if (_isHorizontalLock) then {
+		_lockX + (_lockW * 0.16)
+	} else {
+		_screenX + ((_screenW - _gridW) / 2)
+	};
+	private _gridY = if (_orientation isEqualTo "vertical") then {
+		_lockY + (_lockH * 0.40)
+	} else {
+		_lockY + (_lockH * 0.22)
+	};
+
+	for "_i" from 0 to ((count _buttons) - 1) do {
+		private _row = floor (_i / 3);
+		private _col = _i mod 3;
+		private _pos = [_gridX + (_col * (_keySize + _keyGap)), _gridY + (_row * (_keySize + _keyGap)), _keySize, _keySize];
+		private _buttonCtrl = _buttons select _i;
+		private _frameCtrl = _buttonFrames param [_i, controlNull];
+		if (!isNull _buttonCtrl) then {
+			_buttonCtrl ctrlSetBackgroundColor _button;
+			_buttonCtrl ctrlSetTextColor _buttonText;
+			_buttonCtrl ctrlSetActiveColor _buttonHoverText;
+			_buttonCtrl ctrlSetPosition _pos;
+			_buttonCtrl ctrlShow true;
+			_buttonCtrl ctrlCommit 0;
+		};
+		if (!isNull _frameCtrl) then {
+			_frameCtrl ctrlSetTextColor _border;
+			_frameCtrl ctrlSetPosition _pos;
+			_frameCtrl ctrlShow true;
+			_frameCtrl ctrlCommit 0;
+		};
+	};
+
+	private _deletePos = [_gridX, _gridY + (3 * (_keySize + _keyGap)), _keySize, _keySize];
+	private _confirmPos = [_gridX + (_keySize * 2) + (_keyGap * 2), _gridY + (3 * (_keySize + _keyGap)), _keySize, _keySize];
+	if (!isNull _delete) then {
+		_delete ctrlSetBackgroundColor _button;
+		_delete ctrlSetTextColor _buttonText;
+		_delete ctrlSetActiveColor _buttonHoverText;
+		_delete ctrlSetPosition _deletePos;
+		_delete ctrlShow true;
+		_delete ctrlCommit 0;
+	};
+	if (!isNull _deleteFrame) then {
+		_deleteFrame ctrlSetTextColor _border;
+		_deleteFrame ctrlSetPosition _deletePos;
+		_deleteFrame ctrlShow true;
+		_deleteFrame ctrlCommit 0;
+	};
+	if (!isNull _confirm) then {
+		_confirm ctrlSetBackgroundColor _button;
+		_confirm ctrlSetTextColor _buttonText;
+		_confirm ctrlSetActiveColor _buttonHoverText;
+		_confirm ctrlSetPosition _confirmPos;
+		_confirm ctrlShow true;
+		_confirm ctrlCommit 0;
+	};
+	if (!isNull _confirmFrame) then {
+		_confirmFrame ctrlSetTextColor _border;
+		_confirmFrame ctrlSetPosition _confirmPos;
+		_confirmFrame ctrlShow true;
+		_confirmFrame ctrlCommit 0;
+	};
+	if (!isNull _confirmIcon) then {
+		private _iconSize = _keySize * 0.44;
+		_confirmIcon ctrlSetText (["right"] call _getArrowIcon);
+		_confirmIcon ctrlSetPosition [
+			(_confirmPos select 0) + ((_keySize - _iconSize) / 2),
+			(_confirmPos select 1) + ((_keySize - _iconSize) / 2),
+			_iconSize,
+			_iconSize
+		];
+		_confirmIcon ctrlShow true;
+		_confirmIcon ctrlCommit 0;
+	};
+
+	true
+};
+
 private _currentApp = _display getVariable [QGVAR(currentApp), "desktop"];
 private _standardButtons = [
 	[IDC_MMC_BTN_DESKTOP, IDC_MMC_FRAME_BTN_DESKTOP],
@@ -491,6 +717,7 @@ if (_currentApp isEqualTo "mail") then {
 	private _mailFolder = _display getVariable [QGVAR(mailFolder), "inbox"];
 	_sourceIndex = switch (_mailMode) do {
 		case "compose": {2};
+		case "addressbook": {3};
 		default {["inbox", "outbox"] find _mailFolder};
 	};
 	if (_sourceIndex < 0) then {
@@ -538,7 +765,8 @@ private _navListPos = [0, 0, 0, 0];
 if (_orientation isEqualTo "vertical") then {
 	private _navToggleH = _navHandleW;
 	private _navToggleY = _dockY - _navToggleH - 0.004;
-	private _navH = if (_hasNavPane) then {(0.038 * ((lbSize _list) min 3)) + 0.012} else {0};
+	private _navRowsVisible = [3, 4] select (_currentApp isEqualTo "mail");
+	private _navH = if (_hasNavPane) then {(0.038 * ((lbSize _list) min _navRowsVisible)) + 0.012} else {0};
 	_navTogglePos = [_bodyX, _navToggleY, _bodyW, _navToggleH];
 	_navListPos = [_bodyX, (_navToggleY - _navH - 0.004) max _bodyY, _bodyW, _navH];
 } else {
@@ -587,7 +815,11 @@ _navList ctrlCommit 0;
 	IDC_MMC_MAIL_SUBJECT,
 	IDC_MMC_MAIL_BODY,
 	IDC_MMC_MAIL_ATTACHMENT,
-	IDC_MMC_MAIL_ATTACHMENT_DESC
+	IDC_MMC_MAIL_ATTACHMENT_DESC,
+	IDC_MMC_MAIL_TABLE,
+	IDC_MMC_FRAME_MAIL_TABLE,
+	IDC_MMC_MAIL_READ_GROUP,
+	IDC_MMC_MAIL_READ_BODY
 ];
 
 private _customBg = _display getVariable [QGVAR(mobileCustomAppsBackgroundControl), controlNull];
@@ -949,18 +1181,20 @@ _mailBackFrame ctrlShow false;
 } forEach [IDC_MMC_MAIL_SCROLL_LEFT, IDC_MMC_MAIL_SCROLL_RIGHT, IDC_MMC_FRAME_MAIL_SCROLL_LEFT, IDC_MMC_FRAME_MAIL_SCROLL_RIGHT];
 [QGVAR(mobileMailScrollLeftArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_LEFT, "left", false] call _setArrowIcon;
 [QGVAR(mobileMailScrollRightArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_RIGHT, "right", false] call _setArrowIcon;
-if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table"]}) then {
+if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table", "addressbook"]}) then {
 	if (_mailMode isEqualTo "compose") then {
 		private _fieldH = 0.041;
 		private _labelH = 0.025;
 		private _labelGap = 0.012;
 		private _rowGap = 0.009;
 		private _topY = _innerY;
-		private _buttonW = 0.084;
 		private _buttonGap = 0.006;
+		private _buttonW = (((_innerW - (_buttonGap * 2)) / 3) min 0.13) max 0.094;
 		private _cancelX = _bodyX + _bodyW - 0.01 - _buttonW;
 		private _sendX = _cancelX - _buttonGap - _buttonW;
-		[IDC_MMC_MAIL_HEADER, [_innerX, _topY, (_sendX - _innerX - _buttonGap) max (_innerW * 0.4), 0.034]] call _set;
+		private _addressBookX = _sendX - _buttonGap - _buttonW;
+		[IDC_MMC_MAIL_HEADER, [_innerX, _topY, (_addressBookX - _innerX - _buttonGap) max (_innerW * 0.3), 0.034]] call _set;
+		[IDC_MMC_MAIL_FORWARD, [_addressBookX, _topY, _buttonW, 0.039]] call _set;
 		[IDC_MMC_MAIL_SEND, [_sendX, _topY, _buttonW, 0.039]] call _set;
 		[IDC_MMC_MAIL_CANCEL, [_cancelX, _topY, _buttonW, 0.039]] call _set;
 		private _y = _topY + 0.049;
@@ -1006,6 +1240,35 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table"]})
 		];
 		[IDC_MMC_MAIL_ERROR, [_innerX + (_innerW * 0.48), _topY + 0.044, _innerW * 0.52, 0.03]] call _set;
 	} else {
+		if (_mailMode isEqualTo "addressbook") then {
+			private _fieldH = 0.039;
+			private _labelH = 0.024;
+			private _gapSmall = 0.009;
+			private _buttonGap = 0.006;
+			private _buttonW = (_innerW - (_buttonGap * 3)) / 4;
+			[IDC_MMC_MAIL_HEADER, [_innerX, _innerY, _innerW, 0.034]] call _set;
+			private _buttonY = _bodyY + _bodyH - 0.045;
+			private _subjectY = _buttonY - _fieldH - 0.017;
+			private _subjectLabelY = _subjectY - _labelH - _gapSmall;
+			private _nameY = _subjectLabelY - _fieldH - (_gapSmall * 2.2);
+			private _nameLabelY = _nameY - _labelH - _gapSmall;
+			private _tableH = (_nameLabelY - (_innerY + 0.042) - 0.01) max 0.1;
+			{
+				[_x, [_innerX, _innerY + 0.042, _innerW, _tableH]] call _set;
+			} forEach [IDC_MMC_MAIL_TABLE, IDC_MMC_FRAME_MAIL_TABLE];
+			[IDC_MMC_MAIL_RECIPIENT_LABEL, [_innerX, _nameLabelY, _innerW * 0.34, _labelH]] call _set;
+			[IDC_MMC_MAIL_RECIPIENT, [_innerX, _nameY, _innerW, _fieldH]] call _set;
+			[IDC_MMC_MAIL_SUBJECT_LABEL, [_innerX, _subjectLabelY, _innerW, _labelH]] call _set;
+			[IDC_MMC_MAIL_SUBJECT, [_innerX, _subjectY, _innerW, _fieldH]] call _set;
+			[IDC_MMC_MAIL_REPLY, [_innerX, _buttonY, _buttonW, 0.039]] call _set;
+			[IDC_MMC_MAIL_FORWARD, [_innerX + _buttonW + _buttonGap, _buttonY, _buttonW, 0.039]] call _set;
+			[IDC_MMC_MAIL_SEND, [_innerX + ((_buttonW + _buttonGap) * 2), _buttonY, _buttonW, 0.039]] call _set;
+			[IDC_MMC_MAIL_CANCEL, [_innerX + ((_buttonW + _buttonGap) * 3), _buttonY, _buttonW, 0.039]] call _set;
+			[IDC_MMC_MAIL_ERROR, [_innerX + (_innerW * 0.36), _nameLabelY, _innerW * 0.64, _labelH]] call _set;
+			private _mailTable = _display displayCtrl IDC_MMC_MAIL_TABLE;
+			_mailTable ctrlSetFontHeight ([0.03, 0.028] select (_orientation isEqualTo "vertical"));
+			_mailTable lnbSetColumnsPos [0.03, 0.18, 0.52, 1.0, 1.2, 1.4];
+		} else {
 		if (_mailMode isEqualTo "read") then {
 			private _backW = 0.032;
 			private _backH = 0.038;
@@ -1016,12 +1279,14 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table"]})
 			_mailBackFrame ctrlSetPosition [_innerX, _innerY, _backW, _backH];
 			_mailBackFrame ctrlCommit 0;
 			[QGVAR(mobileMailBackArrowIcon), _mailBack, "left", true] call _setArrowIcon;
-			private _buttonW = 0.084;
 			private _buttonGap = 0.006;
-			private _forwardX = _bodyX + _bodyW - 0.01 - _buttonW;
+			private _buttonW = (((_innerW - _backW - (_buttonGap * 4)) / 3) min 0.13) max 0.094;
+			private _saveX = _bodyX + _bodyW - 0.01 - _buttonW;
+			private _forwardX = _saveX - _buttonGap - _buttonW;
 			private _replyX = _forwardX - _buttonGap - _buttonW;
 			[IDC_MMC_MAIL_REPLY, [_replyX, _innerY, _buttonW, 0.038]] call _set;
 			[IDC_MMC_MAIL_FORWARD, [_forwardX, _innerY, _buttonW, 0.038]] call _set;
+			[IDC_MMC_MAIL_SEND, [_saveX, _innerY, _buttonW, 0.038]] call _set;
 			private _metaH = 0.205 min ((_bodyH * 0.42) max 0.18);
 			[IDC_MMC_MAIL_READ_META, [_innerX, _innerY + 0.05, _innerW, _metaH]] call _set;
 			[IDC_MMC_MAIL_READ_GROUP, [_innerX, _innerY + 0.064 + _metaH, _innerW, (_bodyH - _metaH - 0.092) max 0.08]] call _set;
@@ -1036,16 +1301,29 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table"]})
 			private _scrollW = 0.032;
 			private _scrollGap = 0.005;
 			private _drawerOpen = (_hasNavPane && _navOpen) || {_hasCustomApps && _customOpen};
-			[IDC_MMC_MAIL_HEADER, [_innerX + _scrollW + _scrollGap, _innerY, _innerW - ((_scrollW + _scrollGap) * 2), 0.034]] call _set;
+			private _buttonGap = 0.006;
+			private _buttonW = (_innerW * 0.33) min 0.13 max 0.094;
+			private _rightArrowX = _innerX + _innerW - _scrollW;
+			private _addressBookX = _rightArrowX - _buttonGap - _buttonW;
+			private _newMailX = _addressBookX - _buttonGap - _buttonW;
+			private _headerX = _innerX + _scrollW + _scrollGap;
+			private _headerW = (_newMailX - _headerX - _buttonGap) max (_innerW * 0.28);
+			[IDC_MMC_MAIL_HEADER, [_headerX, _innerY, _headerW max 0.06, 0.034]] call _set;
+			[IDC_MMC_MAIL_FORWARD, [_newMailX, _innerY, _buttonW, 0.034]] call _set;
+			[IDC_MMC_MAIL_SEND, [_addressBookX, _innerY, _buttonW, 0.034]] call _set;
+			(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlShow true;
+			(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlShow true;
+			(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlEnable !_drawerOpen;
+			(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlEnable !_drawerOpen;
 			[IDC_MMC_MAIL_SCROLL_LEFT, [_innerX, _innerY, _scrollW, 0.034]] call _set;
 			[IDC_MMC_FRAME_MAIL_SCROLL_LEFT, [_innerX, _innerY, _scrollW, 0.034]] call _set;
-			[IDC_MMC_MAIL_SCROLL_RIGHT, [_innerX + _innerW - _scrollW, _innerY, _scrollW, 0.034]] call _set;
-			[IDC_MMC_FRAME_MAIL_SCROLL_RIGHT, [_innerX + _innerW - _scrollW, _innerY, _scrollW, 0.034]] call _set;
+			[IDC_MMC_MAIL_SCROLL_RIGHT, [_rightArrowX, _innerY, _scrollW, 0.034]] call _set;
+			[IDC_MMC_FRAME_MAIL_SCROLL_RIGHT, [_rightArrowX, _innerY, _scrollW, 0.034]] call _set;
 			{
-				(_display displayCtrl _x) ctrlShow !_drawerOpen;
+				(_display displayCtrl _x) ctrlShow true;
 			} forEach [IDC_MMC_MAIL_SCROLL_LEFT, IDC_MMC_MAIL_SCROLL_RIGHT, IDC_MMC_FRAME_MAIL_SCROLL_LEFT, IDC_MMC_FRAME_MAIL_SCROLL_RIGHT];
-			[QGVAR(mobileMailScrollLeftArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_LEFT, "left", !_drawerOpen] call _setArrowIcon;
-			[QGVAR(mobileMailScrollRightArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_RIGHT, "right", !_drawerOpen] call _setArrowIcon;
+			[QGVAR(mobileMailScrollLeftArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_LEFT, "left", true] call _setArrowIcon;
+			[QGVAR(mobileMailScrollRightArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_RIGHT, "right", true] call _setArrowIcon;
 			{
 				[_x, [_innerX, _innerY + 0.044, _innerW, (_bodyH - 0.064) max 0.1]] call _set;
 			} forEach [IDC_MMC_MAIL_TABLE, IDC_MMC_FRAME_MAIL_TABLE];
@@ -1053,8 +1331,8 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table"]})
 			_mailTable ctrlSetFontHeight ([0.03, 0.028] select (_orientation isEqualTo "vertical"));
 			private _tablePage = _display getVariable [QGVAR(mobileMailTablePage), 0];
 			_mailTable lnbSetColumnsPos ([[0.03, 0.18, 0.37, 0.58, 1.18, 1.52], [-0.62, -0.43, -0.23, -0.02, 0.43, 0.76]] select (_tablePage > 0));
-			(_display displayCtrl IDC_MMC_MAIL_SCROLL_LEFT) ctrlEnable (_tablePage > 0);
-			(_display displayCtrl IDC_MMC_MAIL_SCROLL_RIGHT) ctrlEnable (_tablePage < 1);
+			(_display displayCtrl IDC_MMC_MAIL_SCROLL_LEFT) ctrlEnable ((_tablePage > 0) && {!_drawerOpen});
+			(_display displayCtrl IDC_MMC_MAIL_SCROLL_RIGHT) ctrlEnable ((_tablePage < 1) && {!_drawerOpen});
 			private _mailRows = _display getVariable [QGVAR(mailRows), []];
 			private _themeForMailIcons = [_display] call FUNC(getThemeConfig);
 			private _readIcon = [PATHTOF(img\mail_read_white.paa), PATHTOF(img\mail_read_black.paa)] select (_themeForMailIcons getOrDefault ["isLight", false]);
@@ -1065,7 +1343,23 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table"]})
 				_mailTable lnbSetPicture [[_row, 0], _iconPath];
 			};
 		};
+		};
 	};
+} else {
+	{
+		(_display displayCtrl _x) ctrlShow false;
+	} forEach [
+		IDC_MMC_MAIL_REPLY,
+		IDC_MMC_MAIL_FORWARD,
+		IDC_MMC_MAIL_SEND,
+		IDC_MMC_MAIL_CANCEL,
+		IDC_MMC_MAIL_SCROLL_LEFT,
+		IDC_MMC_MAIL_SCROLL_RIGHT,
+		IDC_MMC_FRAME_MAIL_SCROLL_LEFT,
+		IDC_MMC_FRAME_MAIL_SCROLL_RIGHT
+	];
+	[QGVAR(mobileMailScrollLeftArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_LEFT, "left", false] call _setArrowIcon;
+	[QGVAR(mobileMailScrollRightArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_RIGHT, "right", false] call _setArrowIcon;
 };
 
 if (_orientation isEqualTo "horizontal" && {_hasNavPane && _navOpen}) then {
@@ -1074,28 +1368,56 @@ if (_orientation isEqualTo "horizontal" && {_hasNavPane && _navOpen}) then {
 
 private _loginVisible = ctrlShown (_display displayCtrl IDC_MMC_LOGIN_PANEL);
 if (_loginVisible) then {
+	private _isLockScreen = _display getVariable [QGVAR(mobileLockScreen), false];
 	private _panelW = if (_orientation isEqualTo "vertical") then {_screenW * 0.78} else {_screenW * 0.42};
-	private _panelH = if (_orientation isEqualTo "vertical") then {_screenH * 0.36} else {_screenH * 0.46};
+	private _panelH = if (_isLockScreen) then {
+		if (_orientation isEqualTo "vertical") then {_screenH * 0.25} else {_screenH * 0.34}
+	} else {
+		if (_orientation isEqualTo "vertical") then {_screenH * 0.36} else {_screenH * 0.46}
+	};
 	private _panelX = _screenX + ((_screenW - _panelW) / 2);
 	private _panelY = _screenY + ((_screenH - _panelH) / 2);
 	{
 		[_x, [_panelX, _panelY, _panelW, _panelH]] call _set;
 	} forEach [IDC_MMC_LOGIN_PANEL, IDC_MMC_FRAME_LOGIN_PANEL];
 	[IDC_MMC_LOGIN_TITLE, [_panelX + 0.016, _panelY + 0.014, _panelW - 0.032, 0.052]] call _set;
-	[IDC_MMC_LOGIN_USERNAME_LABEL, [_panelX + 0.024, _panelY + 0.076, _panelW - 0.048, 0.026]] call _set;
-	[IDC_MMC_LOGIN_USERNAME, [_panelX + 0.024, _panelY + 0.104, _panelW - 0.048, 0.036]] call _set;
-	[IDC_MMC_FRAME_LOGIN_USERNAME, [_panelX + 0.024, _panelY + 0.104, _panelW - 0.048, 0.036]] call _set;
-	[IDC_MMC_LOGIN_PASSWORD_LABEL, [_panelX + 0.024, _panelY + 0.148, _panelW - 0.048, 0.026]] call _set;
-	[IDC_MMC_LOGIN_PASSWORD, [_panelX + 0.024, _panelY + 0.176, _panelW - 0.092, 0.036]] call _set;
-	[IDC_MMC_LOGIN_PASSWORD_VISIBLE, [_panelX + 0.024, _panelY + 0.176, _panelW - 0.092, 0.036]] call _set;
-	[IDC_MMC_FRAME_LOGIN_PASSWORD, [_panelX + 0.024, _panelY + 0.176, _panelW - 0.092, 0.036]] call _set;
-	[IDC_MMC_LOGIN_PASSWORD_TOGGLE, [_panelX + _panelW - 0.062, _panelY + 0.176, 0.038, 0.036]] call _set;
-	[IDC_MMC_FRAME_LOGIN_PASSWORD_TOGGLE, [_panelX + _panelW - 0.062, _panelY + 0.176, 0.038, 0.036]] call _set;
-	[IDC_MMC_LOGIN_ERROR, [_panelX + 0.024, _panelY + 0.218, _panelW - 0.048, 0.038]] call _set;
-	[IDC_MMC_LOGIN_BUTTON, [_panelX + (_panelW * 0.24), _panelY + _panelH - 0.064, _panelW * 0.22, 0.044]] call _set;
-	[IDC_MMC_FRAME_LOGIN_BUTTON, [_panelX + (_panelW * 0.24), _panelY + _panelH - 0.064, _panelW * 0.22, 0.044]] call _set;
-	[IDC_MMC_LOGIN_SHUTDOWN, [_panelX + (_panelW * 0.52), _panelY + _panelH - 0.064, _panelW * 0.28, 0.044]] call _set;
-	[IDC_MMC_FRAME_LOGIN_SHUTDOWN, [_panelX + (_panelW * 0.52), _panelY + _panelH - 0.064, _panelW * 0.28, 0.044]] call _set;
+	if (_isLockScreen) then {
+		{
+			(_display displayCtrl _x) ctrlShow false;
+		} forEach [
+			IDC_MMC_LOGIN_USERNAME_LABEL,
+			IDC_MMC_LOGIN_USERNAME,
+			IDC_MMC_FRAME_LOGIN_USERNAME,
+			IDC_MMC_LOGIN_PASSWORD_VISIBLE,
+			IDC_MMC_LOGIN_PASSWORD_TOGGLE,
+			IDC_MMC_FRAME_LOGIN_PASSWORD_TOGGLE,
+			IDC_MMC_LOGIN_SHUTDOWN,
+			IDC_MMC_FRAME_LOGIN_SHUTDOWN
+		];
+		private _fieldW = _panelW * 0.68;
+		private _fieldX = _panelX + ((_panelW - _fieldW) / 2);
+		[IDC_MMC_LOGIN_PASSWORD_LABEL, [_fieldX, _panelY + 0.084, _fieldW, 0.026]] call _set;
+		[IDC_MMC_LOGIN_PASSWORD, [_fieldX, _panelY + 0.114, _fieldW, 0.04]] call _set;
+		[IDC_MMC_FRAME_LOGIN_PASSWORD, [_fieldX, _panelY + 0.114, _fieldW, 0.04]] call _set;
+		[IDC_MMC_LOGIN_ERROR, [_panelX + 0.024, _panelY + 0.162, _panelW - 0.048, 0.038]] call _set;
+		[IDC_MMC_LOGIN_BUTTON, [_panelX + (_panelW * 0.36), _panelY + _panelH - 0.064, _panelW * 0.28, 0.044]] call _set;
+		[IDC_MMC_FRAME_LOGIN_BUTTON, [_panelX + (_panelW * 0.36), _panelY + _panelH - 0.064, _panelW * 0.28, 0.044]] call _set;
+	} else {
+		[IDC_MMC_LOGIN_USERNAME_LABEL, [_panelX + 0.024, _panelY + 0.076, _panelW - 0.048, 0.026]] call _set;
+		[IDC_MMC_LOGIN_USERNAME, [_panelX + 0.024, _panelY + 0.104, _panelW - 0.048, 0.036]] call _set;
+		[IDC_MMC_FRAME_LOGIN_USERNAME, [_panelX + 0.024, _panelY + 0.104, _panelW - 0.048, 0.036]] call _set;
+		[IDC_MMC_LOGIN_PASSWORD_LABEL, [_panelX + 0.024, _panelY + 0.148, _panelW - 0.048, 0.026]] call _set;
+		[IDC_MMC_LOGIN_PASSWORD, [_panelX + 0.024, _panelY + 0.176, _panelW - 0.092, 0.036]] call _set;
+		[IDC_MMC_LOGIN_PASSWORD_VISIBLE, [_panelX + 0.024, _panelY + 0.176, _panelW - 0.092, 0.036]] call _set;
+		[IDC_MMC_FRAME_LOGIN_PASSWORD, [_panelX + 0.024, _panelY + 0.176, _panelW - 0.092, 0.036]] call _set;
+		[IDC_MMC_LOGIN_PASSWORD_TOGGLE, [_panelX + _panelW - 0.062, _panelY + 0.176, 0.038, 0.036]] call _set;
+		[IDC_MMC_FRAME_LOGIN_PASSWORD_TOGGLE, [_panelX + _panelW - 0.062, _panelY + 0.176, 0.038, 0.036]] call _set;
+		[IDC_MMC_LOGIN_ERROR, [_panelX + 0.024, _panelY + 0.218, _panelW - 0.048, 0.038]] call _set;
+		[IDC_MMC_LOGIN_BUTTON, [_panelX + (_panelW * 0.24), _panelY + _panelH - 0.064, _panelW * 0.22, 0.044]] call _set;
+		[IDC_MMC_FRAME_LOGIN_BUTTON, [_panelX + (_panelW * 0.24), _panelY + _panelH - 0.064, _panelW * 0.22, 0.044]] call _set;
+		[IDC_MMC_LOGIN_SHUTDOWN, [_panelX + (_panelW * 0.52), _panelY + _panelH - 0.064, _panelW * 0.28, 0.044]] call _set;
+		[IDC_MMC_FRAME_LOGIN_SHUTDOWN, [_panelX + (_panelW * 0.52), _panelY + _panelH - 0.064, _panelW * 0.28, 0.044]] call _set;
+	};
 };
 
 private _powerShown = ctrlShown (_display displayCtrl IDC_MMC_POWER_SCREEN);

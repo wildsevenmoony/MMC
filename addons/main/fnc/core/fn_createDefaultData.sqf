@@ -21,6 +21,9 @@ _data set ["layout", _config getOrDefault ["layout", createHashMap]];
 _data set ["closedSystem", _config getOrDefault ["closedSystem", false]];
 _data set ["loginRequired", _config getOrDefault ["loginRequired", true]];
 _data set ["autoLoginUsername", _config getOrDefault ["autoLoginUsername", ""]];
+if ("mobileLockCode" in keys _config) then {
+	_data set ["mobileLockCode", _config getOrDefault ["mobileLockCode", ""]];
+};
 _data set ["disabledApps", [_config getOrDefault ["disabledApps", []]] call FUNC(normalizeStandardAppIds)];
 _data set ["desktopTitle", _config getOrDefault ["desktopTitle", "Welcome"]];
 _data set ["desktopContent", _config getOrDefault ["desktopContent", "Select an app on the left. Files, Mail, Messenger, and Notes are wired to the computer data model now.<br/><br/>The Start button controls power state."]];

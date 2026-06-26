@@ -20,6 +20,7 @@ if (!isNull _objectUnderCursor && {!(_objectUnderCursor getVariable [QGVAR(isCom
 		["EDIT", ["Username", "Login username for this account."], "operator", false],
 		["EDIT", ["Password", "Leave empty to allow login with an empty password field."], "", false],
 		["EDIT", ["E-Mail Address", "Mail addressed to this value appears in this user's inbox."], "operator@mmcsystems.com", false],
+		["EDIT", ["Address Book", "Optional comma or semicolon separated entries, e.g. Overlord <overlord@aaf.ass>,bravo@aaf.ass."], "", false],
 		["EDIT", ["Messenger Username", "Display name shown in Messenger. Leave empty to use Username."], "", false],
 		[
 			"COMBO",
@@ -48,7 +49,7 @@ if (!isNull _objectUnderCursor && {!(_objectUnderCursor getVariable [QGVAR(isCom
 	],
 	{
 		params ["_dialogValues", "_object"];
-		_dialogValues params ["_username", "_password", "_email", "_messengerName", "_messengerSide", "_theme", "_filesEnabled", "_mailEnabled", "_messagesEnabled", "_notesEnabled"];
+		_dialogValues params ["_username", "_password", "_email", "_addressBookText", "_messengerName", "_messengerSide", "_theme", "_filesEnabled", "_mailEnabled", "_messagesEnabled", "_notesEnabled"];
 
 		private _disabledApps = [];
 		if (!_filesEnabled) then {_disabledApps pushBack "files"};
@@ -66,7 +67,8 @@ if (!isNull _objectUnderCursor && {!(_objectUnderCursor getVariable [QGVAR(isCom
 			["displayName", _messengerName],
 			["messengerName", _messengerName],
 			["side", _messengerSide],
-			["messengerSide", _messengerSide]
+			["messengerSide", _messengerSide],
+			["addressBook", [_addressBookText] call FUNC(normalizeAddressBook)]
 		];
 
 		private _targets = if (isNull _object) then {

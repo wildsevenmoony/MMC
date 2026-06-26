@@ -118,6 +118,7 @@ private _mailControls = [
 	(_display displayCtrl _x) ctrlShow false;
 } forEach _mailControls;
 _desktopGroup ctrlShow false;
+_desktopBody ctrlEnable true;
 _desktopBody ctrlSetStructuredText parseText "";
 _previewImage ctrlShow false;
 _previewFrame ctrlShow false;
@@ -153,6 +154,18 @@ if (_app isEqualTo "select") then {
 	_display setVariable [QGVAR(currentApp), _app];
 	if (_app isEqualTo "files") then {
 		_display setVariable [QGVAR(filesFolder), ""];
+	};
+	if (_app isEqualTo "mail") then {
+		_display setVariable [QGVAR(mailFolder), "inbox"];
+		_display setVariable [QGVAR(mailMode), "table"];
+		_display setVariable [QGVAR(mobileMailTablePage), 0];
+	};
+	if (_app isEqualTo "messages") then {
+		if (_display getVariable [QGVAR(messengerKeepSelection), false]) then {
+			_display setVariable [QGVAR(messengerKeepSelection), false];
+		} else {
+			_display setVariable [QGVAR(messengerSelectedId), ""];
+		};
 	};
 };
 

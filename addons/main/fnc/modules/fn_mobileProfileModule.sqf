@@ -85,6 +85,18 @@ _profile set ["priority", _logic getVariable [QGVAR(mobileProfilePriority), 0]];
 _profile set ["sources", _sources];
 _profile set ["theme", _logic getVariable [QGVAR(mobileProfileTheme), "default"]];
 _profile set ["aliases", [_logic getVariable [QGVAR(mobileProfileAliases), ""]] call _splitList];
+private _emailDomain = [_logic getVariable [QGVAR(mobileProfileEmailDomain), ""]] call CBA_fnc_trim;
+if (_emailDomain isNotEqualTo "") then {
+	_profile set ["emailDomain", _emailDomain];
+} else {
+	_profile deleteAt "emailDomain";
+};
+private _lockCode = [_logic getVariable [QGVAR(mobileLockCode), ""]] call CBA_fnc_trim;
+if (_lockCode isNotEqualTo "") then {
+	_profile set ["lockCode", _lockCode];
+} else {
+	_profile deleteAt "lockCode";
+};
 private _messengerName = [_logic getVariable [QGVAR(messengerName), ""]] call CBA_fnc_trim;
 if (_messengerName isNotEqualTo "") then {
 	_profile set ["displayName", _messengerName];
@@ -121,6 +133,7 @@ _profile = [_profile, synchronizedObjects _logic, _logic] call FUNC(enrichMobile
 	["id", _id],
 	["sources", _profile getOrDefault ["sources", []]],
 	["theme", _profile getOrDefault ["theme", ""]],
+	["hasLockCode", (_profile getOrDefault ["lockCode", ""]) isNotEqualTo ""],
 	["aliases", _profile getOrDefault ["aliases", []]],
 	["itemClasses", _profile getOrDefault ["itemClasses", []]],
 	["deviceIds", _profile getOrDefault ["deviceIds", []]],

@@ -32,6 +32,7 @@ _title ctrlSetText "Messenger";
 _body ctrlSetStructuredText parseText "";
 _group ctrlShow true;
 _history ctrlShow true;
+_history ctrlEnable false;
 
 private _oldInput = _display getVariable [QGVAR(messengerInputControl), controlNull];
 private _oldSelectedId = _display getVariable [QGVAR(messengerSelectedId), ""];
@@ -105,19 +106,16 @@ private _ownEmail = toLowerANSI (_own getOrDefault ["email", ""]);
 private _ownUsername = toLowerANSI (_own getOrDefault ["username", ""]);
 
 private _selectedId = _display getVariable [QGVAR(messengerSelectedId), ""];
+if (_selection isEqualType "" && {_selection isEqualTo "home"}) then {
+	_selectedId = "";
+	_display setVariable [QGVAR(messengerSelectedId), ""];
+};
 if (_isSelect && {_selection isEqualType 0 && {_selection >= 0 && {_selection < count _contacts}}}) then {
 	_selectedId = (_contacts select _selection) getOrDefault ["id", ""];
 	_display setVariable [QGVAR(messengerSelectedId), _selectedId];
 };
-if (_selectedId isEqualTo "" && {_contacts isNotEqualTo []}) then {
-	_selectedId = (_contacts select 0) getOrDefault ["id", ""];
-	_display setVariable [QGVAR(messengerSelectedId), _selectedId];
-};
 if (_selectedId isNotEqualTo "" && {_contacts findIf {(_x getOrDefault ["id", ""]) isEqualTo _selectedId} < 0}) then {
 	_selectedId = "";
-	if (_contacts isNotEqualTo []) then {
-		_selectedId = (_contacts select 0) getOrDefault ["id", ""];
-	};
 	_display setVariable [QGVAR(messengerSelectedId), _selectedId];
 };
 
@@ -151,8 +149,7 @@ if (_targetIndex >= 0) then {
 	_target = _contacts select _targetIndex;
 };
 private _targetName = _target getOrDefault ["name", "No device selected"];
-private _targetEmail = toLowerANSI (_target getOrDefault ["email", ""]);
-private _targetUsername = toLowerANSI (_target getOrDefault ["username", ""]);
+private _isHome = _selectedId isEqualTo "";
 
 private _escape = {
 	params [["_text", "", [""]]];
@@ -169,23 +166,51 @@ if !(_messages isEqualType []) then {
 	_messages = [];
 };
 
+private _messageMatches = {
+	params [
+		["_message", createHashMap, [createHashMap]],
+		["_contact", createHashMap, [createHashMap]]
+	];
+	private _contactId = _contact getOrDefault ["id", ""];
+	private _contactEmail = toLowerANSI (_contact getOrDefault ["email", ""]);
+	private _contactUsername = toLowerANSI (_contact getOrDefault ["username", ""]);
+	private _from = _message getOrDefault ["from", ""];
+	private _to = _message getOrDefault ["to", ""];
+	private _fromEmail = toLowerANSI (_message getOrDefault ["fromEmail", ""]);
+	private _toEmail = toLowerANSI (_message getOrDefault ["toEmail", ""]);
+	private _fromUsername = toLowerANSI (_message getOrDefault ["fromUsername", ""]);
+	private _toUsername = toLowerANSI (_message getOrDefault ["toUsername", ""]);
+	private _sentById = _from isEqualTo _ownId && {_to isEqualTo _contactId};
+	private _receivedById = _from isEqualTo _contactId && {_to isEqualTo _ownId};
+	private _sentByEmail = _ownEmail isNotEqualTo "" && {_contactEmail isNotEqualTo "" && {_fromEmail isEqualTo _ownEmail && {_toEmail isEqualTo _contactEmail}}};
+	private _receivedByEmail = _ownEmail isNotEqualTo "" && {_contactEmail isNotEqualTo "" && {_fromEmail isEqualTo _contactEmail && {_toEmail isEqualTo _ownEmail}}};
+	private _sentByUsername = _ownUsername isNotEqualTo "" && {_contactUsername isNotEqualTo "" && {_fromUsername isEqualTo _ownUsername && {_toUsername isEqualTo _contactUsername}}};
+	private _receivedByUsername = _ownUsername isNotEqualTo "" && {_contactUsername isNotEqualTo "" && {_fromUsername isEqualTo _contactUsername && {_toUsername isEqualTo _ownUsername}}};
+	_sentById || {_receivedById || {_sentByEmail || {_receivedByEmail || {_sentByUsername || _receivedByUsername}}}}
+};
+
+private _messageReceivedFrom = {
+	params [
+		["_message", createHashMap, [createHashMap]],
+		["_contact", createHashMap, [createHashMap]]
+	];
+	private _contactId = _contact getOrDefault ["id", ""];
+	private _contactEmail = toLowerANSI (_contact getOrDefault ["email", ""]);
+	private _contactUsername = toLowerANSI (_contact getOrDefault ["username", ""]);
+	((_message getOrDefault ["from", ""]) isEqualTo _contactId)
+	|| {_ownEmail isNotEqualTo "" && {_contactEmail isNotEqualTo "" && {toLowerANSI (_message getOrDefault ["fromEmail", ""]) isEqualTo _contactEmail && {toLowerANSI (_message getOrDefault ["toEmail", ""]) isEqualTo _ownEmail}}}}
+	|| {_ownUsername isNotEqualTo "" && {_contactUsername isNotEqualTo "" && {toLowerANSI (_message getOrDefault ["fromUsername", ""]) isEqualTo _contactUsername && {toLowerANSI (_message getOrDefault ["toUsername", ""]) isEqualTo _ownUsername}}}}
+};
+
+private _messageReadByOwn = {
+	params [["_message", createHashMap, [createHashMap]]];
+	private _readBy = _message getOrDefault ["readBy", []];
+	_readBy isEqualType [] && {_ownId in _readBy || {_ownEmail isNotEqualTo "" && {_ownEmail in _readBy}} || {_ownUsername isNotEqualTo "" && {_ownUsername in _readBy}}}
+};
+
 private _conversation = _messages select {
 	_x isEqualType createHashMap
-	&& {
-		private _from = _x getOrDefault ["from", ""];
-		private _to = _x getOrDefault ["to", ""];
-		private _fromEmail = toLowerANSI (_x getOrDefault ["fromEmail", ""]);
-		private _toEmail = toLowerANSI (_x getOrDefault ["toEmail", ""]);
-		private _fromUsername = toLowerANSI (_x getOrDefault ["fromUsername", ""]);
-		private _toUsername = toLowerANSI (_x getOrDefault ["toUsername", ""]);
-		private _sentById = _from isEqualTo _ownId && {_to isEqualTo _selectedId};
-		private _receivedById = _from isEqualTo _selectedId && {_to isEqualTo _ownId};
-		private _sentByEmail = _ownEmail isNotEqualTo "" && {_targetEmail isNotEqualTo "" && {_fromEmail isEqualTo _ownEmail && {_toEmail isEqualTo _targetEmail}}};
-		private _receivedByEmail = _ownEmail isNotEqualTo "" && {_targetEmail isNotEqualTo "" && {_fromEmail isEqualTo _targetEmail && {_toEmail isEqualTo _ownEmail}}};
-		private _sentByUsername = _ownUsername isNotEqualTo "" && {_targetUsername isNotEqualTo "" && {_fromUsername isEqualTo _ownUsername && {_toUsername isEqualTo _targetUsername}}};
-		private _receivedByUsername = _ownUsername isNotEqualTo "" && {_targetUsername isNotEqualTo "" && {_fromUsername isEqualTo _targetUsername && {_toUsername isEqualTo _ownUsername}}};
-		_sentById || {_receivedById || {_sentByEmail || {_receivedByEmail || {_sentByUsername || _receivedByUsername}}}}
-	}
+	&& {[_x, _target] call _messageMatches}
 };
 private _conversationSignature = str (_conversation apply {
 	_x getOrDefault ["id", format [
@@ -206,25 +231,33 @@ _display setVariable [QGVAR(messengerConversationSignature), _conversationSignat
 _display setVariable [QGVAR(messengerRenderedSelectedId), _selectedId];
 _display setVariable [QGVAR(messengerForceScrollBottom), false];
 
-_title ctrlSetText format ["Messenger - %1 devices", count _contacts];
+private _theme = [_display] call FUNC(getThemeConfig);
+_title ctrlSetText (["Messenger", format ["Messenger - %1", _targetName]] select !_isHome);
 
-private _inputBg = _display ctrlCreate ["RscText", [_display] call FUNC(nextDynamicIdc)];
-private _inputGroup = controlNull;
-private _input = _display ctrlCreate [QGVAR(RscComputerEditMulti), [_display] call FUNC(nextDynamicIdc)];
-private _sendFrame = controlNull;
-private _send = _display ctrlCreate [QGVAR(RscComputerButton), [_display] call FUNC(nextDynamicIdc)];
-private _sendHotspot = controlNull;
-private _generation = (_display getVariable [QGVAR(messengerInputControlsGeneration), 0]) + 1;
-_display setVariable [QGVAR(messengerInputControlsGeneration), _generation];
-{
-	if (!isNull _x) then {
-		_x ctrlShow false;
-		_x setVariable [QGVAR(messengerInputControlsGeneration), _generation];
-		_x setVariable [QGVAR(messengerDynamicControl), true];
+if (!_isHome) then {
+	private _changedRead = false;
+	{
+		if ([_x, _target] call _messageReceivedFrom && {!([_x] call _messageReadByOwn)}) then {
+			private _readBy = _x getOrDefault ["readBy", []];
+			if !(_readBy isEqualType []) then {
+				_readBy = [];
+			};
+			{
+				if (_x isNotEqualTo "") then {
+					_readBy pushBackUnique _x;
+				};
+			} forEach [_ownId, _ownEmail, _ownUsername];
+			_x set ["readBy", _readBy];
+			_changedRead = true;
+		};
+	} forEach _conversation;
+	if (_changedRead) then {
+		missionNamespace setVariable [QGVAR(messengerMessages), _messages, false];
+		GVAR(messengerMessages) = _messages;
 	};
-} forEach [_inputBg, _inputGroup, _input, _send, _sendHotspot, _sendFrame];
+};
+
 private _baseGroupPos = ctrlPosition _group;
-private _inputH = 0.19;
 private _gap = 0.008;
 if (_isMobile) then {
 	private _contentPos = ctrlPosition _body;
@@ -243,6 +276,178 @@ if (_isMobile) then {
 		(_contentPos select 3) - 0.024
 	];
 };
+
+if (_isHome) exitWith {
+	_group ctrlSetPosition _baseGroupPos;
+	_group ctrlCommit 0;
+	private _historyWidth = (_baseGroupPos select 2) - 0.02;
+	_history ctrlSetStructuredText parseText "";
+	_history ctrlSetPosition [0, 0, _historyWidth max 0.1, 0.2];
+	_history ctrlCommit 0;
+
+	private _textColor = _theme getOrDefault ["text", [0.9, 0.92, 0.96, 1]];
+	private _mutedText = _theme getOrDefault ["mutedText", [0.62, 0.72, 0.85, 1]];
+	private _panel = _theme getOrDefault ["panel", [0.03, 0.035, 0.045, 0.96]];
+	private _accent = _theme getOrDefault ["accent", [0.12, 0.32, 0.58, 0.94]];
+	private _border = _theme getOrDefault ["border", [0, 0, 0, 0.85]];
+	private _controls = [];
+	private _y = 0.012;
+
+	private _intro = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+	_intro setVariable [QGVAR(messengerDynamicControl), true];
+	_intro ctrlSetTextColor _textColor;
+	_intro ctrlSetBackgroundColor [0, 0, 0, 0];
+	_intro ctrlSetPosition [0.012, _y, (_historyWidth - 0.024) max 0.1, 0.06];
+	_intro ctrlSetStructuredText parseText format [
+		"<t size='1.18'>Messages</t><br/><t size='0.88' color='#9fb6d8'>%1 visible devices</t>",
+		count _contacts
+	];
+	_intro ctrlCommit 0;
+	private _introH = 0.055 max ((ctrlTextHeight _intro) + 0.012);
+	_intro ctrlSetPosition [0.012, _y, (_historyWidth - 0.024) max 0.1, _introH];
+	_intro ctrlCommit 0;
+	_controls pushBack _intro;
+	_y = _y + _introH + 0.012;
+
+	if (_contacts isEqualTo []) then {
+		private _empty = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+		_empty setVariable [QGVAR(messengerDynamicControl), true];
+		_empty ctrlSetTextColor _mutedText;
+		_empty ctrlSetBackgroundColor [0, 0, 0, 0];
+		_empty ctrlSetPosition [0.012, _y, (_historyWidth - 0.024) max 0.1, 0.06];
+		_empty ctrlSetStructuredText parseText "<t size='1.0'>No device on your allowed side is currently registered.</t>";
+		_empty ctrlCommit 0;
+		_controls pushBack _empty;
+		_y = _y + 0.075;
+	} else {
+		{
+			private _contact = _x;
+			private _contactIndex = _forEachIndex;
+			private _contactMessages = _messages select {_x isEqualType createHashMap && {[_x, _contact] call _messageMatches}};
+			private _latest = createHashMap;
+			if (_contactMessages isNotEqualTo []) then {
+				_latest = _contactMessages select -1;
+			};
+			private _unread = {
+				[_x, _contact] call _messageReceivedFrom && {!([_x] call _messageReadByOwn)}
+			} count _contactMessages;
+			private _name = _contact getOrDefault ["name", "Device"];
+			private _preview = [_latest getOrDefault ["body", "No messages yet."]] call _escape;
+			private _stamp = if (count _latest > 0) then {
+				format ["%1 %2", _latest getOrDefault ["date", ""], _latest getOrDefault ["time", ""]]
+			} else {
+				""
+			};
+			if (count _preview > 140) then {
+				_preview = (_preview select [0, 137]) + "...";
+			};
+
+			private _cardH = 0.088;
+			private _bg = _display ctrlCreate ["RscText", [_display] call FUNC(nextDynamicIdc), _group];
+			private _frame = _display ctrlCreate [QGVAR(RscComputerFrame), [_display] call FUNC(nextDynamicIdc), _group];
+			private _label = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+			{
+				_x setVariable [QGVAR(messengerDynamicControl), true];
+			} forEach [_bg, _frame, _label];
+			private _cardColor = [_panel, _accent] select (_unread > 0);
+			_bg ctrlSetBackgroundColor _cardColor;
+			_bg ctrlSetPosition [0.012, _y, (_historyWidth - 0.024) max 0.1, _cardH];
+			_bg ctrlCommit 0;
+			_frame ctrlSetTextColor _border;
+			_frame ctrlEnable false;
+			_frame ctrlSetPosition [0.012, _y, (_historyWidth - 0.024) max 0.1, _cardH];
+			_frame ctrlCommit 0;
+			_label ctrlSetTextColor _textColor;
+			_label ctrlSetBackgroundColor [0, 0, 0, 0];
+			private _badgeW = [0, 0.052] select (_unread > 0);
+			_label ctrlSetPosition [0.024, _y + 0.007, (_historyWidth - 0.056 - _badgeW) max 0.08, _cardH - 0.014];
+			_label ctrlSetStructuredText parseText format [
+				"<t size='1.02'>%1</t><br/><t size='0.82' color='%4'>%2</t><br/><t size='0.9'>%3</t>",
+				[_name] call _escape,
+				_stamp,
+				_preview,
+				["#9fb6d8", "#ffffff"] select (_unread > 0)
+			];
+			_label ctrlCommit 0;
+			private _badge = controlNull;
+			if (_unread > 0) then {
+				_badge = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+				_badge setVariable [QGVAR(messengerDynamicControl), true];
+				_badge ctrlEnable false;
+				_badge ctrlSetTextColor [1, 1, 1, 1];
+				_badge ctrlSetBackgroundColor [0, 0, 0, 0];
+				_badge ctrlSetPosition [0.012 + ((_historyWidth - 0.024) max 0.1) - _badgeW - 0.012, _y + 0.024, _badgeW, 0.032];
+				_badge ctrlSetStructuredText parseText format ["<t align='center' color='#ffffff' bgcolor='#2b73c8' size='0.95'>%1</t>", _unread];
+				_badge ctrlCommit 0;
+			};
+			private _button = _display ctrlCreate [QGVAR(RscComputerHitButton), [_display] call FUNC(nextDynamicIdc), _group];
+			_button setVariable [QGVAR(messengerDynamicControl), true];
+			_button ctrlSetPosition [0.012, _y, (_historyWidth - 0.024) max 0.1, _cardH];
+			private _targetId = _contact getOrDefault ["id", ""];
+			private _openChat = {
+				params ["_control"];
+				private _display = ctrlParent _control;
+				private _targetId = _control getVariable [QGVAR(messengerTargetId), ""];
+				if (_targetId isNotEqualTo "") then {
+					_display setVariable [QGVAR(messengerSelectedId), _targetId];
+					_display setVariable [QGVAR(messengerKeepSelection), true];
+					["messages"] call MMC_fnc_renderApp;
+				} else {
+					[_control getVariable [QGVAR(messengerTargetIndex), -1], true] call MMC_fnc_renderMessenger;
+				};
+			};
+			{
+				_x setVariable [QGVAR(messengerTargetId), _targetId];
+				_x setVariable [QGVAR(messengerTargetIndex), _contactIndex];
+				_x ctrlSetTooltip format ["Open chat with %1.", _name];
+				_x ctrlAddEventHandler ["MouseButtonUp", {
+					params ["_control", "_button"];
+					if (_button isNotEqualTo 0) exitWith {false};
+					private _display = ctrlParent _control;
+					private _targetId = _control getVariable [QGVAR(messengerTargetId), ""];
+					if (_targetId isNotEqualTo "") then {
+						_display setVariable [QGVAR(messengerSelectedId), _targetId];
+						_display setVariable [QGVAR(messengerKeepSelection), true];
+						["messages"] call MMC_fnc_renderApp;
+					} else {
+						[_control getVariable [QGVAR(messengerTargetIndex), -1], true] call MMC_fnc_renderMessenger;
+					};
+					true
+				}];
+			} forEach [_bg, _label, _button];
+			_button ctrlAddEventHandler ["ButtonClick", _openChat];
+			_button ctrlCommit 0;
+			_controls append ([_bg, _frame, _label] + ([_badge] select {!isNull _x}) + [_button]);
+			_y = _y + _cardH + 0.01;
+		} forEach _contacts;
+	};
+
+	_history ctrlSetPosition [0, 0, _historyWidth max 0.1, _y + 0.025];
+	_history ctrlCommit 0;
+	_display setVariable [QGVAR(messengerDynamicControls), _controls];
+
+	if (_isMobile) then {
+		_display setVariable [QGVAR(mobileRecreatePanesOnTop), true];
+		[_display] call FUNC(applyMobileDisplayLayout);
+	};
+};
+
+private _inputBg = _display ctrlCreate ["RscText", [_display] call FUNC(nextDynamicIdc)];
+private _inputGroup = controlNull;
+private _input = _display ctrlCreate [QGVAR(RscComputerEditMulti), [_display] call FUNC(nextDynamicIdc)];
+private _sendFrame = controlNull;
+private _send = _display ctrlCreate [QGVAR(RscComputerButton), [_display] call FUNC(nextDynamicIdc)];
+private _sendHotspot = controlNull;
+private _generation = (_display getVariable [QGVAR(messengerInputControlsGeneration), 0]) + 1;
+_display setVariable [QGVAR(messengerInputControlsGeneration), _generation];
+{
+	if (!isNull _x) then {
+		_x ctrlShow false;
+		_x setVariable [QGVAR(messengerInputControlsGeneration), _generation];
+		_x setVariable [QGVAR(messengerDynamicControl), true];
+	};
+} forEach [_inputBg, _inputGroup, _input, _send, _sendHotspot, _sendFrame];
+private _inputH = 0.19;
 private _historyGroupPos = [
 	_baseGroupPos select 0,
 	_baseGroupPos select 1,
@@ -256,7 +461,6 @@ _history ctrlSetStructuredText parseText "";
 _history ctrlSetPosition [0, 0, _historyWidth max 0.1, 0.2];
 _history ctrlCommit 0;
 
-private _theme = [_display] call FUNC(getThemeConfig);
 private _drafts = _display getVariable [QGVAR(messengerDrafts), createHashMap];
 if !(_drafts isEqualType createHashMap) then {
 	_drafts = createHashMap;
@@ -381,9 +585,42 @@ private _addHistoryNotice = {
 	_bubbleY = _bubbleY + _h + _bubbleGap;
 };
 
+private _back = _display ctrlCreate [QGVAR(RscComputerButton), [_display] call FUNC(nextDynamicIdc), _group];
+private _backFrame = _display ctrlCreate [QGVAR(RscComputerFrame), [_display] call FUNC(nextDynamicIdc), _group];
+{
+	_x setVariable [QGVAR(messengerDynamicControl), true];
+} forEach [_back, _backFrame];
+_back ctrlSetText "<";
+_back ctrlSetTooltip "Return to Messenger home.";
+_back ctrlSetBackgroundColor (_theme getOrDefault ["button", [0.028, 0.032, 0.042, 0.98]]);
+_back ctrlSetTextColor (_theme getOrDefault ["buttonText", [0.92, 0.94, 0.97, 1]]);
+_back ctrlSetActiveColor (_theme getOrDefault ["buttonHoverText", [1, 1, 1, 1]]);
+_back ctrlSetPosition [0.012, _bubbleY, 0.046, 0.04];
+private _returnHome = {
+	params ["_control"];
+	private _display = ctrlParent _control;
+	_display setVariable [QGVAR(messengerSelectedId), ""];
+	["messages"] call MMC_fnc_renderApp;
+};
+_back ctrlAddEventHandler ["ButtonClick", _returnHome];
+_back ctrlAddEventHandler ["MouseButtonUp", {
+	params ["_control", "_button"];
+	if (_button isNotEqualTo 0) exitWith {false};
+	private _display = ctrlParent _control;
+	_display setVariable [QGVAR(messengerSelectedId), ""];
+	["messages"] call MMC_fnc_renderApp;
+	true
+}];
+_back ctrlCommit 0;
+_backFrame ctrlSetTextColor (_theme getOrDefault ["border", [0, 0, 0, 0.85]]);
+_backFrame ctrlEnable false;
+_backFrame ctrlSetPosition [0.012, _bubbleY, 0.046, 0.04];
+_backFrame ctrlCommit 0;
+_bubbleControls append [_back, _backFrame];
+
 private _heading = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
 _heading setVariable [QGVAR(messengerDynamicControl), true];
-_heading ctrlSetPosition [0.012, _bubbleY, (_historyWidth - 0.024) max 0.1, 0.05];
+_heading ctrlSetPosition [0.066, _bubbleY, (_historyWidth - 0.078) max 0.1, 0.05];
 _heading ctrlSetTextColor _textColor;
 _heading ctrlSetBackgroundColor [0, 0, 0, 0];
 _heading ctrlSetStructuredText parseText format ["<t size='1.2'>%1</t>", [_targetName] call _escape];

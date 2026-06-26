@@ -14,6 +14,10 @@ GVAR(messengerMessages) = [];
 GVAR(mobileOrientation) = "horizontal";
 GVAR(mobileUniqueCounters) = createHashMap;
 GVAR(debugEnabled) = false;
+GVAR(notificationSoundEnabled) = true;
+GVAR(notesAutosaveEnabled) = true;
+GVAR(mailAddressBookIncludeFriendlySides) = true;
+GVAR(mailAddressBookExcludeCivilians) = true;
 
 [
 	QGVAR(debugEnabled),
@@ -22,6 +26,51 @@ GVAR(debugEnabled) = false;
 	["Moony's Magnificent Computers", "Debug"],
 	false,
 	0
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(mobileLockCode),
+	"EDITBOX",
+	["Mobile Lock Code", "Numeric unlock code used for personal inventory or arsenal mobile devices when no mission mobile profile sets one. Leave empty to let any entry, including no entry, unlock the device."],
+	["Moony's Magnificent Computers", "Mobile Devices"],
+	"",
+	0
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(notesAutosaveEnabled),
+	"CHECKBOX",
+	["Notes Autosave", "Automatically saves the currently edited note shortly after typing. Disable this if notes should only be saved when pressing Save."],
+	["Moony's Magnificent Computers", "Notes"],
+	true,
+	0
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(notificationSoundEnabled),
+	"CHECKBOX",
+	["Notification Sound", "Play MMC notification sounds when mail or Messenger messages arrive. ACE text notifications still appear when this is disabled."],
+	["Moony's Magnificent Computers", "Notifications"],
+	true,
+	0
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(mailAddressBookIncludeFriendlySides),
+	"CHECKBOX",
+	["Address Book Include Friendly Sides", "Automatically list player mail addresses from friendly sides in the Mail address book. Matching-side players are always listed."],
+	["Moony's Magnificent Computers", "Mail"],
+	true,
+	1
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(mailAddressBookExcludeCivilians),
+	"CHECKBOX",
+	["Address Book Exclude Civilians", "Hide civilian player mail addresses when the current user is not civilian."],
+	["Moony's Magnificent Computers", "Mail"],
+	true,
+	1
 ] call CBA_fnc_addSetting;
 
 [

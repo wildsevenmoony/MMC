@@ -56,6 +56,15 @@
 			defaultValue = "''"; \
 			expression = "_this setVariable ['%s', _value, true];"; \
 		}; \
+		class GVAR(mobileLockCode) { \
+			property = QGVAR(mobileLockCode); \
+			displayName = "Lock Code"; \
+			tooltip = "Numeric code required on the mobile lock screen. Leave empty to let any entry, including no entry, unlock the device."; \
+			control = "Edit"; \
+			typeName = "STRING"; \
+			defaultValue = "''"; \
+			expression = "_this setVariable ['%s', _value, true];"; \
+		}; \
 		class GVAR(userEmail) { \
 			property = QGVAR(userEmail); \
 			displayName = "E-Mail Address"; \
@@ -337,6 +346,13 @@ class CfgVehicles {
 		scope = 2;
 
 		class Attributes: AttributesBase {
+			class GVAR(mobileProfileMatchingCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Profile Matching";
+				description = "";
+			};
+
 			class GVAR(mobileProfileId): Edit {
 				property = QGVAR(mobileProfileId);
 				displayName = "Profile ID";
@@ -387,6 +403,13 @@ class CfgVehicles {
 				};
 			};
 
+			class GVAR(mobileProfileIdentityCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Identity";
+				description = "";
+			};
+
 			class GVAR(mobileProfileTheme): Combo {
 				property = QGVAR(mobileProfileTheme);
 				displayName = "Theme";
@@ -412,6 +435,24 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(mobileProfileEmailDomain): Edit {
+				property = QGVAR(mobileProfileEmailDomain);
+				displayName = "Player E-Mail Domain";
+				tooltip = "Optional domain used when a matching player's primary e-mail is generated automatically, e.g. @aaf.ass or ion.com. Explicit e-mail addresses still override this.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(mobileLockCode): Edit {
+				property = QGVAR(mobileLockCode);
+				displayName = "Lock Code";
+				tooltip = "Numeric code required on the mobile lock screen for devices matching this profile. Leave empty to let any entry, including no entry, unlock the device.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class GVAR(messengerName): Edit {
 				property = QGVAR(messengerName);
 				displayName = "Messenger Username";
@@ -419,6 +460,13 @@ class CfgVehicles {
 				typeName = "STRING";
 				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(mobileProfileSelectorsCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Selectors";
+				description = "";
 			};
 
 			class GVAR(mobileProfileItemClasses): Edit {
@@ -491,6 +539,13 @@ class CfgVehicles {
 				typeName = "STRING";
 				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(mobileProfileAppsCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Apps";
+				description = "";
 			};
 
 			class GVAR(mobileProfileAppScripts): Edit {
@@ -568,6 +623,13 @@ class CfgVehicles {
 		scope = 2;
 
 		class Attributes: AttributesBase {
+			class GVAR(assignMobileProfileDeviceCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Device";
+				description = "";
+			};
+
 			class GVAR(assignMobileProfileGiveDevice): Checkbox {
 				property = QGVAR(assignMobileProfileGiveDevice);
 				displayName = "Add Device";
@@ -594,10 +656,26 @@ class CfgVehicles {
 				};
 			};
 
+			class GVAR(assignMobileProfileIdentityCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Identity and Mail";
+				description = "";
+			};
+
 			class GVAR(assignMobileProfileEmail): Edit {
 				property = QGVAR(assignMobileProfileEmail);
 				displayName = "E-Mail Address";
-				tooltip = "Primary mobile e-mail address for the synced unit. Leave empty to use PLAYERNAME@mmcsystems.com.";
+				tooltip = "Primary mobile e-mail address for the synced unit. Leave empty to use PLAYERNAME@mmcsystems.com or the configured Player E-Mail Domain.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(mobileProfileEmailDomain): Edit {
+				property = QGVAR(mobileProfileEmailDomain);
+				displayName = "Player E-Mail Domain";
+				tooltip = "Optional domain used when the E-Mail Address is empty, e.g. @aaf.ass or ion.com. The actual address becomes PLAYERNAME@domain.";
 				typeName = "STRING";
 				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";
@@ -612,6 +690,15 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(mobileLockCode): Edit {
+				property = QGVAR(mobileLockCode);
+				displayName = "Lock Code";
+				tooltip = "Numeric code required on the mobile lock screen for this assigned profile. Leave empty to let any entry, including no entry, unlock the device.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
 			class GVAR(messengerName): Edit {
 				property = QGVAR(messengerName);
 				displayName = "Messenger Username";
@@ -619,6 +706,13 @@ class CfgVehicles {
 				typeName = "STRING";
 				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(assignMobileProfileAppearanceCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Appearance";
+				description = "";
 			};
 
 			class GVAR(mobileProfileTheme): Combo {
@@ -635,6 +729,13 @@ class CfgVehicles {
 					class CSAT {name = "CSAT"; value = "csat";};
 					class AAF {name = "AAF"; value = "aaf";};
 				};
+			};
+
+			class GVAR(assignMobileProfileAppsCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Apps";
+				description = "";
 			};
 
 			class GVAR(mobileProfileAppScripts): Edit {
@@ -680,6 +781,13 @@ class CfgVehicles {
 				typeName = "BOOL";
 				defaultValue = "true";
 				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(assignMobileProfileAdvancedCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Advanced";
+				description = "";
 			};
 
 			class GVAR(assignMobileProfilePriority): Edit {
@@ -730,6 +838,13 @@ class CfgVehicles {
 		scope = 2;
 
 		class Attributes: AttributesBase {
+			class GVAR(addUserLoginCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Login";
+				description = "";
+			};
+
 			class GVAR(userName): Edit {
 				property = QGVAR(userName);
 				displayName = "Username";
@@ -747,12 +862,28 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
+			class GVAR(addUserMailCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Mail and Messenger";
+				description = "";
+			};
+
 			class GVAR(userEmail): Edit {
 				property = QGVAR(userEmail);
 				displayName = "E-Mail Address";
 				tooltip = "Mail addressed to this value appears in this user's inbox.";
 				typeName = "STRING";
 				defaultValue = "'operator@mmcsystems.com'";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(addressBook): Edit {
+				property = QGVAR(addressBook);
+				displayName = "Address Book";
+				tooltip = "Optional mission-made address book entries. Use comma or semicolon separated e-mail addresses, optionally as Name <address@example.com>.";
+				typeName = "STRING";
+				defaultValue = "''";
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
@@ -783,6 +914,13 @@ class CfgVehicles {
 				};
 			};
 
+			class GVAR(addUserAppearanceCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Appearance";
+				description = "";
+			};
+
 			class GVAR(userTheme): Combo {
 				property = QGVAR(userTheme);
 				displayName = "Theme";
@@ -797,6 +935,13 @@ class CfgVehicles {
 					class CSAT {name = "CSAT"; value = "csat";};
 					class AAF {name = "AAF"; value = "aaf";};
 				};
+			};
+
+			class GVAR(addUserAppsCategory) {
+				data = "AttributeSystemSubcategory";
+				control = "SubCategory";
+				displayName = "Apps";
+				description = "";
 			};
 
 			class GVAR(appFilesEnabled): Checkbox {

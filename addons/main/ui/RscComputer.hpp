@@ -72,6 +72,25 @@ class GVAR(RscComputerInvisibleButton): RscButton {
 	offsetPressedY = 0;
 };
 
+class GVAR(RscComputerHitButton): RscButton {
+	shadow = 0;
+	style = 2;
+	text = " ";
+	colorText[] = {0, 0, 0, 0};
+	colorDisabled[] = {0, 0, 0, 0};
+	colorBackground[] = {0, 0, 0, 0.01};
+	colorBackground2[] = {0, 0, 0, 0.01};
+	colorBackgroundActive[] = {0, 0, 0, 0.01};
+	colorFocused[] = {0, 0, 0, 0.01};
+	colorShadow[] = {0, 0, 0, 0};
+	colorBorder[] = {0, 0, 0, 0};
+	borderSize = 0;
+	offsetX = 0;
+	offsetY = 0;
+	offsetPressedX = 0;
+	offsetPressedY = 0;
+};
+
 class GVAR(RscComputerFrame): RscText {
 	shadow = 0;
 	style = 64;

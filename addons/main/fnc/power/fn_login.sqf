@@ -8,6 +8,10 @@
 private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (isNull _display) exitWith {};
 
+if (_display getVariable [QGVAR(mobileLockScreen), false]) exitWith {
+	call FUNC(unlockMobile);
+};
+
 private _computer = _display getVariable [QGVAR(computer), objNull];
 if (isNull _computer || {!(_computer getVariable [QGVAR(poweredOn), true])}) exitWith {};
 

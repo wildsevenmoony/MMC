@@ -52,6 +52,8 @@ if (count _device == 0) exitWith {
 	false
 };
 
+_device set ["clientLockCode", missionNamespace getVariable [QGVAR(mobileLockCode), ""]];
+
 ["Mobile", "Requesting mobile open from client", createHashMapFromArray [
 	["player", format ["%1:%2:%3", name player, getPlayerUID player, typeOf player]],
 	["device", _device]

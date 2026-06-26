@@ -18,6 +18,7 @@ if !(isClass (configFile >> "CfgPatches" >> "zen_custom_modules")) exitWith {};
 		["Add Text File", {_this call FUNC(addTextFileZeus)}],
 		["Add Picture", {_this call FUNC(addPictureZeus)}],
 		["Add Note", {_this call FUNC(addNoteZeus)}],
+		["Add Mail Address to Address Book", {_this call FUNC(addAddressBookZeus)}],
 		["Modify Desktop", {_this call FUNC(modifyDesktopZeus)}],
 		["Add Mail", {_this call FUNC(addMailZeus)}]
 	];

@@ -90,6 +90,7 @@ if (_drafts isEqualType createHashMap) then {
 
 _display setVariable [QGVAR(messengerSkipDraftSave), true];
 _display setVariable [QGVAR(messengerForceScrollBottom), true];
+_display setVariable [QGVAR(messengerKeepSelection), true];
 _input ctrlSetText "";
 {
 	if (

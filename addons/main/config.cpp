@@ -10,6 +10,7 @@
 #include "CfgFactionClasses.hpp"
 #include "CfgFunctions.hpp"
 #include "CfgPatches.hpp"
+#include "CfgSounds.hpp"
 #include "CfgVehicles.hpp"
 #include "CfgWeapons.hpp"
 #include "ui\RscComputer.hpp"

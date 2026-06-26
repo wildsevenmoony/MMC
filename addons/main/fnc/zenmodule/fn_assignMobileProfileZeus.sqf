@@ -47,8 +47,10 @@ if (isNull _objectUnderCursor || {!(_objectUnderCursor isKindOf "CAManBase")}) e
 			],
 			false
 		],
-		["EDIT", ["E-Mail Address", "Primary mobile e-mail address. Leave empty to use PLAYERNAME@mmcsystems.com."], "", false],
+		["EDIT", ["E-Mail Address", "Primary mobile e-mail address. Leave empty to use PLAYERNAME@mmcsystems.com or the Player E-Mail Domain."], "", false],
+		["EDIT", ["Player E-Mail Domain", "Optional domain used when E-Mail Address is empty, e.g. @aaf.ass or ion.com."], "", false],
 		["EDIT", ["Linked E-Mail Addresses", "Optional comma-separated e-mail aliases linked to the same profile."], "", false],
+		["EDIT", ["Lock Code", "Numeric code required on the mobile lock screen. Leave empty to let any entry, including no entry, unlock the device."], "", false],
 		["EDIT", ["Messenger Username", "Display name shown in Messenger. Leave empty to use the unit/player name."], "", false],
 		[
 			"COMBO",
@@ -82,7 +84,9 @@ if (isNull _objectUnderCursor || {!(_objectUnderCursor isKindOf "CAManBase")}) e
 			"_giveDevice",
 			"_deviceClass",
 			"_email",
+			"_emailDomain",
 			"_aliasesText",
+			"_lockCode",
 			"_messengerName",
 			"_messengerSide",
 			"_theme",
@@ -149,9 +153,17 @@ if (isNull _objectUnderCursor || {!(_objectUnderCursor isKindOf "CAManBase")}) e
 			["disabledApps", _disabledApps],
 			["appScripts", [_appScriptsText] call _splitList]
 		];
+		_lockCode = [_lockCode] call CBA_fnc_trim;
+		if (_lockCode isNotEqualTo "") then {
+			_profile set ["lockCode", _lockCode];
+		};
 		_email = [_email] call CBA_fnc_trim;
 		if (_email isNotEqualTo "") then {
 			_profile set ["primaryEmail", _email];
+		};
+		_emailDomain = [_emailDomain] call CBA_fnc_trim;
+		if (_emailDomain isNotEqualTo "") then {
+			_profile set ["emailDomain", _emailDomain];
 		};
 
 		private _assignedProfiles = _unit getVariable [QGVAR(assignedMobileProfileIds), []];

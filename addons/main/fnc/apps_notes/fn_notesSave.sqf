@@ -5,11 +5,19 @@
  * Saves the currently edited note for the active MMC user.
  *
  * Arguments:
- * None
+ * 0: Re-render notes app after save <BOOL, default: true>
+ * 1: Show status text <BOOL, default: true>
+ * 2: Clear draft state <BOOL, default: true>
  *
  * Return Value:
  * Saved <BOOL>
  */
+
+params [
+	["_render", true, [true]],
+	["_showStatus", true, [true]],
+	["_clearDraft", true, [true]]
+];
 
 private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (isNull _display) exitWith {false};
@@ -25,8 +33,12 @@ private _title = [ctrlText _titleControl] call CBA_fnc_trim;
 private _body = ctrlText _bodyControl;
 private _trimmedBody = [_body] call CBA_fnc_trim;
 if (_title isEqualTo "" && {_trimmedBody isEqualTo ""}) exitWith {
-	_display setVariable [QGVAR(notesStatus), "Write a title or body before saving."];
-	["render"] call FUNC(renderNotes);
+	if (_showStatus) then {
+		_display setVariable [QGVAR(notesStatus), "Write a title or body before saving."];
+	};
+	if (_render) then {
+		["render"] call FUNC(renderNotes);
+	};
 	false
 };
 
@@ -100,11 +112,15 @@ _display setVariable [QGVAR(data), _data];
 _display setVariable [QGVAR(activeUser), _user];
 _display setVariable [QGVAR(selectedNoteId), _id];
 _display setVariable [QGVAR(selectedNoteSource), "user"];
-_display setVariable [QGVAR(notesStatus), "Note saved."];
-_display setVariable [QGVAR(notesDraftId), "__none"];
-_display setVariable [QGVAR(notesDraftSource), "user"];
-_display setVariable [QGVAR(notesDraftTitle), ""];
-_display setVariable [QGVAR(notesDraftBody), ""];
+if (_showStatus) then {
+	_display setVariable [QGVAR(notesStatus), "Note saved."];
+};
+if (_clearDraft) then {
+	_display setVariable [QGVAR(notesDraftId), "__none"];
+	_display setVariable [QGVAR(notesDraftSource), "user"];
+	_display setVariable [QGVAR(notesDraftTitle), ""];
+	_display setVariable [QGVAR(notesDraftBody), ""];
+};
 
 ["Notes", "Saved note", createHashMapFromArray [
 	["computer", _computer],
@@ -113,5 +129,7 @@ _display setVariable [QGVAR(notesDraftBody), ""];
 	["noteCount", count _notes]
 ]] call FUNC(debugLog);
 
-["render"] call FUNC(renderNotes);
+if (_render) then {
+	["render"] call FUNC(renderNotes);
+};
 true

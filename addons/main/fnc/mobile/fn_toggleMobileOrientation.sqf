@@ -18,6 +18,11 @@ private _orientation = _display getVariable [QGVAR(mobileOrientation), GVAR(mobi
 _orientation = ["vertical", "horizontal"] select (_orientation isEqualTo "vertical");
 _display setVariable [QGVAR(mobileOrientation), _orientation];
 
+if (_display getVariable [QGVAR(mobileLockScreen), false]) exitWith {
+	[_display] call FUNC(applyMobileDisplayLayout);
+	_orientation
+};
+
 private _currentApp = _display getVariable [QGVAR(currentApp), ""];
 if (_currentApp isEqualTo "notes") then {
 	private _titleControl = _display getVariable [QGVAR(notesTitleControl), controlNull];

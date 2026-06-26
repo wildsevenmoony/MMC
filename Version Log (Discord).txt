@@ -1,23 +1,62 @@
 # **Moony's Magnificent Computers** - Update DD.MM.YYYY
--# Version 1.1.0.3
+-# Version 1.1.0.23
 ## Added
 - Mobile device system with smartphone, tablet and rugged tablet items
 - Unique mobile device IDs so phones and tablets can keep their data when looted, stolen or dropped
+- Mobile lock screen with numeric unlock codes for placed, profile-assigned, Zeus-assigned, inventory and arsenal devices
 - Mobile profiles for player-linked, arsenal-linked and placed-device workflows
 - Mobile Messenger with side-filtered contacts and chat history
 - Notes app for multiple personal notes per user
 - Custom app building blocks, including structured text, buttons, edit fields, checkboxes, combo boxes, progress bars, lines, boxes, spacers and live camera feed controls
 - In-world screen state textures and layout-controlled screen selection options
 - Zeus action for opening or starting registered computers remotely
+- Delete button on the mobile lock screen keypad
+- ACE notifications and notification sound for incoming mail and Messenger messages
+- Messenger home screen with latest-message previews and unread counts
+- Back button from an open Messenger chat to the Messenger home screen
+- Optional CBA-controlled Notes autosave.
+- Mail address books with manual entries, save-from-mail, composer insertion, Add User seeding and Zeus seeding.
+- CBA settings for side-visible address book contacts, including friendly-side inclusion and civilian filtering.
+## Fixed
+- Mobile lock screen cleanup no longer errors when reopening devices with nested dynamic controls
+- Mobile lock screen now hides the custom app drawer controls while locked
+- Personal inventory and arsenal devices now correctly use the player's CBA mobile lock code when the matching mobile profile has no filled lock code
+- Mobile lock screen layout now keeps the keypad and time/date separated in horizontal orientation
+- Messenger home contact cards and the chat back button are now clickable through the full visible control.
+- Messenger home cards now use real transparent buttons plus an index fallback so card clicks open the selected chat reliably.
+- Messenger home unread counters now sit on the far right side of the contact card.
+- Address Book Use To and Use CC now only fill their intended composer fields.
+- Address Book now preserves composer drafts when selecting To or CC contacts.
+- Address Book actions now require a selected address and no longer clear drafts when clicked empty.
+- Mail table action buttons now keep clear of mobile scroll arrows and remain visible, but disabled, below open mobile panes.
+- Mail action buttons and Address Book controls now use more consistent sizing and spacing.
+- Mail now opens the Inbox when the Mail app button is pressed, while preserving normal folder navigation inside the app.
+- Address Book Use To, Use CC and Delete buttons now enable immediately after selecting an address.
+- Mail action controls are now hidden reliably when switching away from the Mail app.
+- Address Book Save is now disabled until both Name and E-Mail fields contain text.
+- Address Book Save state updates no longer error when typing into the Name or E-Mail fields.
+- Address Book status messages now stay on the Address Book screen instead of carrying into the composer.
+- Address Book status is now shown beside the Name label and the composer clears stale status text on open.
 ## Removed
 - Experimental video playback support, because it was not reliable enough inside the dialog
 ## Changed
 - ACE self-action for mobile devices is now called "Mobile Device"
 - Mobile UI was redesigned into a separate compact layout instead of shrinking the desktop layout
+- Mobile lock screen now uses a phone-style PIN keypad with time, date and access prompt
+- Mobile lock screen now includes the rotate button
+- Personal inventory and arsenal device lock codes are captured into the unique device data when the device is first prepared
 - Mail system gained read/unread icons, CC, attachments, reply/forward improvements and mission-time timestamps
 - Mail, file, picture, desktop/home and mobile-profile module syncing was expanded
 - Dedicated server behavior was improved for mail, devices, mobile profiles and Messenger
 - Documentation and Steam description were updated for the expanded system
+- Messenger notifications now show who sent the message without exposing the message text.
+- Unread Messenger home cards now use the theme accent color until opened.
+- Added a CBA setting to disable MMC notification sounds while keeping ACE text notifications.
+- Mail notifications now use their own mail sound.
+- Mobile profiles can now generate player e-mail addresses from a per-profile domain when the primary e-mail field is empty.
+- Larger Mail composer action buttons and grouped Eden module attributes for cleaner setup.
+- Address Book editor controls were moved lower in the content box with more spacing.
+- Inbox and Outbox now expose New Mail and Address Book buttons directly.
 
 # **Moony's Magnificent Computers** - Initial Release DD.MM.YYYY
 -# Version 1.0.0.0
@@ -29,6 +68,8 @@
 - Mail app with inbox, outbox, reply and forward workflow
 - Eden and Zeus modules for registering computers, adding users, adding text files, adding mail and changing power state
 - Default, NATO, CSAT and AAF visual themes
+## Fixed
+- Mobile lock screen cleanup no longer errors when reopening devices with nested dynamic controls
 ## Removed
 - Nothing
 ## Changed

@@ -145,6 +145,21 @@ if (_computer getVariable [QGVAR(booting), false]) exitWith {
 	call _revealMobileDisplay;
 };
 
+if (_isMobileDisplay && {!(_display getVariable [QGVAR(mobileUnlocked), false])}) exitWith {
+	private _lockCodeSet = _computer getVariable [QGVAR(mobileLockCodeSet), false];
+	private _lockCode = if (_lockCodeSet) then {
+		[_computer getVariable [QGVAR(mobileLockCode), _data getOrDefault ["mobileLockCode", ""]]] call CBA_fnc_trim
+	} else {
+		[missionNamespace getVariable [QGVAR(mobileLockCode), ""]] call CBA_fnc_trim
+	};
+	_display setVariable [QGVAR(mobileLockCode), _lockCode];
+	_display setVariable [QGVAR(mobileLockCodeSource), _computer getVariable [QGVAR(mobileLockCodeSource), ["clientSetting", "profileOrDevice"] select _lockCodeSet]];
+	_display setVariable [QGVAR(mobileUnlocked), false];
+	[_display] call FUNC(showMobileLock);
+	[_display] call FUNC(applyMobileDisplayLayout);
+	call _revealMobileDisplay;
+};
+
 if (count _activeUser == 0) then {
 	if (_loginRequired) then {
 		[_display] call FUNC(showLogin);

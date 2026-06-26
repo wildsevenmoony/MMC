@@ -59,6 +59,7 @@ if (_messengerSide isEqualTo "") then {
 	_messengerSide = [_theme, _customLayout] call FUNC(getMessengerSideFromTheme);
 };
 private _disabledApps = [_logic] call FUNC(getDisabledAppsFromConfig);
+private _addressBook = [_logic getVariable [QGVAR(addressBook), ""]] call FUNC(normalizeAddressBook);
 
 private _legacyBackgroundCustom = _logic getVariable [QGVAR(userBackgroundCustom), ""];
 if (_legacyBackgroundCustom isNotEqualTo "" && {count _customLayout == 0}) then {
@@ -80,6 +81,7 @@ private _userConfig = createHashMapFromArray [
 	["messengerName", _messengerName],
 	["side", _messengerSide],
 	["messengerSide", _messengerSide],
+	["addressBook", _addressBook],
 	["scope", "pending"],
 	["disabledApps", _disabledApps]
 ];
@@ -131,7 +133,8 @@ if (_scope isEqualTo "global") then {
 			["displayName", _messengerName],
 			["messengerName", _messengerName],
 			["side", _messengerSide],
-			["messengerSide", _messengerSide]
+			["messengerSide", _messengerSide],
+			["addressBook", _addressBook]
 		]] call FUNC(addUser);
 	};
 } forEach _computerObjects;

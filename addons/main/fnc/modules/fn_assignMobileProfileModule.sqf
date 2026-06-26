@@ -123,6 +123,18 @@ if (_displayName isNotEqualTo "") then {
 };
 _profile set ["theme", _logic getVariable [QGVAR(mobileProfileTheme), "default"]];
 _profile set ["aliases", [_logic getVariable [QGVAR(mobileProfileAliases), ""]] call _splitList];
+private _emailDomain = [_logic getVariable [QGVAR(mobileProfileEmailDomain), ""]] call CBA_fnc_trim;
+if (_emailDomain isNotEqualTo "") then {
+	_profile set ["emailDomain", _emailDomain];
+} else {
+	_profile deleteAt "emailDomain";
+};
+private _lockCode = [_logic getVariable [QGVAR(mobileLockCode), ""]] call CBA_fnc_trim;
+if (_lockCode isNotEqualTo "") then {
+	_profile set ["lockCode", _lockCode];
+} else {
+	_profile deleteAt "lockCode";
+};
 _profile set ["disabledApps", [_logic] call FUNC(getDisabledAppsFromConfig)];
 if (_email isNotEqualTo "") then {
 	_profile set ["primaryEmail", _email];
@@ -141,6 +153,7 @@ _profile = [_profile, _objects, _logic] call FUNC(enrichMobileProfileFromModules
 	["id", _id],
 	["units", _units apply {format ["%1:%2", name _x, typeOf _x]}],
 	["theme", _profile getOrDefault ["theme", ""]],
+	["hasLockCode", (_profile getOrDefault ["lockCode", ""]) isNotEqualTo ""],
 	["primaryEmail", _profile getOrDefault ["primaryEmail", ""]],
 	["aliases", _profile getOrDefault ["aliases", []]],
 	["appScripts", _profile getOrDefault ["appScripts", []]],

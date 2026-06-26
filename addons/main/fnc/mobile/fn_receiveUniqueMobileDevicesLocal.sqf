@@ -53,6 +53,7 @@ if (!hasInterface || {isNull player}) exitWith {false};
 				["orientation", _type getOrDefault ["orientation", "horizontal"]],
 				["icon", _type getOrDefault ["icon", ""]],
 				["source", "personal"],
+				["clientLockCode", missionNamespace getVariable [QGVAR(mobileLockCode), ""]],
 				["type", _type]
 			];
 			["Mobile", "Opening newly assigned unique mobile device for data initialization", createHashMapFromArray [

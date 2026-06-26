@@ -56,11 +56,29 @@ private _allControls = [
 {(_display displayCtrl _x) ctrlShow false} forEach _allControls;
 
 (_display displayCtrl IDC_MMC_APP_TITLE) ctrlSetText "Mail";
+(_display displayCtrl IDC_MMC_MAIL_RECIPIENT_LABEL) ctrlSetText "Recipient";
+(_display displayCtrl IDC_MMC_MAIL_SUBJECT_LABEL) ctrlSetText "Subject";
+(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetText "Answer";
+(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetTooltip "Answer this mail.";
+(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetEventHandler ["ButtonClick", "['reply'] call MMC_fnc_mailCompose"];
+(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetText "Forward";
+(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetTooltip "Forward this mail.";
+(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetEventHandler ["ButtonClick", "['forward'] call MMC_fnc_mailCompose"];
+(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetText "Send";
+(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetTooltip "";
+(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetEventHandler ["ButtonClick", "call MMC_fnc_mailSendFromComposer"];
+(_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetEventHandler ["KeyUp", ""];
+(_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetEventHandler ["KeyUp", ""];
+(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetText "Cancel";
+(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetTooltip "";
+(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetEventHandler ["ButtonClick", "['table'] call MMC_fnc_renderMail"];
+{(_display displayCtrl _x) ctrlEnable true} forEach [IDC_MMC_MAIL_REPLY, IDC_MMC_MAIL_FORWARD, IDC_MMC_MAIL_SEND, IDC_MMC_MAIL_CANCEL];
 
 private _rows = [
 	createHashMapFromArray [["action", "folder"], ["folder", "inbox"], ["label", "Inbox"]],
 	createHashMapFromArray [["action", "folder"], ["folder", "outbox"], ["label", "Outbox"]],
-	createHashMapFromArray [["action", "compose"], ["label", "Send E-Mail"]]
+	createHashMapFromArray [["action", "compose"], ["label", "Send E-Mail"]],
+	createHashMapFromArray [["action", "addressbook"], ["label", "Address Book"]]
 ];
 
 lbClear _list;
@@ -75,6 +93,17 @@ _table ctrlRemoveAllEventHandlers "MouseButtonDown";
 _table ctrlAddEventHandler ["MouseButtonDown", {
 	params ["_control", "_button", "_mouseX", "_mouseY"];
 	private _display = ctrlParent _control;
+	if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+		_display setVariable [QGVAR(startMenuOpen), false];
+		_display setVariable [QGVAR(mobileNavOpen), false];
+		_display setVariable [QGVAR(mobileCustomAppsOpen), false];
+		[{
+			params ["_display"];
+			if (!isNull _display) then {
+				[_display] call MMC_fnc_applyMobileDisplayLayout;
+			};
+		}, [_display], 0] call CBA_fnc_waitAndExecute;
+	};
 	private _rows = _display getVariable [QGVAR(mailRows), []];
 	private _tablePos = ctrlPosition _control;
 	private _localY = _mouseY;
@@ -107,10 +136,17 @@ if (_fromNav) then {
 			(_display displayCtrl _x) ctrlSetText "";
 		} forEach [IDC_MMC_MAIL_RECIPIENT, IDC_MMC_MAIL_CC, IDC_MMC_MAIL_SUBJECT, IDC_MMC_MAIL_ATTACHMENT, IDC_MMC_MAIL_ATTACHMENT_DESC, IDC_MMC_MAIL_BODY, IDC_MMC_MAIL_ERROR];
 	};
+	if (_navAction isEqualTo "addressbook") then {
+		_display setVariable [QGVAR(mailMode), "addressbook"];
+		_display setVariable [QGVAR(selectedAddressBookIndex), -1];
+	};
 };
 
 if (_action isEqualTo "table") then {
 	_display setVariable [QGVAR(mailMode), "table"];
+};
+if (_action isEqualTo "addressbook") then {
+	_display setVariable [QGVAR(mailMode), "addressbook"];
 };
 
 private _mode = _display getVariable [QGVAR(mailMode), "table"];
@@ -140,6 +176,7 @@ if (_mode isEqualTo "compose") exitWith {
 	_body ctrlSetStructuredText parseText "";
 	(_display displayCtrl IDC_MMC_MAIL_HEADER) ctrlShow true;
 	(_display displayCtrl IDC_MMC_MAIL_HEADER) ctrlSetText "New E-Mail";
+	(_display displayCtrl IDC_MMC_MAIL_ERROR) ctrlSetText "";
 	{
 		(_display displayCtrl _x) ctrlShow true;
 	} forEach [
@@ -157,10 +194,29 @@ if (_mode isEqualTo "compose") exitWith {
 		IDC_MMC_MAIL_BODY_HINT,
 		IDC_MMC_MAIL_BODY_GROUP,
 		IDC_MMC_MAIL_BODY,
+		IDC_MMC_MAIL_FORWARD,
 		IDC_MMC_MAIL_SEND,
 		IDC_MMC_MAIL_CANCEL,
 		IDC_MMC_MAIL_ERROR
 	];
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetText "Address Book";
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetTooltip "Open the address book.";
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetEventHandler ["ButtonClick", "
+		params ['_control'];
+		private _display = ctrlParent _control;
+		_display setVariable ['MMC_main_mailComposeDraft', createHashMapFromArray [
+			['recipient', ctrlText (_display displayCtrl 860076)],
+			['cc', ctrlText (_display displayCtrl 860092)],
+			['subject', ctrlText (_display displayCtrl 860078)],
+			['body', ctrlText (_display displayCtrl 860082)],
+			['attachment', ctrlText (_display displayCtrl 860080)],
+			['attachmentDescription', ctrlText (_display displayCtrl 860094)]
+		]];
+		_display setVariable ['MMC_main_mailMode', 'addressbook'];
+		_display setVariable ['MMC_main_selectedAddressBookIndex', -1];
+		_display setVariable ['MMC_main_selectedAddressBookEntry', createHashMap];
+		['addressbook'] call MMC_fnc_renderMail;
+	"];
 	private _showFrom = (_display getVariable [QGVAR(isMobileDisplay), false]) && {(count _senderAddresses) > 1};
 	if (_showFrom) then {
 		private _fromCombo = _display displayCtrl IDC_MMC_MAIL_FROM;
@@ -184,6 +240,120 @@ if (_mode isEqualTo "compose") exitWith {
 	call FUNC(resizeMailBody);
 	if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
 		[_display] call FUNC(applyMobileDisplayLayout);
+	} else {
+		private _buttonW = 0.124;
+		private _buttonGap = 0.008;
+		private _buttonY = safeZoneY + 0.153;
+		private _cancelX = safeZoneX + safeZoneW - 0.2;
+		private _sendX = _cancelX - _buttonGap - _buttonW;
+		private _addressBookX = _sendX - _buttonGap - _buttonW;
+		(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetPosition [_addressBookX, _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetPosition [_sendX, _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetPosition [_cancelX, _buttonY, _buttonW, 0.036];
+		{(_display displayCtrl _x) ctrlCommit 0} forEach [IDC_MMC_MAIL_FORWARD, IDC_MMC_MAIL_SEND, IDC_MMC_MAIL_CANCEL];
+	};
+};
+
+if (_mode isEqualTo "addressbook") exitWith {
+	_body ctrlSetStructuredText parseText "";
+	_header ctrlShow true;
+	_table ctrlShow true;
+	(_display displayCtrl IDC_MMC_FRAME_MAIL_TABLE) ctrlShow true;
+	_header ctrlSetText "Address Book";
+
+	{
+		(_display displayCtrl _x) ctrlShow true;
+	} forEach [
+		IDC_MMC_MAIL_RECIPIENT_LABEL,
+		IDC_MMC_MAIL_RECIPIENT,
+		IDC_MMC_MAIL_SUBJECT_LABEL,
+		IDC_MMC_MAIL_SUBJECT,
+		IDC_MMC_MAIL_REPLY,
+		IDC_MMC_MAIL_FORWARD,
+		IDC_MMC_MAIL_SEND,
+		IDC_MMC_MAIL_CANCEL,
+		IDC_MMC_MAIL_ERROR
+	];
+
+	(_display displayCtrl IDC_MMC_MAIL_RECIPIENT_LABEL) ctrlSetText "Name";
+	(_display displayCtrl IDC_MMC_MAIL_SUBJECT_LABEL) ctrlSetText "E-Mail";
+	(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetText "Use To";
+	(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetTooltip "Use the selected address as recipient in a new e-mail.";
+	(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetEventHandler ["ButtonClick", "['to'] call MMC_fnc_mailAddressBookUse"];
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetText "Use CC";
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetTooltip "Use the selected address as CC in a new e-mail.";
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetEventHandler ["ButtonClick", "['cc'] call MMC_fnc_mailAddressBookUse"];
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetText "Save";
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetTooltip "Save or update this address book entry.";
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetEventHandler ["ButtonClick", "call MMC_fnc_mailAddressBookSave"];
+	(_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetEventHandler ["KeyUp", "call MMC_fnc_mailAddressBookUpdateSaveState"];
+	(_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetEventHandler ["KeyUp", "call MMC_fnc_mailAddressBookUpdateSaveState"];
+	(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetText "Delete";
+	(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetTooltip "Delete the selected address book entry.";
+	(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetEventHandler ["ButtonClick", "call MMC_fnc_mailAddressBookDelete"];
+	private _addressBookStatus = _display getVariable [QGVAR(mailAddressBookStatus), ""];
+	(_display displayCtrl IDC_MMC_MAIL_ERROR) ctrlSetText _addressBookStatus;
+	_display setVariable [QGVAR(mailAddressBookStatus), ""];
+	private _hasAddressSelection = (_display getVariable [QGVAR(selectedAddressBookIndex), -1]) >= 0;
+	if (!_hasAddressSelection) then {
+		(_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetText "";
+		(_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetText "";
+	};
+	(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlEnable _hasAddressSelection;
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlEnable _hasAddressSelection;
+	(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlEnable _hasAddressSelection;
+	[_display] call FUNC(mailAddressBookUpdateSaveState);
+
+	lnbClear _table;
+	private _entries = [_computer, _activeUser] call FUNC(getAddressBookEntries);
+	private _headerRow = _table lnbAddRow ["", "Name", "E-Mail", "", "", ""];
+	for "_column" from 0 to 5 do {
+		_table lnbSetColor [[_headerRow, _column], [1, 1, 1, 1]];
+	};
+	{
+		private _row = _table lnbAddRow ["", _x getOrDefault ["name", ""], _x getOrDefault ["email", ""], "", "", ""];
+		_table lnbSetTooltip [[_row, 1], _x getOrDefault ["name", ""]];
+		_table lnbSetTooltip [[_row, 2], _x getOrDefault ["email", ""]];
+	} forEach _entries;
+	_display setVariable [QGVAR(addressBookRows), [createHashMap] + _entries];
+	if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+		[_display] call FUNC(applyMobileDisplayLayout);
+	} else {
+		private _innerX = safeZoneX + 0.445;
+		private _innerW = safeZoneW - 0.64;
+		private _bottomY = safeZoneY + safeZoneH - 0.255;
+		private _fieldH = 0.036;
+		private _labelH = 0.028;
+		private _gapY = 0.011;
+		private _buttonGap = 0.007;
+		private _buttonW = (_innerW - (_buttonGap * 3)) / 4;
+		private _buttonY = safeZoneY + safeZoneH - 0.069;
+		_header ctrlSetPosition [_innerX, safeZoneY + 0.153, _innerW, 0.034];
+		_table ctrlSetPosition [_innerX, safeZoneY + 0.193, _innerW, safeZoneH - 0.47];
+		(_display displayCtrl IDC_MMC_FRAME_MAIL_TABLE) ctrlSetPosition [_innerX, safeZoneY + 0.193, _innerW, safeZoneH - 0.47];
+		(_display displayCtrl IDC_MMC_MAIL_RECIPIENT_LABEL) ctrlSetPosition [_innerX, _bottomY, _innerW * 0.34, _labelH];
+		(_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetPosition [_innerX, _bottomY + _labelH + _gapY, _innerW, _fieldH];
+		(_display displayCtrl IDC_MMC_MAIL_SUBJECT_LABEL) ctrlSetPosition [_innerX, _bottomY + _labelH + _gapY + _fieldH + (_gapY * 1.8), _innerW, _labelH];
+		(_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetPosition [_innerX, _bottomY + (_labelH * 2) + (_gapY * 2.8) + _fieldH, _innerW, _fieldH];
+		(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetPosition [_innerX, _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetPosition [_innerX + _buttonW + _buttonGap, _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetPosition [_innerX + ((_buttonW + _buttonGap) * 2), _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetPosition [_innerX + ((_buttonW + _buttonGap) * 3), _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_ERROR) ctrlSetPosition [_innerX + (_innerW * 0.36), _bottomY, _innerW * 0.64, _labelH];
+		{(_display displayCtrl _x) ctrlCommit 0} forEach [
+			IDC_MMC_MAIL_HEADER,
+			IDC_MMC_MAIL_TABLE,
+			IDC_MMC_FRAME_MAIL_TABLE,
+			IDC_MMC_MAIL_RECIPIENT_LABEL,
+			IDC_MMC_MAIL_RECIPIENT,
+			IDC_MMC_MAIL_SUBJECT_LABEL,
+			IDC_MMC_MAIL_SUBJECT,
+			IDC_MMC_MAIL_REPLY,
+			IDC_MMC_MAIL_FORWARD,
+			IDC_MMC_MAIL_SEND,
+			IDC_MMC_MAIL_CANCEL,
+			IDC_MMC_MAIL_ERROR
+		];
 	};
 };
 
@@ -195,6 +365,20 @@ if (_mode isEqualTo "read") exitWith {
 	private _readBody = _display displayCtrl IDC_MMC_MAIL_READ_BODY;
 	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlShow true;
 	(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlShow _isInbox;
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlShow true;
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetText "Save Address";
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetTooltip "Save this mail contact to your address book.";
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetEventHandler ["ButtonClick", "call MMC_fnc_mailAddressBookSaveSelectedMail"];
+	if !(_display getVariable [QGVAR(isMobileDisplay), false]) then {
+		private _buttonW = 0.124;
+		private _buttonGap = 0.008;
+		private _buttonY = 0.176;
+		private _saveX = 0.746;
+		(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetPosition [_saveX, _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetPosition [_saveX - _buttonW - _buttonGap, _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetPosition [_saveX - ((_buttonW + _buttonGap) * 2), _buttonY, _buttonW, 0.036];
+		{(_display displayCtrl _x) ctrlCommit 0} forEach [IDC_MMC_MAIL_SEND, IDC_MMC_MAIL_FORWARD, IDC_MMC_MAIL_REPLY];
+	};
 	_readMeta ctrlShow true;
 	_readGroup ctrlShow true;
 	private _attachment = _mail getOrDefault ["attachment", ""];
@@ -252,6 +436,38 @@ _header ctrlShow true;
 _table ctrlShow true;
 (_display displayCtrl IDC_MMC_FRAME_MAIL_TABLE) ctrlShow true;
 _header ctrlSetText (["Inbox", "Outbox"] select (_folder isEqualTo "outbox"));
+(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlShow true;
+(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetText "New Mail";
+(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetTooltip "Compose a new e-mail.";
+(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetEventHandler ["ButtonClick", "
+	params ['_control'];
+	private _display = ctrlParent _control;
+	_display setVariable ['MMC_main_mailMode', 'compose'];
+	_display setVariable ['MMC_main_composeMode', 'new'];
+	['compose'] call MMC_fnc_renderMail;
+"];
+(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlShow true;
+(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetText "Address Book";
+(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetTooltip "Open the address book.";
+(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetEventHandler ["ButtonClick", "
+	params ['_control'];
+	private _display = ctrlParent _control;
+	_display setVariable ['MMC_main_mailMode', 'addressbook'];
+	_display setVariable ['MMC_main_selectedAddressBookIndex', -1];
+	_display setVariable ['MMC_main_selectedAddressBookEntry', createHashMap];
+	['addressbook'] call MMC_fnc_renderMail;
+"];
+if !(_display getVariable [QGVAR(isMobileDisplay), false]) then {
+	private _buttonW = 0.124;
+	private _buttonGap = 0.008;
+	private _buttonY = safeZoneY + 0.153;
+	private _rightArrowX = safeZoneX + safeZoneW - 0.215;
+	private _addressBookX = _rightArrowX - _buttonGap - _buttonW;
+	private _newMailX = _addressBookX - _buttonGap - _buttonW;
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetPosition [_newMailX, _buttonY, _buttonW, 0.036];
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetPosition [_addressBookX, _buttonY, _buttonW, 0.036];
+	{(_display displayCtrl _x) ctrlCommit 0} forEach [IDC_MMC_MAIL_FORWARD, IDC_MMC_MAIL_SEND];
+};
 lnbClear _table;
 
 private _themeConfig = [_display] call FUNC(getThemeConfig);

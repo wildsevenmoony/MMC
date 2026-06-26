@@ -277,6 +277,7 @@ _titleEdit ctrlSetPosition [_pad, _titleY, _usableW, _titleH];
 _titleEdit ctrlSetTextColor _textColor;
 _titleEdit ctrlSetBackgroundColor _panel;
 _titleEdit ctrlSetTooltip "Note name.";
+_titleEdit ctrlSetEventHandler ["KeyUp", "call MMC_fnc_notesAutosave"];
 _titleEdit ctrlCommit 0;
 _controls append ([_display, _group, [_pad, _titleY, _usableW, _titleH], _border, 0.0012] call FUNC(createAppBorder));
 
@@ -317,6 +318,7 @@ _bodyEdit ctrlSetPosition [
 _bodyEdit ctrlSetTextColor _textColor;
 _bodyEdit ctrlSetBackgroundColor _panel;
 _bodyEdit ctrlSetTooltip "Write note text. Shift+Enter adds a line break. Structured text tags can be kept for use in mails or desktop scripts.";
+_bodyEdit ctrlSetEventHandler ["KeyUp", "call MMC_fnc_notesAutosave"];
 _bodyEdit ctrlCommit 0;
 _controls append ([_display, _group, [_pad, _bodyY, _usableW, _bodyH], _border, 0.0012] call FUNC(createAppBorder));
 

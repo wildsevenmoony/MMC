@@ -22,6 +22,11 @@ if (isNull _display) exitWith {false};
 if (!isNull _control) then {
 	_display = ctrlParent _control;
 };
+
+if ((_display getVariable [QGVAR(mailMode), "table"]) isEqualTo "addressbook") exitWith {
+	[_control, _selectedRow] call FUNC(mailAddressBookSelect)
+};
+
 private _validClick = _display getVariable [QGVAR(mailTableClickValid), false];
 _display setVariable [QGVAR(mailTableClickValid), false];
 if (!_validClick) exitWith {false};

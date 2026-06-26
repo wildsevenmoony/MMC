@@ -50,6 +50,7 @@ _device setVariable [QGVAR(mobileDeviceLabel), _label];
 _device setVariable [QGVAR(data), _data];
 _device setVariable [QGVAR(poweredOn), true];
 _device setVariable [QGVAR(booting), false];
+_device setVariable [QGVAR(mobileUnlocked), false];
 [_device] call FUNC(ensureAutoLoginUser);
 
 private _profiles = _matchedProfiles select {_x isEqualType createHashMap};

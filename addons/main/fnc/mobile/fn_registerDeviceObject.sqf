@@ -42,6 +42,7 @@ if (!isServer || {is3DEN}) exitWith {false};
 	};
 
 	private _password = _object getVariable [QGVAR(userPassword), ""];
+	private _lockCode = [_object getVariable [QGVAR(mobileLockCode), ""]] call CBA_fnc_trim;
 	private _theme = _object getVariable [QGVAR(userTheme), "default"];
 	private _disabledApps = [_object] call FUNC(getDisabledAppsFromConfig);
 	private _messengerSide = _object getVariable [QGVAR(messengerSide), ""];
@@ -60,6 +61,7 @@ if (!isServer || {is3DEN}) exitWith {false};
 		["systemName", _object getVariable [QGVAR(systemName), "MMC Mobile Device"]],
 		["messengerName", _messengerName],
 		["messengerSide", _messengerSide],
+		["mobileLockCode", _lockCode],
 		["disabledApps", _disabledApps]
 	];
 
@@ -69,6 +71,9 @@ if (!isServer || {is3DEN}) exitWith {false};
 
 	_object setVariable [QGVAR(isMobileComputer), true, true];
 	_object setVariable [QGVAR(mobileDefaultOrientation), _orientation, true];
+	_object setVariable [QGVAR(mobileLockCode), _lockCode, true];
+	_object setVariable [QGVAR(mobileLockCodeSet), true, true];
+	_object setVariable [QGVAR(mobileLockCodeSource), "device", true];
 	[_object, _config] call FUNC(registerObject);
 	[_object, _username, _password, _email, _theme, createHashMap, "direct", _disabledApps, createHashMapFromArray [
 		["displayName", _messengerName],

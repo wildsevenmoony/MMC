@@ -34,6 +34,7 @@ class CfgFunctions {
 			class removeStandardApp {};
 			class renderApp {};
 			class restoreStandardApp {};
+			class showNotificationLocal {};
 			class setStandardAppHidden {};
 			class updateClock {};
 			class zeusComputerChildren {};
@@ -100,7 +101,11 @@ class CfgFunctions {
 			class registerMobileProfile {};
 			class requestUniqueMobileDevices {};
 			class selectMobileProfiles {};
+			class setMobileLockInput {};
+			class showMobileLock {};
+			class handleMobileLockKey {};
 			class toggleMobileOrientation {};
+			class unlockMobile {};
 		};
 
 		class ComputerModules {
@@ -162,15 +167,24 @@ class CfgFunctions {
 
 		class ComputerMail {
 			file = PATHTOF(fnc\apps_mail);
+			class addAddressBookEntry {};
 			class addMail {};
 			class addMailToUser {};
 			class findUserByEmail {};
+			class getAddressBookEntries {};
+			class mailAddressBookDelete {};
+			class mailAddressBookSave {};
+			class mailAddressBookSaveSelectedMail {};
+			class mailAddressBookSelect {};
+			class mailAddressBookUpdateSaveState {};
+			class mailAddressBookUse {};
 			class mailCompose {};
 			class mailSelect {};
 			class mailSendFromComposer {};
 			class mailSendResult {};
 			class makeUniqueEmail {};
 			class markMailRead {};
+			class normalizeAddressBook {};
 			class renderMail {};
 			class resizeMailBody {};
 			class scrollMailTable {};
@@ -197,6 +211,7 @@ class CfgFunctions {
 		class ComputerNotes {
 			file = PATHTOF(fnc\apps_notes);
 			class addNote {};
+			class notesAutosave {};
 			class notesDelete {};
 			class notesMail {};
 			class notesNew {};
@@ -207,6 +222,7 @@ class CfgFunctions {
 		class ZeusModules {
 			file = PATHTOF(fnc\zenmodule);
 			class zenInit {postInit = 1;};
+			class addAddressBookZeus {};
 			class addMailZeus {};
 			class addPictureZeus {};
 			class addTextFileZeus {};

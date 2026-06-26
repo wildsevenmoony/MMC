@@ -59,6 +59,40 @@ private _ccNames = [];
 	};
 } forEach (_cc splitString ",");
 
+private _notifyUser = {
+	params [
+		["_computer", objNull, [objNull]],
+		["_user", createHashMap, [createHashMap]]
+	];
+	if (isNull _computer || {count _user == 0}) exitWith {};
+
+	private _targets = [];
+	private _ownerUid = _computer getVariable [QGVAR(mobileOwnerUid), ""];
+	if (_ownerUid isNotEqualTo "") then {
+		{
+			if (getPlayerUID _x isEqualTo _ownerUid) then {
+				_targets pushBackUnique _x;
+			};
+		} forEach allPlayers;
+	};
+
+	private _inUseBy = _computer getVariable [QGVAR(inUseBy), ""];
+	if (_inUseBy isNotEqualTo "") then {
+		private _activeUser = [_computer] call FUNC(getActiveUser);
+		if (toLowerANSI (_activeUser getOrDefault ["username", ""]) isEqualTo toLowerANSI (_user getOrDefault ["username", ""])) then {
+			{
+				if (getPlayerUID _x isEqualTo _inUseBy) then {
+					_targets pushBackUnique _x;
+				};
+			} forEach allPlayers;
+		};
+	};
+
+	if (_targets isNotEqualTo []) then {
+		["mail", _fromEmail, _subject] remoteExecCall [QFUNC(showNotificationLocal), _targets];
+	};
+};
+
 ["Mail", "Delivering mail to registered computers", createHashMapFromArray [
 	["fromEmail", _fromEmail],
 	["toEmail", _toEmail],
@@ -96,6 +130,7 @@ private _ccNames = [];
 			};
 			_users set [_forEachIndex, _user];
 			_changed = true;
+			[_computer, _user] call _notifyUser;
 		};
 
 		if (_username isEqualTo _fromName) then {

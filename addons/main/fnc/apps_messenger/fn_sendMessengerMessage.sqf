@@ -79,6 +79,31 @@ GVAR(messengerMessages) pushBack _message;
 missionNamespace setVariable [QGVAR(messengerMessages), GVAR(messengerMessages), true];
 [GVAR(messengerMessages)] remoteExecCall [QFUNC(syncMessengerMessagesLocal), 0];
 
+private _notifyTargets = [];
+private _targetObject = _toMeta getOrDefault ["object", objNull];
+if (!isNull _targetObject) then {
+	private _ownerUid = _targetObject getVariable [QGVAR(mobileOwnerUid), ""];
+	if (_ownerUid isNotEqualTo "") then {
+		{
+			if (getPlayerUID _x isEqualTo _ownerUid) then {
+				_notifyTargets pushBackUnique _x;
+			};
+		} forEach allPlayers;
+	};
+
+	private _inUseBy = _targetObject getVariable [QGVAR(inUseBy), ""];
+	if (_inUseBy isNotEqualTo "") then {
+		{
+			if (getPlayerUID _x isEqualTo _inUseBy) then {
+				_notifyTargets pushBackUnique _x;
+			};
+		} forEach allPlayers;
+	};
+};
+if (_notifyTargets isNotEqualTo []) then {
+	["message", _fromName, _body] remoteExecCall [QFUNC(showNotificationLocal), _notifyTargets];
+};
+
 ["Messenger", "Message sent", createHashMapFromArray [
 	["from", _fromName],
 	["to", _toName],

@@ -214,14 +214,56 @@ if (_profileUsername isEqualTo "") then {
 
 private _profiles = [_player, _deviceInfo] call FUNC(selectMobileProfiles);
 private _profileIds = _profiles apply {_x getOrDefault ["id", ""]} select {_x isNotEqualTo ""};
+private _lockCodeSet = false;
+private _lockCode = "";
+private _lockCodeSource = "none";
+{
+	if ("lockCode" in keys _x) then {
+		private _profileLockCode = [_x getOrDefault ["lockCode", ""]] call CBA_fnc_trim;
+		if (_profileLockCode isNotEqualTo "") then {
+			_lockCodeSet = true;
+			_lockCode = _profileLockCode;
+			_lockCodeSource = "profile";
+		};
+	};
+} forEach _profiles;
+
+_data = _device getVariable [QGVAR(data), createHashMap];
+if (!_lockCodeSet && {"mobileLockCode" in keys _data}) then {
+	private _dataLockCode = [_data getOrDefault ["mobileLockCode", ""]] call CBA_fnc_trim;
+	if (_dataLockCode isNotEqualTo "") then {
+		_lockCodeSet = true;
+		_lockCode = _dataLockCode;
+		_lockCodeSource = "deviceData";
+	};
+};
+if (!_lockCodeSet && {"clientLockCode" in keys _deviceInfo}) then {
+	_lockCodeSet = true;
+	_lockCode = [_deviceInfo getOrDefault ["clientLockCode", ""]] call CBA_fnc_trim;
+	_lockCodeSource = "clientSetting";
+};
+if (_lockCodeSet) then {
+	_data set ["mobileLockCode", _lockCode];
+	_device setVariable [QGVAR(data), _data, true];
+	_device setVariable [QGVAR(mobileLockCode), _lockCode, true];
+	_device setVariable [QGVAR(mobileLockCodeSet), true, true];
+	_device setVariable [QGVAR(mobileLockCodeSource), _lockCodeSource, true];
+} else {
+	_device setVariable [QGVAR(mobileLockCode), "", true];
+	_device setVariable [QGVAR(mobileLockCodeSet), false, true];
+	_device setVariable [QGVAR(mobileLockCodeSource), "clientSetting", true];
+};
 
 ["Mobile", "Profiles selected for mobile open", createHashMapFromArray [
 	["profileUsername", _profileUsername],
 	["profileIds", _profileIds],
+	["lockCodeSource", _lockCodeSource],
+	["hasLockCode", _lockCodeSet && {_lockCode isNotEqualTo ""}],
 	["profiles", _profiles apply {
 		createHashMapFromArray [
 			["id", _x getOrDefault ["id", ""]],
 			["theme", _x getOrDefault ["theme", ""]],
+			["hasLockCode", ("lockCode" in keys _x) && {(_x getOrDefault ["lockCode", ""]) isNotEqualTo ""}],
 			["files", count (_x getOrDefault ["files", []])],
 			["mails", count (_x getOrDefault ["mails", []])],
 			["appScripts", _x getOrDefault ["appScripts", []]],
@@ -291,6 +333,8 @@ if (_openDisplay) then {
 	};
 	["Mobile", "Sending mobile data to client", createHashMapFromArray [
 		["device", _device],
+		["lockCodeSource", _device getVariable [QGVAR(mobileLockCodeSource), "clientSetting"]],
+		["hasLockCode", (_device getVariable [QGVAR(mobileLockCodeSet), false]) && {(_device getVariable [QGVAR(mobileLockCode), ""]) isNotEqualTo ""}],
 		["users", (_deviceData getOrDefault ["users", []]) apply {
 			createHashMapFromArray [
 				["username", _x getOrDefault ["username", ""]],
