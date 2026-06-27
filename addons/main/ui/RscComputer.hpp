@@ -111,7 +111,7 @@ class GVAR(RscMobileNavList): RscListbox {
 	shadow = 0;
 	rowHeight = 0.035;
 	colorBackground[] = {0.02, 0.025, 0.035, 0.94};
-	colorScrollbar[] = {0, 0.333, 0.706, 0.95};
+	colorScrollbar[] = {1, 1, 1, 0.95};
 	class ListScrollBar {
 		width = 0;
 		height = 0;
@@ -137,15 +137,15 @@ class GVAR(RscComputerAppGroup): RscControlsGroup {
 		arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
 		border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
 		thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
-		color[] = {0, 0.333, 0.706, 0.95};
-		colorActive[] = {0.08, 0.42, 0.8, 0.98};
-		colorDisabled[] = {0, 0.333, 0.706, 0.25};
+		color[] = {1, 1, 1, 0.95};
+		colorActive[] = {1, 1, 1, 0.98};
+		colorDisabled[] = {1, 1, 1, 0.25};
 	};
 	class HScrollbar {
 		height = 0;
-		color[] = {0, 0.333, 0.706, 0.95};
-		colorActive[] = {0.08, 0.42, 0.8, 0.98};
-		colorDisabled[] = {0, 0.333, 0.706, 0.25};
+		color[] = {1, 1, 1, 0.95};
+		colorActive[] = {1, 1, 1, 0.98};
+		colorDisabled[] = {1, 1, 1, 0.25};
 	};
 	class Controls {};
 };
@@ -268,7 +268,7 @@ class GVAR(RscComputer) {
 			w = 0.24;
 			h = "(safeZoneH - 0.245) * 0.25";
 			colorBackground[] = {0.02, 0.025, 0.035, 0.88};
-			colorScrollbar[] = {0, 0.333, 0.706, 0.95};
+			colorScrollbar[] = {1, 1, 1, 0.95};
 			class ListScrollBar {
 				width = 0;
 				height = 0;
@@ -306,15 +306,15 @@ class GVAR(RscComputer) {
 				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
 				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
 				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
-				color[] = {0, 0.333, 0.706, 0.95};
-				colorActive[] = {0.08, 0.42, 0.8, 0.98};
-				colorDisabled[] = {0, 0.333, 0.706, 0.25};
+				color[] = {1, 1, 1, 0.95};
+				colorActive[] = {1, 1, 1, 0.98};
+				colorDisabled[] = {1, 1, 1, 0.25};
 			};
 			class HScrollbar {
 				height = 0;
-				color[] = {0, 0.333, 0.706, 0.95};
-				colorActive[] = {0.08, 0.42, 0.8, 0.98};
-				colorDisabled[] = {0, 0.333, 0.706, 0.25};
+				color[] = {1, 1, 1, 0.95};
+				colorActive[] = {1, 1, 1, 0.98};
+				colorDisabled[] = {1, 1, 1, 0.25};
 			};
 			class Controls {
 				class DesktopContentBody: RscStructuredText {
@@ -352,15 +352,15 @@ class GVAR(RscComputer) {
 				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
 				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
 				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
-				color[] = {0, 0.333, 0.706, 0.95};
-				colorActive[] = {0.08, 0.42, 0.8, 0.98};
-				colorDisabled[] = {0, 0.333, 0.706, 0.25};
+				color[] = {1, 1, 1, 0.95};
+				colorActive[] = {1, 1, 1, 0.98};
+				colorDisabled[] = {1, 1, 1, 0.25};
 			};
 			class HScrollbar {
 				height = 0;
-				color[] = {0, 0.333, 0.706, 0.95};
-				colorActive[] = {0.08, 0.42, 0.8, 0.98};
-				colorDisabled[] = {0, 0.333, 0.706, 0.25};
+				color[] = {1, 1, 1, 0.95};
+				colorActive[] = {1, 1, 1, 0.98};
+				colorDisabled[] = {1, 1, 1, 0.25};
 			};
 			class Controls {
 				class FileDescriptionBody: RscStructuredText {
@@ -404,7 +404,7 @@ class GVAR(RscComputer) {
 			colorBackground[] = {0.02, 0.025, 0.035, 0.72};
 			colorSelectBackground[] = {0.06, 0.075, 0.095, 1};
 			colorSelectBackground2[] = {0.06, 0.075, 0.095, 1};
-			colorScrollbar[] = {0, 0.333, 0.706, 0.95};
+			colorScrollbar[] = {1, 1, 1, 0.95};
 			class ListScrollBar {
 				width = 0;
 				height = 0;
@@ -586,15 +586,15 @@ class GVAR(RscComputer) {
 				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
 				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
 				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
-				color[] = {0, 0.333, 0.706, 0.95};
-				colorActive[] = {0.08, 0.42, 0.8, 0.98};
-				colorDisabled[] = {0, 0.333, 0.706, 0.25};
+				color[] = {1, 1, 1, 0.95};
+				colorActive[] = {1, 1, 1, 0.98};
+				colorDisabled[] = {1, 1, 1, 0.25};
 			};
 			class HScrollbar {
 				height = 0;
-				color[] = {0, 0.333, 0.706, 0.95};
-				colorActive[] = {0.08, 0.42, 0.8, 0.98};
-				colorDisabled[] = {0, 0.333, 0.706, 0.25};
+				color[] = {1, 1, 1, 0.95};
+				colorActive[] = {1, 1, 1, 0.98};
+				colorDisabled[] = {1, 1, 1, 0.25};
 			};
 			class Controls {
 				class MailBody: RscEdit {
@@ -635,15 +635,15 @@ class GVAR(RscComputer) {
 				arrowFull = "\A3\ui_f\data\gui\cfg\scrollbar\arrowFull_ca.paa";
 				border = "\A3\ui_f\data\gui\cfg\scrollbar\border_ca.paa";
 				thumb = "\A3\ui_f\data\gui\cfg\scrollbar\thumb_ca.paa";
-				color[] = {0, 0.333, 0.706, 0.95};
-				colorActive[] = {0.08, 0.42, 0.8, 0.98};
-				colorDisabled[] = {0, 0.333, 0.706, 0.25};
+				color[] = {1, 1, 1, 0.95};
+				colorActive[] = {1, 1, 1, 0.98};
+				colorDisabled[] = {1, 1, 1, 0.25};
 			};
 			class HScrollbar {
 				height = 0;
-				color[] = {0, 0.333, 0.706, 0.95};
-				colorActive[] = {0.08, 0.42, 0.8, 0.98};
-				colorDisabled[] = {0, 0.333, 0.706, 0.25};
+				color[] = {1, 1, 1, 0.95};
+				colorActive[] = {1, 1, 1, 0.98};
+				colorDisabled[] = {1, 1, 1, 0.25};
 			};
 			class Controls {
 				class MailReadBody: RscStructuredText {
@@ -1229,6 +1229,10 @@ class GVAR(RscAddTextFileDialog): MMB_main_RscBaseDisplay {
 
 class GVAR(RscAddPictureDialog): MMB_main_RscBaseDisplay {
 	onLoad = "(_this select 0) setVariable ['MMB_main_populateFunction', 'MMC_fnc_guiAddPictureDialog']; call MMB_fnc_initDisplay";
+};
+
+class GVAR(RscAddAudioDialog): MMB_main_RscBaseDisplay {
+	onLoad = "(_this select 0) setVariable ['MMB_main_populateFunction', 'MMC_fnc_guiAddAudioDialog']; call MMB_fnc_initDisplay";
 };
 
 class GVAR(RscModifyDesktopDialog): MMB_main_RscBaseDisplay {

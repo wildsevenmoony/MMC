@@ -32,6 +32,7 @@ class CfgPatches {
 			QGVAR(customLayout),
 			QGVAR(addTextFile),
 			QGVAR(addPicture),
+			QGVAR(addAudio),
 			QGVAR(modifyDesktop),
 			QGVAR(addMail),
 			QGVAR(deviceSmartphone),

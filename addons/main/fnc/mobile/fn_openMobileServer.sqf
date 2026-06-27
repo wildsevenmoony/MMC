@@ -64,7 +64,10 @@ if (_deviceKey isEqualTo "") then {
 	};
 };
 private _storeKey = if (_usesPersistentItemStore) then {_deviceKey} else {format ["%1:%2", _uid, _deviceKey]};
-private _orientation = _deviceInfo getOrDefault ["orientation", _type getOrDefault ["orientation", "horizontal"]];
+private _requestedOrientation = _deviceInfo getOrDefault ["orientation", _type getOrDefault ["orientation", "horizontal"]];
+if !(_requestedOrientation in ["horizontal", "vertical"]) then {
+	_requestedOrientation = _type getOrDefault ["orientation", "horizontal"];
+};
 private _label = _deviceInfo getOrDefault ["label", _type getOrDefault ["label", "Mobile Device"]];
 
 private _device = GVAR(mobileDevices) getOrDefault [_storeKey, objNull];
@@ -87,6 +90,10 @@ if (isNull _device) then {
 	["existingDataKeys", keys (_device getVariable [QGVAR(data), createHashMap])]
 ]] call FUNC(debugLog);
 GVAR(mobileDevices) set [_storeKey, _device];
+private _orientation = _device getVariable [QGVAR(mobileDefaultOrientation), _requestedOrientation];
+if !(_orientation in ["horizontal", "vertical"]) then {
+	_orientation = _requestedOrientation;
+};
 private _publicMobileDevices = missionNamespace getVariable [QGVAR(mobileDeviceObjects), []];
 _publicMobileDevices pushBackUnique _device;
 missionNamespace setVariable [QGVAR(mobileDeviceObjects), _publicMobileDevices, true];

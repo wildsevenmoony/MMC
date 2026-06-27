@@ -12,7 +12,8 @@ params [
 	["_body", "", [""]],
 	["_attachment", "", [""]],
 	["_cc", "", [""]],
-	["_attachmentDescription", "", [""]]
+	["_attachmentDescription", "", [""]],
+	["_attachments", [], [[]]]
 ];
 
 private _fromUser = [_fromEmail] call FUNC(findUserByEmail);
@@ -30,10 +31,10 @@ if (count _fromUser == 0 || {count _toUser == 0}) exitWith {
 (call FUNC(formatMailDate)) params ["_date", "_time"];
 _body = [_body] call FUNC(normalizeStructuredText);
 _attachmentDescription = [_attachmentDescription] call FUNC(normalizeStructuredText);
-private _attachmentName = "";
-if (_attachment isNotEqualTo "") then {
-	private _parts = _attachment splitString "\/";
-	_attachmentName = _parts param [((count _parts) - 1) max 0, "attachment.paa"];
+_attachments = [_attachment, _attachmentDescription, _attachments] call FUNC(mailNormalizeAttachments);
+if (_attachments isNotEqualTo []) then {
+	_attachment = (_attachments select 0) getOrDefault ["texture", (_attachments select 0) getOrDefault ["path", ""]];
+	_attachmentDescription = (_attachments select 0) getOrDefault ["content", _attachmentDescription];
 };
 private _message = createHashMapFromArray [
 	["from", _fromEmail],
@@ -45,6 +46,7 @@ private _message = createHashMapFromArray [
 	["cc", _cc],
 	["attachment", _attachment],
 	["attachmentDescription", _attachmentDescription],
+	["attachments", _attachments],
 	["read", false]
 ];
 
@@ -117,15 +119,11 @@ private _notifyUser = {
 			_mail pushBack +_message;
 			_user set ["mail", _mail];
 
-			if (_attachment isNotEqualTo "") then {
+			if (_attachments isNotEqualTo []) then {
 				private _files = _user getOrDefault ["files", []];
-				_files pushBack createHashMapFromArray [
-					["name", _attachmentName],
-					["type", "picture"],
-					["path", format ["\Pictures\%1", _attachmentName]],
-					["content", _attachmentDescription],
-					["texture", _attachment]
-				];
+				{
+					_files pushBack (+_x);
+				} forEach _attachments;
 				_user set ["files", _files];
 			};
 			_users set [_forEachIndex, _user];

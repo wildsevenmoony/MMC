@@ -56,6 +56,7 @@ private _title = _display displayCtrl IDC_MMC_APP_TITLE;
 private _list = _display displayCtrl IDC_MMC_APP_LIST;
 private _body = _display displayCtrl IDC_MMC_APP_BODY;
 _body ctrlEnable false;
+_body ctrlShow true;
 _body ctrlSetPosition [safeZoneX + 0.43, safeZoneY + 0.135, safeZoneW - 0.61, safeZoneH - 0.315];
 _body ctrlCommit 0;
 private _desktopGroup = _display displayCtrl IDC_MMC_DESKTOP_CONTENT_GROUP;
@@ -184,19 +185,6 @@ private _setBody = {
 	_body ctrlSetStructuredText parseText _text;
 };
 
-private _setScrollableBody = {
-	params ["_text"];
-	_body ctrlSetStructuredText parseText "";
-	_desktopGroup ctrlShow true;
-	_desktopBody ctrlShow true;
-	_desktopBody ctrlSetStructuredText parseText _text;
-	private _contentHeight = 0.2 max ((ctrlTextHeight _desktopBody) + 0.03);
-	private _bodyPos = ctrlPosition _desktopBody;
-	_bodyPos set [3, _contentHeight];
-	_desktopBody ctrlSetPosition _bodyPos;
-	_desktopBody ctrlCommit 0;
-};
-
 private _noContent = "<t size='1.25'>No Content available</t>";
 
 [_display] call FUNC(refreshStandardApps);
@@ -212,14 +200,15 @@ if ((_app select [0, 7]) isEqualTo "custom:") exitWith {
 switch (_app) do {
 	case "files": {
 		_title ctrlSetText "Files";
+		_display setVariable [QGVAR(filesAudioSelected), false];
 		private _files = (_data getOrDefault ["files", []]) + (_activeUser getOrDefault ["files", []]);
 		private _statusText = _display getVariable [QGVAR(mediaStatusText), "Selected: No Audio File Selected"];
+		(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText _statusText;
 		{
 			(_display displayCtrl _x) ctrlShow true;
 			(_display displayCtrl _x) ctrlSetFade 0;
 			(_display displayCtrl _x) ctrlCommit 0;
 		} forEach _mediaControls;
-		(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText _statusText;
 
 		if (_files isEqualTo []) exitWith {
 			[_noContent] call _setBody;
@@ -233,109 +222,204 @@ switch (_app) do {
 			if (_action isEqualTo "folder") then {
 				_folder = _selectedRow getOrDefault ["type", ""];
 				_display setVariable [QGVAR(filesFolder), _folder];
-				_index = 0;
-			};
-			if (_action isEqualTo "back") then {
-				_folder = "";
-				_display setVariable [QGVAR(filesFolder), _folder];
-				_index = 0;
+				_display setVariable [QGVAR(selectedFileIndex), -1];
 			};
 		};
 
 		private _rows = [];
-		if (_folder isEqualTo "") then {
-			{
-				_x params ["_label", "_type"];
-				private _row = _list lbAdd _label;
-				_list lbSetTooltip [_row, format ["Open %1.", _label]];
-				_rows pushBack createHashMapFromArray [["action", "folder"], ["type", _type]];
-			} forEach [
-				["Text Files", "text"],
-				["Audio Files", "audio"],
-				["Pictures", "picture"]
-			];
-			_display setVariable [QGVAR(fileListRows), _rows];
-			["<t size='1.25'>Folders</t><br/><br/>Select a folder to view files from the computer and the active user account."] call _setBody;
+		private _folders = [
+			["Text Files", "text"],
+			["Audio Files", "audio"],
+			["Pictures", "picture"]
+		];
+		{
+			_x params ["_label", "_type"];
+			private _row = _list lbAdd _label;
+			_list lbSetTooltip [_row, format ["Open %1.", _label]];
+			_rows pushBack createHashMapFromArray [["action", "folder"], ["type", _type]];
+		} forEach _folders;
+		_display setVariable [QGVAR(fileListRows), _rows];
+
+		if (_folder isEqualTo "") exitWith {
+			private _countText = count (_files select {(_x getOrDefault ["type", "file"]) isEqualTo "text"});
+			private _countAudio = count (_files select {(_x getOrDefault ["type", "file"]) isEqualTo "audio"});
+			private _countPictures = count (_files select {(_x getOrDefault ["type", "file"]) isEqualTo "picture"});
+			[format [
+				"<t size='1.25'>Files</t><br/><br/>Select a category in the navigation pane.<br/><br/><t color='#9fb6d8'>Text Files: %1<br/>Audio Files: %2<br/>Pictures: %3</t>",
+				_countText,
+				_countAudio,
+				_countPictures
+			]] call _setBody;
+		};
+
+		private _folderLabel = (_folders select {(_x select 1) isEqualTo _folder}) param [0, ["Files", _folder]] select 0;
+		private _folderFiles = _files select {(_x getOrDefault ["type", "file"]) isEqualTo _folder};
+		private _selectedIndex = _display getVariable [QGVAR(selectedFileIndex), -1];
+		if (_selectedIndex >= count _folderFiles) then {
+			_selectedIndex = -1;
+			_display setVariable [QGVAR(selectedFileIndex), -1];
+		};
+		private _selectedFile = _folderFiles param [_selectedIndex, createHashMap];
+		private _selectedType = _selectedFile getOrDefault ["type", "file"];
+		private _audioSelected = _selectedIndex >= 0 && {_selectedType isEqualTo "audio"};
+		_display setVariable [QGVAR(filesAudioSelected), _audioSelected];
+		if (_audioSelected) then {
+			_display setVariable [QGVAR(selectedMediaFile), _selectedFile];
+			_statusText = format ["Selected: %1", [_selectedFile] call FUNC(getFileDisplayName)];
+			(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText _statusText;
+			_display setVariable [QGVAR(mediaStatusText), _statusText];
+		};
+
+		_desktopGroup ctrlShow false;
+		_desktopBody ctrlShow false;
+		_body ctrlSetStructuredText parseText "";
+		_body ctrlShow true;
+		if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+			call _applyMobileNow;
+		};
+		private _groupPos = ctrlPosition _body;
+		if (!(_display getVariable [QGVAR(isMobileDisplay), false])) then {
+			_groupPos set [3, ((_groupPos select 3) - 0.09) max 0.08];
+		};
+		private _group = _display ctrlCreate [QGVAR(RscComputerAppGroup), [_display] call FUNC(nextDynamicIdc)];
+		_group ctrlSetPosition _groupPos;
+		_group ctrlSetText "";
+		_group ctrlCommit 0;
+		private _controls = [_group];
+		private _contentW = (_groupPos select 2) max 0.1;
+		private _y = 0.012;
+
+		private _heading = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+		_heading ctrlSetPosition [0.012, _y, _contentW - 0.024, 0.042];
+		_heading ctrlSetStructuredText parseText format ["<t size='1.22'>%1</t>", _folderLabel];
+		_heading ctrlCommit 0;
+		_controls pushBack _heading;
+
+		private _themeConfig = [_display] call FUNC(getThemeConfig);
+		private _buttonColor = _themeConfig getOrDefault ["button", [0.028, 0.032, 0.042, 0.98]];
+		private _buttonTextColor = _themeConfig getOrDefault ["buttonText", [0.92, 0.94, 0.97, 1]];
+		private _backPos = [0.012, _y + 0.05, 0.105, 0.036];
+		private _backLabel = _display ctrlCreate [QGVAR(RscComputerTextButton), [_display] call FUNC(nextDynamicIdc), _group];
+		_backLabel ctrlSetPosition _backPos;
+		_backLabel ctrlSetText "Back";
+		_backLabel ctrlSetBackgroundColor _buttonColor;
+		_backLabel ctrlSetTextColor _buttonTextColor;
+		private _backHit = _display ctrlCreate [QGVAR(RscComputerInvisibleButton), [_display] call FUNC(nextDynamicIdc), _group];
+		_backHit ctrlSetPosition _backPos;
+		if (_selectedIndex < 0 || {_folder isEqualTo "audio"}) then {
+			_backLabel ctrlSetTooltip "Return to file types.";
+			_backHit ctrlSetTooltip "Return to file types.";
+			_backHit ctrlSetEventHandler ["ButtonClick", "[-2] call MMC_fnc_fileSelectButton"];
 		} else {
-			private _backRow = _list lbAdd "Back";
-			_list lbSetTooltip [_backRow, "Return to file folders."];
-			_rows pushBack createHashMapFromArray [["action", "back"]];
+			_backLabel ctrlSetTooltip "Return to this file category.";
+			_backHit ctrlSetTooltip "Return to this file category.";
+			_backHit ctrlSetEventHandler ["ButtonClick", "[-1] call MMC_fnc_fileSelectButton"];
+		};
+		_backLabel ctrlCommit 0;
+		_backHit ctrlCommit 0;
+		_controls pushBack _backLabel;
+		_controls pushBack _backHit;
+		_y = _y + 0.098;
 
-			private _folderFiles = _files select {(_x getOrDefault ["type", "file"]) isEqualTo _folder};
+		if (_folderFiles isEqualTo []) exitWith {
+			private _empty = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+			_empty ctrlSetPosition [0.012, _y, _contentW - 0.024, 0.06];
+			_empty ctrlSetStructuredText parseText "<t size='1.1'>No files in this category.</t>";
+			_empty ctrlCommit 0;
+			_controls pushBack _empty;
+			_display setVariable [QGVAR(customActionControls), _controls];
+			call _applyMobileNow;
+		};
+
+		if (_selectedIndex < 0 || {_folder isEqualTo "audio"}) then {
+			private _buttonW = (_contentW - 0.036) max 0.08;
 			{
-				private _row = _list lbAdd (_x getOrDefault ["name", "Untitled"]);
-				_list lbSetTooltip [_row, format [
-					"%1%2Type: %3",
-					_x getOrDefault ["path", _x getOrDefault ["name", "Untitled"]],
-					toString [10],
-					_x getOrDefault ["type", "file"]
-				]];
-				_rows pushBack createHashMapFromArray [["action", "file"], ["file", _x]];
+				private _buttonPos = [0.012, _y, _buttonW, 0.038];
+				private _label = _display ctrlCreate [QGVAR(RscComputerTextButton), [_display] call FUNC(nextDynamicIdc), _group];
+				_label ctrlSetPosition _buttonPos;
+				private _fileLabel = [_x] call FUNC(getFileDisplayName);
+				_label ctrlSetText _fileLabel;
+				_label ctrlSetBackgroundColor _buttonColor;
+				_label ctrlSetTextColor _buttonTextColor;
+				_label ctrlSetTooltip _fileLabel;
+				_label ctrlCommit 0;
+				_controls pushBack _label;
+
+				private _hit = _display ctrlCreate [QGVAR(RscComputerInvisibleButton), [_display] call FUNC(nextDynamicIdc), _group];
+				_hit ctrlSetPosition _buttonPos;
+				_hit ctrlSetTooltip _fileLabel;
+				_hit ctrlSetEventHandler ["ButtonClick", format ["[%1] call MMC_fnc_fileSelectButton", _forEachIndex]];
+				_hit ctrlCommit 0;
+				_controls pushBack _hit;
+				_y = _y + 0.044;
 			} forEach _folderFiles;
-
-			_display setVariable [QGVAR(fileListRows), _rows];
-
-			if (_folderFiles isEqualTo []) exitWith {
-				[_noContent] call _setBody;
+			if (_folder isEqualTo "audio") then {
+				private _hint = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+				_hint ctrlSetPosition [0.012, _y + 0.01, _contentW - 0.024, 0.055];
+				_hint ctrlSetStructuredText parseText "<t color='#9fb6d8'>Select a file and use the media controls below.</t>";
+				_hint ctrlCommit 0;
+				_controls pushBack _hint;
+				_y = _y + 0.074;
 			};
+		} else {
+			private _file = _selectedFile;
+			private _type = _selectedType;
 
-			private _rowData = _rows param [_index, createHashMap];
-			if ((_rowData getOrDefault ["action", ""]) isNotEqualTo "file") exitWith {
-				["<t size='1.25'>Folders</t><br/><br/>Select a file in this folder."] call _setBody;
-			};
-
-			private _file = _rowData getOrDefault ["file", createHashMap];
-			private _type = _file getOrDefault ["type", "file"];
-			if (_type isEqualTo "audio") then {
-				_display setVariable [QGVAR(selectedMediaFile), _file];
-				_statusText = format ["Selected: %1", _file getOrDefault ["name", "media"]];
-				(_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText _statusText;
-				_display setVariable [QGVAR(mediaStatusText), _statusText];
-			};
-			private _mediaHint = ["", "<br/><br/><t color='#9fb6d8'>Use the media controls below to play this file.</t>"] select (_type isEqualTo "audio");
-			private _assetInfo = switch (_type) do {
-				case "picture": {
-					_previewImage ctrlSetText (_file getOrDefault ["texture", ""]);
-					_previewImage ctrlShow true;
-					_descriptionBody ctrlSetStructuredText parseText ([_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText));
-					private _descriptionHeight = 0.14 max ((ctrlTextHeight _descriptionBody) + 0.02);
-					private _descriptionPos = ctrlPosition _descriptionBody;
-					_descriptionPos set [3, _descriptionHeight];
-					_descriptionBody ctrlSetPosition _descriptionPos;
-					_descriptionBody ctrlCommit 0;
-					_descriptionGroup ctrlShow true;
-					""
-				};
-				default {""};
-			};
-
-			private _header = format [
-				"<t size='1.25'>%1</t><br/><t color='#9fb6d8'>%2</t>",
-				_file getOrDefault ["name", "No file selected"],
-				_file getOrDefault ["path", ""]
+			private _header = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+			_header ctrlSetPosition [0.012, _y + 0.012, _contentW - 0.024, 0.052];
+			_header ctrlSetStructuredText parseText format [
+				"<t size='1.16'>%1</t>",
+				[_file] call FUNC(getFileDisplayName)
 			];
+			_header ctrlCommit 0;
+			_controls pushBack _header;
+			_y = _y + 0.07;
 
 			if (_type isEqualTo "text") then {
-				[format [
-					"%1<br/><br/>%2",
-					_header,
-					[_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText)
-				]] call _setScrollableBody;
+				private _text = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+				_text ctrlSetPosition [0.012, _y, _contentW - 0.024, 0.1];
+				_text ctrlSetStructuredText parseText ([_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText));
+				private _textH = 0.1 max ((ctrlTextHeight _text) + 0.02);
+				_text ctrlSetPosition [0.012, _y, _contentW - 0.024, _textH];
+				_text ctrlCommit 0;
+				_controls pushBack _text;
+				_y = _y + _textH + 0.02;
 			} else {
-				private _content = if (_type isEqualTo "picture") then {
-					""
+				if (_type isEqualTo "picture") then {
+					private _image = _display ctrlCreate ["RscPictureKeepAspect", [_display] call FUNC(nextDynamicIdc), _group];
+					private _imageH = 0.22 min ((_contentW - 0.024) * 0.56);
+					_image ctrlSetPosition [0.012, _y, _contentW - 0.024, _imageH];
+					_image ctrlSetText (_file getOrDefault ["texture", ""]);
+					_image ctrlCommit 0;
+					_controls pushBack _image;
+					_y = _y + _imageH + 0.016;
+
+					private _description = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+					_description ctrlSetPosition [0.012, _y, _contentW - 0.024, 0.08];
+					_description ctrlSetStructuredText parseText ([_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText));
+					private _descriptionH = 0.08 max ((ctrlTextHeight _description) + 0.02);
+					_description ctrlSetPosition [0.012, _y, _contentW - 0.024, _descriptionH];
+					_description ctrlCommit 0;
+					_controls pushBack _description;
+					_y = _y + _descriptionH + 0.02;
 				} else {
-					format ["<br/><br/>%1", [_file getOrDefault ["content", ""]] call FUNC(normalizeStructuredText)]
+					private _hint = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc), _group];
+					_hint ctrlSetPosition [0.012, _y, _contentW - 0.024, 0.055];
+					_hint ctrlSetStructuredText parseText "<t color='#9fb6d8'>Use the media controls below to play this file.</t>";
+					_hint ctrlCommit 0;
+					_controls pushBack _hint;
+					_y = _y + 0.072;
 				};
-				[format [
-					"%1%2%3%4",
-					_header,
-					_content,
-					_assetInfo,
-					_mediaHint
-				]] call _setBody;
 			};
 		};
+
+		private _scrollMarker = _display ctrlCreate ["RscText", [_display] call FUNC(nextDynamicIdc), _group];
+		_scrollMarker ctrlSetPosition [0, _y max 0.001, 0.001, 0.001];
+		_scrollMarker ctrlSetText "";
+		_scrollMarker ctrlSetBackgroundColor [0, 0, 0, 0];
+		_scrollMarker ctrlCommit 0;
+		_controls pushBack _scrollMarker;
+		_display setVariable [QGVAR(customActionControls), _controls];
 	};
 	case "mail": {
 		["select", _index, _isSelect] call FUNC(renderMail);

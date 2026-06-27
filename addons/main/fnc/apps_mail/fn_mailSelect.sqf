@@ -26,6 +26,9 @@ if (!isNull _control) then {
 if ((_display getVariable [QGVAR(mailMode), "table"]) isEqualTo "addressbook") exitWith {
 	[_control, _selectedRow] call FUNC(mailAddressBookSelect)
 };
+if ((_display getVariable [QGVAR(mailMode), "table"]) isEqualTo "attachments") exitWith {
+	[_control, _selectedRow] call FUNC(mailAttachmentPickerSelect)
+};
 
 private _validClick = _display getVariable [QGVAR(mailTableClickValid), false];
 _display setVariable [QGVAR(mailTableClickValid), false];

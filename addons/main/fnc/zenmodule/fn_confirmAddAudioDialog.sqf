@@ -2,7 +2,7 @@
 
 /*
  * Author: Moony
- * Confirms the Add Text File dynamic dialog.
+ * Confirms the Add Audio dynamic dialog.
  */
 
 params ["_display", "_values", "_arguments"];
@@ -14,9 +14,10 @@ private _getValue = {
 	(_values select _index) select 3
 };
 
-private _name = ["fileName", "intel.txt"] call _getValue;
+private _name = ["fileName", "audio.ogg"] call _getValue;
 private _path = _name;
-private _content = ["content", "Mission intel goes here."] call _getValue;
+private _soundClass = [["soundClass", ""] call _getValue] call FUNC(normalizeAudioClass);
+private _description = ["fileDescription", ""] call _getValue;
 private _selected = (_display getVariable [QGVAR(userCheckboxes), []]) select {cbChecked (_x select 1)};
 
 if (_selected isEqualTo []) exitWith {
@@ -27,9 +28,9 @@ if (_selected isEqualTo []) exitWith {
 {
 	private _computer = _x;
 	{
-		[_computer, _x select 0, _name, _content, "text", _path] remoteExecCall [QFUNC(addFileToUser), 2];
+		[_computer, _x select 0, _name, _description, "audio", _path, "", _soundClass] remoteExecCall [QFUNC(addFileToUser), 2];
 	} forEach _selected;
 } forEach ([] call FUNC(getRegisteredComputers));
 
-[objNull, "TEXT FILE ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
+[objNull, "AUDIO FILE ADDED"] call BIS_fnc_showCuratorFeedbackMessage;
 true

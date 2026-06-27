@@ -36,6 +36,7 @@ private _draft = _display getVariable [QGVAR(mailComposeDraft), createHashMap];
 (_display displayCtrl IDC_MMC_MAIL_BODY) ctrlSetText (_draft getOrDefault ["body", ""]);
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetText (_draft getOrDefault ["attachment", ""]);
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_DESC) ctrlSetText (_draft getOrDefault ["attachmentDescription", ""]);
+_display setVariable [QGVAR(mailComposeAttachments), _draft getOrDefault ["attachments", []]];
 _display setVariable [QGVAR(mailComposeDraft), createHashMap];
 
 if (_target isEqualTo "cc") then {

@@ -132,6 +132,8 @@ if (_fromNav) then {
 		_display setVariable [QGVAR(mailMode), "compose"];
 		_display setVariable [QGVAR(composeMode), "new"];
 		_display setVariable [QGVAR(mailFrom), ""];
+		_display setVariable [QGVAR(mailComposeAttachments), []];
+		_display setVariable [QGVAR(mailComposeDraft), createHashMap];
 		{
 			(_display displayCtrl _x) ctrlSetText "";
 		} forEach [IDC_MMC_MAIL_RECIPIENT, IDC_MMC_MAIL_CC, IDC_MMC_MAIL_SUBJECT, IDC_MMC_MAIL_ATTACHMENT, IDC_MMC_MAIL_ATTACHMENT_DESC, IDC_MMC_MAIL_BODY, IDC_MMC_MAIL_ERROR];
@@ -147,6 +149,9 @@ if (_action isEqualTo "table") then {
 };
 if (_action isEqualTo "addressbook") then {
 	_display setVariable [QGVAR(mailMode), "addressbook"];
+};
+if (_action isEqualTo "attachments") then {
+	_display setVariable [QGVAR(mailMode), "attachments"];
 };
 
 private _mode = _display getVariable [QGVAR(mailMode), "table"];
@@ -194,11 +199,49 @@ if (_mode isEqualTo "compose") exitWith {
 		IDC_MMC_MAIL_BODY_HINT,
 		IDC_MMC_MAIL_BODY_GROUP,
 		IDC_MMC_MAIL_BODY,
+		IDC_MMC_MAIL_REPLY,
 		IDC_MMC_MAIL_FORWARD,
 		IDC_MMC_MAIL_SEND,
 		IDC_MMC_MAIL_CANCEL,
 		IDC_MMC_MAIL_ERROR
 	];
+	private _draft = _display getVariable [QGVAR(mailComposeDraft), createHashMap];
+	if (count _draft > 0) then {
+		(_display displayCtrl IDC_MMC_MAIL_RECIPIENT) ctrlSetText (_draft getOrDefault ["recipient", ctrlText (_display displayCtrl IDC_MMC_MAIL_RECIPIENT)]);
+		(_display displayCtrl IDC_MMC_MAIL_CC) ctrlSetText (_draft getOrDefault ["cc", ctrlText (_display displayCtrl IDC_MMC_MAIL_CC)]);
+		(_display displayCtrl IDC_MMC_MAIL_SUBJECT) ctrlSetText (_draft getOrDefault ["subject", ctrlText (_display displayCtrl IDC_MMC_MAIL_SUBJECT)]);
+		(_display displayCtrl IDC_MMC_MAIL_BODY) ctrlSetText (_draft getOrDefault ["body", ctrlText (_display displayCtrl IDC_MMC_MAIL_BODY)]);
+		(_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetText (_draft getOrDefault ["attachment", ctrlText (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT)]);
+		(_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_DESC) ctrlSetText (_draft getOrDefault ["attachmentDescription", ctrlText (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_DESC)]);
+		_display setVariable [QGVAR(mailComposeAttachments), _draft getOrDefault ["attachments", _display getVariable [QGVAR(mailComposeAttachments), []]]];
+	};
+	private _attachments = _display getVariable [QGVAR(mailComposeAttachments), []];
+	if !(_attachments isEqualType []) then {
+		_attachments = [];
+		_display setVariable [QGVAR(mailComposeAttachments), _attachments];
+	};
+	private _attachmentNames = _attachments apply {_x getOrDefault ["name", "Attachment"]};
+	if (_attachmentNames isNotEqualTo []) then {
+		(_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetText (_attachmentNames joinString ", ");
+	};
+	(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetText "Files";
+	(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetTooltip "Select one or more files from this user/device as attachments.";
+	(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetEventHandler ["ButtonClick", "
+		params ['_control'];
+		private _display = ctrlParent _control;
+		_display setVariable ['MMC_main_mailComposeDraft', createHashMapFromArray [
+			['recipient', ctrlText (_display displayCtrl 860076)],
+			['cc', ctrlText (_display displayCtrl 860092)],
+			['subject', ctrlText (_display displayCtrl 860078)],
+			['body', ctrlText (_display displayCtrl 860082)],
+			['attachment', ctrlText (_display displayCtrl 860080)],
+			['attachmentDescription', ctrlText (_display displayCtrl 860094)],
+			['attachments', _display getVariable ['MMC_main_mailComposeAttachments', []]]
+		]];
+		_display setVariable ['MMC_main_mailMode', 'attachments'];
+		_display setVariable ['MMC_main_mailAttachmentPickerFolder', ''];
+		['attachments'] call MMC_fnc_renderMail;
+	"];
 	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetText "Address Book";
 	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetTooltip "Open the address book.";
 	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetEventHandler ["ButtonClick", "
@@ -210,7 +253,8 @@ if (_mode isEqualTo "compose") exitWith {
 			['subject', ctrlText (_display displayCtrl 860078)],
 			['body', ctrlText (_display displayCtrl 860082)],
 			['attachment', ctrlText (_display displayCtrl 860080)],
-			['attachmentDescription', ctrlText (_display displayCtrl 860094)]
+			['attachmentDescription', ctrlText (_display displayCtrl 860094)],
+			['attachments', _display getVariable ['MMC_main_mailComposeAttachments', []]]
 		]];
 		_display setVariable ['MMC_main_mailMode', 'addressbook'];
 		_display setVariable ['MMC_main_selectedAddressBookIndex', -1];
@@ -241,16 +285,116 @@ if (_mode isEqualTo "compose") exitWith {
 	if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
 		[_display] call FUNC(applyMobileDisplayLayout);
 	} else {
-		private _buttonW = 0.124;
+		private _buttonW = 0.104;
 		private _buttonGap = 0.008;
 		private _buttonY = safeZoneY + 0.153;
 		private _cancelX = safeZoneX + safeZoneW - 0.2;
 		private _sendX = _cancelX - _buttonGap - _buttonW;
 		private _addressBookX = _sendX - _buttonGap - _buttonW;
+		private _filesX = _addressBookX - _buttonGap - _buttonW;
+		(_display displayCtrl IDC_MMC_MAIL_REPLY) ctrlSetPosition [_filesX, _buttonY, _buttonW, 0.036];
 		(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetPosition [_addressBookX, _buttonY, _buttonW, 0.036];
 		(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetPosition [_sendX, _buttonY, _buttonW, 0.036];
 		(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetPosition [_cancelX, _buttonY, _buttonW, 0.036];
-		{(_display displayCtrl _x) ctrlCommit 0} forEach [IDC_MMC_MAIL_FORWARD, IDC_MMC_MAIL_SEND, IDC_MMC_MAIL_CANCEL];
+		{(_display displayCtrl _x) ctrlCommit 0} forEach [IDC_MMC_MAIL_REPLY, IDC_MMC_MAIL_FORWARD, IDC_MMC_MAIL_SEND, IDC_MMC_MAIL_CANCEL];
+	};
+};
+
+if (_mode isEqualTo "attachments") exitWith {
+	_body ctrlSetStructuredText parseText "";
+	_header ctrlShow true;
+	_table ctrlShow true;
+	(_display displayCtrl IDC_MMC_FRAME_MAIL_TABLE) ctrlShow true;
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlShow true;
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlShow true;
+	(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlShow true;
+	(_display displayCtrl IDC_MMC_MAIL_ERROR) ctrlShow true;
+
+	_header ctrlSetText "Select Attachment";
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetText "Back";
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetTooltip "Return to the attachment folders.";
+	(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetEventHandler ["ButtonClick", "
+		params ['_control'];
+		private _display = ctrlParent _control;
+		_display setVariable ['MMC_main_mailAttachmentPickerFolder', ''];
+		['attachments'] call MMC_fnc_renderMail;
+	"];
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetText "Done";
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetTooltip "Return to the e-mail composer.";
+	(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetEventHandler ["ButtonClick", "
+		params ['_control'];
+		private _display = ctrlParent _control;
+		private _draft = _display getVariable ['MMC_main_mailComposeDraft', createHashMap];
+		_draft set ['attachments', _display getVariable ['MMC_main_mailComposeAttachments', []]];
+		_display setVariable ['MMC_main_mailComposeDraft', _draft];
+		_display setVariable ['MMC_main_mailMode', 'compose'];
+		['compose'] call MMC_fnc_renderMail;
+	"];
+	(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetText "Cancel";
+	(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetTooltip "Return to the e-mail composer.";
+	(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetEventHandler ["ButtonClick", "['compose'] call MMC_fnc_renderMail"];
+
+	private _folder = _display getVariable [QGVAR(mailAttachmentPickerFolder), ""];
+	private _files = [_computer, _activeUser] call FUNC(mailGetVisibleFiles);
+	private _rows = [];
+	lnbClear _table;
+	if (_folder isEqualTo "") then {
+		private _folders = [
+			["text", "Text Files"],
+			["picture", "Pictures"],
+			["audio", "Audio Files"]
+		];
+		{
+			_x params ["_type", "_label"];
+			private _count = count (_files select {(_x getOrDefault ["type", ""]) isEqualTo _type});
+			private _row = _table lnbAddRow ["", _label, format ["%1 file(s)", _count], "", "", ""];
+			_table lnbSetTooltip [[_row, 1], format ["Open %1.", _label]];
+			_rows pushBack createHashMapFromArray [["action", "folder"], ["folder", _type]];
+		} forEach _folders;
+	} else {
+		private _backRow = _table lnbAddRow ["", "Back", "Return to folders", "", "", ""];
+		_table lnbSetTooltip [[_backRow, 1], "Return to attachment folders."];
+		_rows pushBack createHashMapFromArray [["action", "back"]];
+		{
+			private _row = _table lnbAddRow [
+				"",
+				_x getOrDefault ["name", "Attachment"],
+				_x getOrDefault ["path", ""],
+				_x getOrDefault ["type", ""],
+				"",
+				""
+			];
+			_table lnbSetTooltip [[_row, 1], _x getOrDefault ["name", "Attachment"]];
+			_table lnbSetTooltip [[_row, 2], _x getOrDefault ["path", ""]];
+			_rows pushBack createHashMapFromArray [["action", "file"], ["file", _x]];
+		} forEach (_files select {(_x getOrDefault ["type", ""]) isEqualTo _folder});
+	};
+	_display setVariable [QGVAR(mailAttachmentPickerRows), _rows];
+
+	private _attachments = _display getVariable [QGVAR(mailComposeAttachments), []];
+	if !(_attachments isEqualType []) then {_attachments = []};
+	private _status = _display getVariable [QGVAR(mailAttachmentPickerStatus), ""];
+	(_display displayCtrl IDC_MMC_MAIL_ERROR) ctrlSetText format [
+		"%1%2%3 selected",
+		_status,
+		["", " | "] select (_status isNotEqualTo ""),
+		count _attachments
+	];
+	_display setVariable [QGVAR(mailAttachmentPickerStatus), ""];
+	if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+		[_display] call FUNC(applyMobileDisplayLayout);
+	} else {
+		private _buttonW = 0.104;
+		private _buttonGap = 0.008;
+		private _buttonY = safeZoneY + 0.153;
+		private _doneX = safeZoneX + safeZoneW - 0.2;
+		private _cancelX = _doneX - _buttonGap - _buttonW;
+		private _backX = _cancelX - _buttonGap - _buttonW;
+		(_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetPosition [_backX, _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_CANCEL) ctrlSetPosition [_cancelX, _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetPosition [_doneX, _buttonY, _buttonW, 0.036];
+		(_display displayCtrl IDC_MMC_MAIL_ERROR) ctrlSetPosition [safeZoneX + 0.445, _buttonY + 0.04, safeZoneW - 0.64, 0.03];
+		{(_display displayCtrl _x) ctrlCommit 0} forEach [IDC_MMC_MAIL_FORWARD, IDC_MMC_MAIL_SEND, IDC_MMC_MAIL_CANCEL, IDC_MMC_MAIL_ERROR];
 	};
 };
 
@@ -383,11 +527,17 @@ if (_mode isEqualTo "read") exitWith {
 	_readGroup ctrlShow true;
 	private _attachment = _mail getOrDefault ["attachment", ""];
 	private _attachmentDescription = _mail getOrDefault ["attachmentDescription", ""];
+	private _attachments = [_attachment, _attachmentDescription, _mail getOrDefault ["attachments", []]] call FUNC(mailNormalizeAttachments);
 	private _attachmentText = ["", format [
-		"<br/><br/><t color='#9fb6d8'>Attachment: %1%2</t>",
-		_attachment,
-		["", format ["<br/>%1", [_attachmentDescription] call FUNC(normalizeStructuredText)]] select (_attachmentDescription isNotEqualTo "")
-	]] select (_attachment isNotEqualTo "");
+		"<br/><br/><t color='#9fb6d8'>Attachments:<br/>%1</t>",
+		(_attachments apply {
+			format [
+				"%1%2",
+				_x getOrDefault ["name", "Attachment"],
+				["", format [" - %1", [_x getOrDefault ["content", ""]] call FUNC(normalizeStructuredText)]] select ((_x getOrDefault ["content", ""]) isNotEqualTo "")
+			]
+		}) joinString "<br/>"
+	]] select (_attachments isNotEqualTo []);
 	private _bodyText = [_mail getOrDefault ["body", ""]] call FUNC(normalizeStructuredText);
 	_body ctrlSetStructuredText parseText "";
 	private _metaSize = [1.25, 1.06] select (_display getVariable [QGVAR(isMobileDisplay), false]);
@@ -442,9 +592,7 @@ _header ctrlSetText (["Inbox", "Outbox"] select (_folder isEqualTo "outbox"));
 (_display displayCtrl IDC_MMC_MAIL_FORWARD) ctrlSetEventHandler ["ButtonClick", "
 	params ['_control'];
 	private _display = ctrlParent _control;
-	_display setVariable ['MMC_main_mailMode', 'compose'];
-	_display setVariable ['MMC_main_composeMode', 'new'];
-	['compose'] call MMC_fnc_renderMail;
+	['new'] call MMC_fnc_mailCompose;
 "];
 (_display displayCtrl IDC_MMC_MAIL_SEND) ctrlShow true;
 (_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetText "Address Book";
@@ -452,6 +600,12 @@ _header ctrlSetText (["Inbox", "Outbox"] select (_folder isEqualTo "outbox"));
 (_display displayCtrl IDC_MMC_MAIL_SEND) ctrlSetEventHandler ["ButtonClick", "
 	params ['_control'];
 	private _display = ctrlParent _control;
+	{
+		(_display displayCtrl _x) ctrlSetText '';
+	} forEach [IDC_MMC_MAIL_RECIPIENT, IDC_MMC_MAIL_CC, IDC_MMC_MAIL_SUBJECT, IDC_MMC_MAIL_ATTACHMENT, IDC_MMC_MAIL_ATTACHMENT_DESC, IDC_MMC_MAIL_BODY, IDC_MMC_MAIL_ERROR];
+	_display setVariable ['MMC_main_mailComposeAttachments', []];
+	_display setVariable ['MMC_main_mailComposeDraft', createHashMap];
+	_display setVariable ['MMC_main_mailFrom', ''];
 	_display setVariable ['MMC_main_mailMode', 'addressbook'];
 	_display setVariable ['MMC_main_selectedAddressBookIndex', -1];
 	_display setVariable ['MMC_main_selectedAddressBookEntry', createHashMap];
@@ -483,11 +637,8 @@ for "_column" from 0 to 5 do {
 
 {
 	private _who = [_x getOrDefault ["from", ""], _x getOrDefault ["to", ""]] select (_folder isEqualTo "outbox");
-	private _attachment = _x getOrDefault ["attachment", ""];
-	private _attachmentName = if (_attachment isEqualTo "") then {""} else {
-		private _parts = _attachment splitString "\/";
-		_parts select ((count _parts - 1) max 0)
-	};
+	private _attachments = [_x getOrDefault ["attachment", ""], _x getOrDefault ["attachmentDescription", ""], _x getOrDefault ["attachments", []]] call FUNC(mailNormalizeAttachments);
+	private _attachmentName = (_attachments apply {_x getOrDefault ["name", "Attachment"]}) joinString ", ";
 	private _isRead = _x getOrDefault ["read", true];
 	private _row = _table lnbAddRow [
 		"",

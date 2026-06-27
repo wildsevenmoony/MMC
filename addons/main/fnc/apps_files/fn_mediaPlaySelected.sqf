@@ -24,9 +24,10 @@ private _audioIndex = _audioFiles findIf {
 	&& {(_x getOrDefault ["path", ""]) isEqualTo (_file getOrDefault ["path", ""])}
 };
 
-[_computer, _file, _audioIndex] call FUNC(playAudio);
+private _started = [_computer, _file, _audioIndex] call FUNC(playAudio);
 
-private _statusText = format ["Playing: %1", _file getOrDefault ["name", "Media"]];
+private _displayName = [_file] call FUNC(getFileDisplayName);
+private _statusText = [format ["Could not play: %1", _displayName], format ["Playing: %1", _displayName]] select _started;
 _display setVariable [QGVAR(mediaStatusText), _statusText];
 (_display displayCtrl IDC_MMC_MEDIA_STATUS) ctrlSetText _statusText;
-true
+_started

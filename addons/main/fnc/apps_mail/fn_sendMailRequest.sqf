@@ -14,6 +14,7 @@
  * 6: Attachment path <STRING>
  * 7: CC list <STRING>
  * 8: Attachment description <STRING>
+ * 9: Attachments <ARRAY>
  *
  * Return Value:
  * None
@@ -30,7 +31,8 @@ params [
 	["_body", "", [""]],
 	["_attachment", "", [""]],
 	["_cc", "", [""]],
-	["_attachmentDescription", "", [""]]
+	["_attachmentDescription", "", [""]],
+	["_attachments", [], [[]]]
 ];
 
 if (!isServer || {isNull _player}) exitWith {};
@@ -39,6 +41,7 @@ _fromEmail = [_fromEmail] call CBA_fnc_trim;
 _toEmail = [_toEmail] call CBA_fnc_trim;
 _attachment = [_attachment] call CBA_fnc_trim;
 _cc = [_cc] call CBA_fnc_trim;
+_attachments = [_attachment, _attachmentDescription, _attachments] call FUNC(mailNormalizeAttachments);
 
 ["Mail", "Send mail request received", createHashMapFromArray [
 	["player", format ["%1:%2", name _player, getPlayerUID _player]],
@@ -47,7 +50,7 @@ _cc = [_cc] call CBA_fnc_trim;
 	["to", _toEmail],
 	["cc", _cc],
 	["subject", _subject],
-	["hasAttachment", _attachment isNotEqualTo ""]
+	["attachmentCount", count _attachments]
 ]] call FUNC(debugLog);
 
 if (_fromEmail isEqualTo "") exitWith {
@@ -75,12 +78,12 @@ if (_body isEqualTo "") exitWith {
 	[false, "Enter a message.", _computer, createHashMap] remoteExecCall [QFUNC(mailSendResult), _player];
 };
 
-if (_attachment isNotEqualTo "" && {!fileExists _attachment}) exitWith {
+if (_attachments isEqualTo [] && {_attachment isNotEqualTo "" && {!fileExists _attachment}}) exitWith {
 	["Mail", "Send mail rejected", createHashMapFromArray [["reason", "missing attachment"], ["attachment", _attachment]]] call FUNC(debugLog);
 	[false, "Attachment file does not exist.", _computer, createHashMap] remoteExecCall [QFUNC(mailSendResult), _player];
 };
 
-private _success = [_fromEmail, _toEmail, _subject, _body, _attachment, _cc, _attachmentDescription] call FUNC(sendMail);
+private _success = [_fromEmail, _toEmail, _subject, _body, _attachment, _cc, _attachmentDescription, _attachments] call FUNC(sendMail);
 private _message = ["Could not send mail.", "Mail sent."] select _success;
 ["Mail", "Send mail result", createHashMapFromArray [
 	["success", _success],

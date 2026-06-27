@@ -101,6 +101,7 @@ class CfgFunctions {
 			class registerMobileProfile {};
 			class requestUniqueMobileDevices {};
 			class selectMobileProfiles {};
+			class setMobileOrientationServer {};
 			class setMobileLockInput {};
 			class showMobileLock {};
 			class handleMobileLockKey {};
@@ -110,6 +111,7 @@ class CfgFunctions {
 
 		class ComputerModules {
 			file = PATHTOF(fnc\modules);
+			class addAudioModule {};
 			class addMailModule {};
 			class addPictureModule {};
 			class addTextFileModule {};
@@ -155,9 +157,12 @@ class CfgFunctions {
 			file = PATHTOF(fnc\apps_files);
 			class addFile {};
 			class addFileToUser {};
+			class fileSelectButton {};
 			class getAudioFiles {};
+			class getFileDisplayName {};
 			class mediaNavigate {};
 			class mediaPlaySelected {};
+			class normalizeAudioClass {};
 			class mediaStop {};
 			class playAudio {};
 			class playAudioLocal {};
@@ -178,7 +183,10 @@ class CfgFunctions {
 			class mailAddressBookSelect {};
 			class mailAddressBookUpdateSaveState {};
 			class mailAddressBookUse {};
+			class mailAttachmentPickerSelect {};
 			class mailCompose {};
+			class mailGetVisibleFiles {};
+			class mailNormalizeAttachments {};
 			class mailSelect {};
 			class mailSendFromComposer {};
 			class mailSendResult {};
@@ -223,16 +231,19 @@ class CfgFunctions {
 			file = PATHTOF(fnc\zenmodule);
 			class zenInit {postInit = 1;};
 			class addAddressBookZeus {};
+			class addAudioZeus {};
 			class addMailZeus {};
 			class addPictureZeus {};
 			class addTextFileZeus {};
 			class addUserZeus {};
 			class modifyDesktopZeus {};
+			class confirmAddAudioDialog {};
 			class confirmAddMailDialog {};
 			class confirmAddNoteDialog {};
 			class confirmAddPictureDialog {};
 			class confirmModifyDesktopDialog {};
 			class confirmAddTextFileDialog {};
+			class guiAddAudioDialog {};
 			class guiAddMailDialog {};
 			class guiAddNoteDialog {};
 			class guiAddPictureDialog {};

@@ -4,12 +4,12 @@
 
 /*
  * Author: Moony
- * Populates the MMB dynamic dialog for adding a picture to users.
+ * Populates the MMB dynamic dialog for adding an audio file to users.
  */
 
 params ["_display", "_content"];
 
-(_display displayCtrl IDC_TITLE) ctrlSetText "Add Picture";
+(_display displayCtrl IDC_TITLE) ctrlSetText "Add Audio";
 
 private _controls = [];
 private _fields = [];
@@ -52,18 +52,21 @@ private _addEdit = {
 		_labelControl ctrlSetTooltip _tooltip;
 	};
 	private _edit = ["RscEdit", _editIdc, [_fieldX, _y, _rowWField, _rowH], _default] call _addControl;
+	if (_tooltip isNotEqualTo "") then {
+		_edit ctrlSetTooltip _tooltip;
+	};
 	_fields pushBack [_key, _editIdc, "edit"];
 	_y = _y + _rowH + _rowGap;
 	_edit
 };
 
-["Picture Name", -1, IDC_MMC_DLG_FILE_NAME, "picture.paa", "fileName", "Displayed in the user's Files app."] call _addEdit;
-["Picture Texture", -1, IDC_MMC_DLG_FILE_TEXTURE, "", "fileTexture", "Texture path, e.g. a mission or mod .paa."] call _addEdit;
-["Description", -1, IDC_MMC_DLG_FILE_DESCRIPTION, "", "fileDescription", "Description shown under the picture in the Files app."] call _addEdit;
+["Audio Name", -1, IDC_MMC_DLG_FILE_NAME, "audio.ogg", "fileName", "Displayed in the user's Files app."] call _addEdit;
+["Audio Classname", -1, IDC_MMC_DLG_FILE_SOUND, "", "soundClass", "Classname from CfgSFX or a CfgVehicles sound source. Use CfgSFX for mission or mod audio that must follow the listener and be stoppable."] call _addEdit;
+["Description", -1, IDC_MMC_DLG_FILE_DESCRIPTION, "", "fileDescription", "Optional text shown when this audio file is selected."] call _addEdit;
 
 (call _addRowBackground) params ["_labelTextX", "_fieldX"];
 private _label = ["RscText", -1, [_labelTextX, _y, _rowWLabel, _rowH], "User"] call _addControl;
-_label ctrlSetTooltip "Select the Users to add the picture to.";
+_label ctrlSetTooltip "Select the Users to add the audio file to.";
 
 private _groupH = _rowH * 3;
 private _selectionBackground = ["RscText", -1, [_fieldX, _y, _rowWField, _groupH], ""] call _addControl;
@@ -93,7 +96,7 @@ private _checkboxes = [];
 _display setVariable [QGVAR(userCheckboxes), _checkboxes];
 _y = _y + _groupH + _rowGap;
 
-_display setVariable ["MMB_main_onConfirm", QFUNC(confirmAddPictureDialog)];
+_display setVariable ["MMB_main_onConfirm", QFUNC(confirmAddAudioDialog)];
 _display setVariable ["MMB_main_controls", _controls];
 _display setVariable ["MMB_main_fields", _fields];
 _display setVariable ["MMB_main_contentHeight", _y + _contentPaddingY];

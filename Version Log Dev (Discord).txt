@@ -1,5 +1,5 @@
 # **Moony's Magnificent Computers** - Update DD.MM.YYYY
--# Version 1.1.0.23
+-# Version 1.1.1.1
 ## Added
 - Mobile device system with smartphone, tablet and rugged tablet items
 - Unique mobile device IDs so phones and tablets can keep their data when looted, stolen or dropped
@@ -17,7 +17,15 @@
 - Optional CBA-controlled Notes autosave.
 - Mail address books with manual entries, save-from-mail, composer insertion, Add User seeding and Zeus seeding.
 - CBA settings for side-visible address book contacts, including friendly-side inclusion and civilian filtering.
+- Mail attachment picker for selecting existing text, picture and audio files from the active file browser.
+- Support for multiple mail attachments on a single e-mail.
+- Eden and Zeus Add Audio modules for seeding audio files onto users, computers and mobile profiles.
 ## Fixed
+- Audio playback now creates/stops local sound sources on clients instead of only on the server.
+- Audio playback now logs missing or invalid sound source classes instead of failing silently.
+- Audio playback now accepts mission-relative file paths without a leading slash as a fallback when no sound class is stored.
+- Files app navigation no longer puts every file into the mobile navigator pane.
+- Mobile Send Mail action buttons now use the same sizing as the Inbox and Outbox mail action buttons.
 - Mobile lock screen cleanup no longer errors when reopening devices with nested dynamic controls
 - Mobile lock screen now hides the custom app drawer controls while locked
 - Personal inventory and arsenal devices now correctly use the player's CBA mobile lock code when the matching mobile profile has no filled lock code
@@ -40,6 +48,7 @@
 ## Removed
 - Experimental video playback support, because it was not reliable enough inside the dialog
 ## Changed
+- Default dark theme buttons are slightly brighter so they stand apart from dark panels.
 - ACE self-action for mobile devices is now called "Mobile Device"
 - Mobile UI was redesigned into a separate compact layout instead of shrinking the desktop layout
 - Mobile lock screen now uses a phone-style PIN keypad with time, date and access prompt
@@ -57,6 +66,10 @@
 - Larger Mail composer action buttons and grouped Eden module attributes for cleaner setup.
 - Address Book editor controls were moved lower in the content box with more spacing.
 - Inbox and Outbox now expose New Mail and Address Book buttons directly.
+- Received mail attachments are added to the recipient's file browser.
+- Audio file entries now preserve their configured playback sound source class when seeded through modules or sent as attachments.
+- Files app now shows file buttons in the content area while the navigator pane only switches file categories.
+- Mobile media controls now hide under open mobile panes so their arrows cannot overlap the pane.
 
 # **Moony's Magnificent Computers** - Initial Release DD.MM.YYYY
 -# Version 1.0.0.0

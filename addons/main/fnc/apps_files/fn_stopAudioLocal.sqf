@@ -20,6 +20,17 @@ if (!isNull _source) then {
 	deleteVehicle _source;
 };
 
+private _soundId = _object getVariable [QGVAR(audioSoundId), -1];
+if (_soundId >= 0) then {
+	stopSound _soundId;
+};
+
+if (_object getVariable [QGVAR(audioMusicPlaying), false]) then {
+	playMusic "";
+};
+
 _object setVariable [QGVAR(audioSource), objNull];
+_object setVariable [QGVAR(audioSoundId), -1];
 _object setVariable [QGVAR(audioName), ""];
+_object setVariable [QGVAR(audioMusicPlaying), false];
 true

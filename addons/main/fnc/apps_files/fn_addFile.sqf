@@ -6,7 +6,8 @@ params [
 	["_content", "", [""]],
 	["_type", "text", [""]],
 	["_path", "", [""]],
-	["_texture", "", [""]]
+	["_texture", "", [""]],
+	["_soundClass", "", [""]]
 ];
 
 if (isNull _object) exitWith {false};
@@ -18,7 +19,8 @@ _files pushBack (createHashMapFromArray [
 	["type", _type],
 	["path", _path],
 	["content", _content],
-	["texture", _texture]
+	["texture", _texture],
+	["soundClass", _soundClass]
 ]);
 _data set ["files", _files];
 _object setVariable [QGVAR(data), _data, true];

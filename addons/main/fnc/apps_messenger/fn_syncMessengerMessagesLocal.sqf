@@ -19,7 +19,8 @@ GVAR(messengerMessages) = _messages;
 private _display = uiNamespace getVariable [QGVAR(display), displayNull];
 if (!isNull _display && {(_display getVariable [QGVAR(currentApp), ""]) isEqualTo "messages"}) then {
 	_display setVariable [QGVAR(messengerForceScrollBottom), true];
-	["messages"] call FUNC(renderApp);
+	_display setVariable [QGVAR(messengerKeepSelection), true];
+	["select", [controlNull, -1]] call FUNC(renderApp);
 };
 
 true

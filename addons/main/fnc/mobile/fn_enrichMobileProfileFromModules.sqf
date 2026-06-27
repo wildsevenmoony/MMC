@@ -2,7 +2,7 @@
 
 /*
  * Author: Moony
- * Adds synced MMC layout, desktop, file, picture, and mail module data to a
+ * Adds synced MMC layout, desktop, file, picture, audio, and mail module data to a
  * mobile profile hashmap without executing or deleting those synced modules.
  *
  * Arguments:
@@ -29,6 +29,7 @@ private _contentTypes = [
 	QGVAR(modifyDesktop),
 	QGVAR(addTextFile),
 	QGVAR(addPicture),
+	QGVAR(addAudio),
 	QGVAR(addMail)
 ];
 
@@ -80,7 +81,7 @@ _objects = _objects arrayIntersect _objects;
 				["sourceModule", _sourceModule],
 				["name", _x getVariable [QGVAR(fileName), "intel.txt"]],
 				["type", "text"],
-				["path", _x getVariable [QGVAR(filePath), "\Desktop\intel.txt"]],
+				["path", _x getVariable [QGVAR(fileName), "intel.txt"]],
 				["content", _x getVariable [QGVAR(fileContent), "Mission intel goes here."]]
 			];
 			_profileOut set ["files", _files];
@@ -94,7 +95,7 @@ _objects = _objects arrayIntersect _objects;
 		case QGVAR(addPicture): {
 			private _sourceModule = netId _x;
 			private _name = _x getVariable [QGVAR(fileName), "picture.paa"];
-			private _path = _x getVariable [QGVAR(filePath), "\Pictures\picture.paa"];
+			private _path = _name;
 			private _texture = _x getVariable [QGVAR(fileTexture), ""];
 			if (_texture isEqualTo "") then {
 				_texture = _path;
@@ -115,6 +116,30 @@ _objects = _objects arrayIntersect _objects;
 				["module", _x],
 				["name", _name],
 				["texture", _texture],
+				["fileCount", count _files]
+			]] call FUNC(debugLog);
+		};
+		case QGVAR(addAudio): {
+			private _sourceModule = netId _x;
+			private _name = _x getVariable [QGVAR(fileName), "audio.ogg"];
+			private _path = _name;
+			private _soundClass = [_x getVariable [QGVAR(fileSoundClass), ""]] call FUNC(normalizeAudioClass);
+
+			private _files = +(_profileOut getOrDefault ["files", []]);
+			_files = _files select {!(_x isEqualType createHashMap) || {_x getOrDefault ["sourceModule", ""] isNotEqualTo _sourceModule}};
+			_files pushBack createHashMapFromArray [
+				["sourceModule", _sourceModule],
+				["name", _name],
+				["type", "audio"],
+				["path", _path],
+				["content", _x getVariable [QGVAR(fileDescription), ""]],
+				["soundClass", _soundClass]
+			];
+			_profileOut set ["files", _files];
+			["MobileProfile", "Enriched audio", createHashMapFromArray [
+				["module", _x],
+				["name", _name],
+				["soundClass", _soundClass],
 				["fileCount", count _files]
 			]] call FUNC(debugLog);
 		};

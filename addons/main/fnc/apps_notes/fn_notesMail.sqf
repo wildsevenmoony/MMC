@@ -41,6 +41,8 @@ _display setVariable [QGVAR(mailFrom), ""];
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT) ctrlSetText "";
 (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_DESC) ctrlSetText "";
 (_display displayCtrl IDC_MMC_MAIL_ERROR) ctrlSetText "";
+_display setVariable [QGVAR(mailComposeAttachments), []];
+_display setVariable [QGVAR(mailComposeDraft), createHashMap];
 call FUNC(resizeMailBody);
 
 [_display] call FUNC(refreshStandardApps);

@@ -62,7 +62,6 @@ private _addEdit = {
 };
 
 ["File Name", -1, IDC_MMC_DLG_FILE_NAME, "intel.txt", "fileName", "Displayed in the user's Files app."] call _addEdit;
-["File Path", -1, IDC_MMC_DLG_FILE_PATH, "\Desktop\intel.txt", "filePath", "Displayed path in the Files app."] call _addEdit;
 ["Content", -1, IDC_MMC_DLG_FILE_CONTENT, "Mission intel goes here.", "content", "Structured text is supported, including tags such as <br/> and image tags. Use \n for line breaks.", _rowH * 5, QGVAR(RscComputerEditMulti)] call _addEdit;
 
 (call _addRowBackground) params ["_labelTextX", "_fieldX"];

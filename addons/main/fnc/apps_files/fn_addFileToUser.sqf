@@ -12,7 +12,8 @@ params [
 	["_content", "", [""]],
 	["_type", "text", [""]],
 	["_path", "", [""]],
-	["_texture", "", [""]]
+	["_texture", "", [""]],
+	["_soundClass", "", [""]]
 ];
 
 if (isNull _object || {_username isEqualTo ""}) exitWith {false};
@@ -39,7 +40,8 @@ _files pushBack (createHashMapFromArray [
 	["type", _type],
 	["path", _path],
 	["content", _content],
-	["texture", _texture]
+	["texture", _texture],
+	["soundClass", _soundClass]
 ]);
 _user set ["files", _files];
 _users set [_index, _user];
@@ -51,6 +53,7 @@ _object setVariable [QGVAR(data), _data, true];
 	["name", _name],
 	["type", _type],
 	["path", _path],
+	["soundClass", _soundClass],
 	["fileCount", count _files]
 ]] call FUNC(debugLog);
 true

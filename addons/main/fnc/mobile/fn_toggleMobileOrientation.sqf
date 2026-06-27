@@ -18,6 +18,12 @@ private _orientation = _display getVariable [QGVAR(mobileOrientation), GVAR(mobi
 _orientation = ["vertical", "horizontal"] select (_orientation isEqualTo "vertical");
 _display setVariable [QGVAR(mobileOrientation), _orientation];
 
+private _computer = _display getVariable [QGVAR(computer), objNull];
+if (!isNull _computer) then {
+	_computer setVariable [QGVAR(mobileDefaultOrientation), _orientation, true];
+	[_computer, _orientation] remoteExecCall [QFUNC(setMobileOrientationServer), 2];
+};
+
 if (_display getVariable [QGVAR(mobileLockScreen), false]) exitWith {
 	[_display] call FUNC(applyMobileDisplayLayout);
 	_orientation
@@ -34,7 +40,7 @@ if (_currentApp isEqualTo "notes") then {
 		_display setVariable [QGVAR(notesDraftBody), ctrlText _bodyControl];
 	};
 };
-if (_currentApp in ["messages", "notes"] || {(_currentApp select [0, 7]) isEqualTo "custom:"}) then {
+if (_currentApp in ["files", "messages", "notes"] || {(_currentApp select [0, 7]) isEqualTo "custom:"}) then {
 	private _paneSelection = ["", "customApps"] select (_display getVariable [QGVAR(mobileCustomAppsOpen), false]);
 	if (_display getVariable [QGVAR(mobileNavOpen), false]) then {
 		_paneSelection = "nav";
@@ -43,7 +49,11 @@ if (_currentApp in ["messages", "notes"] || {(_currentApp select [0, 7]) isEqual
 	if (_currentApp isEqualTo "messages") then {
 		[_display] call FUNC(applyMobileDisplayLayout);
 	};
-	[_currentApp] call FUNC(renderApp);
+	if (_currentApp isEqualTo "files") then {
+		["select", [controlNull, -1]] call FUNC(renderApp);
+	} else {
+		[_currentApp] call FUNC(renderApp);
+	};
 } else {
 	[_display] call FUNC(applyMobileDisplayLayout);
 };

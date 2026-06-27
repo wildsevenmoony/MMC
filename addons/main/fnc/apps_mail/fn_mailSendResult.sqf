@@ -43,6 +43,8 @@ if (!isNull _computer && {count _data > 0}) then {
 };
 
 _error ctrlSetText "";
+_display setVariable [QGVAR(mailComposeAttachments), []];
+_display setVariable [QGVAR(mailComposeDraft), createHashMap];
 _display setVariable [QGVAR(mailFolder), "outbox"];
 _display setVariable [QGVAR(mailMode), "table"];
 ["table"] call FUNC(renderMail);

@@ -2,7 +2,7 @@
 
 /*
  * Author: Moony
- * Adds a configured picture to synced MMC computers or users.
+ * Adds a configured audio file to synced MMC computers, users, or mobile profiles.
  */
 
 private _logic = objNull;
@@ -41,24 +41,20 @@ if (!_activated || {isNull _logic}) exitWith {true};
 _objects append (synchronizedObjects _logic);
 _objects = _objects arrayIntersect _objects;
 
-private _name = _logic getVariable [QGVAR(fileName), "picture.paa"];
+private _name = _logic getVariable [QGVAR(fileName), "audio.ogg"];
 private _path = _name;
-private _texture = _logic getVariable [QGVAR(fileTexture), ""];
+private _soundClass = [_logic getVariable [QGVAR(fileSoundClass), ""]] call FUNC(normalizeAudioClass);
 private _description = _logic getVariable [QGVAR(fileDescription), ""];
-if (_texture isEqualTo "") then {
-	_texture = _path;
-};
-
 private _profileModules = _objects select {
 	private _type = typeOf _x;
 	(_x getVariable [QGVAR(isMobileProfileModule), false]) || {_type in [QGVAR(mobileProfile), QGVAR(assignMobileProfile)]}
 };
 private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), false]};
 
-["Modules", "Add Picture module resolving targets", createHashMapFromArray [
+["Modules", "Add Audio module resolving targets", createHashMapFromArray [
 	["module", _logic],
 	["name", _name],
-	["texture", _texture],
+	["soundClass", _soundClass],
 	["synced", _objects apply {format ["%1:%2", typeOf _x, _x]}],
 	["profileModules", count _profileModules],
 	["userModules", count _userModules]
@@ -75,17 +71,17 @@ private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), fal
 	_files pushBack createHashMapFromArray [
 		["sourceModule", _sourceModule],
 		["name", _name],
-		["type", "picture"],
+		["type", "audio"],
 		["path", _path],
 		["content", _description],
-		["texture", _texture]
+		["soundClass", _soundClass]
 	];
 	_profile set ["files", _files];
 	_x setVariable [QGVAR(mobileProfileConfig), _profile, true];
 	private _profileId = _profile getOrDefault ["id", _x getVariable [QGVAR(mobileProfileId), "mobile_profile"]];
 	[_profileId, _profile] call FUNC(registerMobileProfile);
 	[_profileId, _profile] remoteExecCall [QFUNC(registerMobileProfile), 0, format [QGVAR(mobileProfile_%1), _profileId]];
-	["Modules", "Add Picture enriched mobile profile", createHashMapFromArray [
+	["Modules", "Add Audio enriched mobile profile", createHashMapFromArray [
 		["profileModule", _x],
 		["profileId", _profileId],
 		["name", _name],
@@ -113,7 +109,7 @@ if (_userModules isNotEqualTo []) then {
 		};
 
 		{
-			[_x, _username, _name, _description, "picture", _path, _texture] call FUNC(addFileToUser);
+			[_x, _username, _name, _description, "audio", _path, "", _soundClass] call FUNC(addFileToUser);
 		} forEach _targets;
 	} forEach _userModules;
 } else {
@@ -130,7 +126,7 @@ if (_userModules isNotEqualTo []) then {
 
 	{
 		if (!isNull _x) then {
-			[_x, _name, _description, "picture", _path, _texture] call FUNC(addFile);
+			[_x, _name, _description, "audio", _path, "", _soundClass] call FUNC(addFile);
 		};
 	} forEach _targets;
 };

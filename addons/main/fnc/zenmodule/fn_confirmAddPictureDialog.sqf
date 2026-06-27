@@ -15,7 +15,7 @@ private _getValue = {
 };
 
 private _name = ["fileName", "picture.paa"] call _getValue;
-private _path = ["filePath", "\Pictures\picture.paa"] call _getValue;
+private _path = _name;
 private _texture = ["fileTexture", ""] call _getValue;
 private _description = ["fileDescription", ""] call _getValue;
 private _selected = (_display getVariable [QGVAR(userCheckboxes), []]) select {cbChecked (_x select 1)};

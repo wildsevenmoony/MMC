@@ -28,6 +28,12 @@ private _subject = ctrlText (_display displayCtrl IDC_MMC_MAIL_SUBJECT);
 private _body = ctrlText (_display displayCtrl IDC_MMC_MAIL_BODY);
 private _attachment = [ctrlText (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT)] call CBA_fnc_trim;
 private _attachmentDescription = ctrlText (_display displayCtrl IDC_MMC_MAIL_ATTACHMENT_DESC);
+private _composeAttachments = _display getVariable [QGVAR(mailComposeAttachments), []];
+if !(_composeAttachments isEqualType []) then {
+	_composeAttachments = [];
+	_display setVariable [QGVAR(mailComposeAttachments), _composeAttachments];
+};
+private _attachments = [_attachment, _attachmentDescription, _composeAttachments] call FUNC(mailNormalizeAttachments);
 private _error = _display displayCtrl IDC_MMC_MAIL_ERROR;
 
 private _setError = {
@@ -39,7 +45,7 @@ private _setError = {
 if (_to isEqualTo "") exitWith {["Enter a recipient address."] call _setError; false};
 if (_subject isEqualTo "") exitWith {["Enter a subject."] call _setError; false};
 if (_body isEqualTo "") exitWith {["Enter a message."] call _setError; false};
-if (_attachment isNotEqualTo "" && {!fileExists _attachment}) exitWith {["Attachment file does not exist."] call _setError; false};
+if (_composeAttachments isEqualTo [] && {_attachment isNotEqualTo "" && {!fileExists _attachment}}) exitWith {["Attachment file does not exist."] call _setError; false};
 
 if (_display getVariable [QGVAR(mailSending), false]) exitWith {false};
 _display setVariable [QGVAR(mailSending), true];
@@ -55,6 +61,7 @@ _display setVariable [QGVAR(mailSending), true];
 	_body,
 	_attachment,
 	_cc,
-	_attachmentDescription
+	_attachmentDescription,
+	_attachments
 ] remoteExecCall [QFUNC(sendMailRequest), 2];
 true

@@ -20,13 +20,13 @@ Moony's Magnificent Computers, or MMC, is an Arma 3 framework for interactive in
 - File browser with folders for text files, pictures, and audio files.
 - Text files and desktop text support structured text, image tags, and `\n` or `<br/>` line breaks.
 - Picture files support a texture path and description shown below the image.
-- Mail app with inbox, outbox, unread/read state, reply, forward, CC, linked mobile sender identities, picture attachment support, address books, and mission-time timestamps.
+- Mail app with inbox, outbox, unread/read state, reply, forward, CC, linked mobile sender identities, multi-file attachments from the file browser, address books, and mission-time timestamps.
 - Messenger app with side-filtered device contacts, notifications, overview cards, unread previews, and a scrollable chat history for registered desktop and mobile devices.
 - Notes app for multiple personal note files per user, optional autosave, save/delete editing, and a handoff into the mail composer.
 - Standard apps can be hidden per computer or per user.
 - Scripted custom apps that mission makers can add to individual computers, including structured text, buttons, fields, checkboxes, combo boxes, progress bars, raw controls, and live camera feeds.
-- Zeus modules for registering computers, changing power state, adding users, assigning live mobile profiles, adding text files, pictures, notes, mail, and modifying desktop/home text.
-- Eden modules for registering computers, adding users, layouts, adding text files, adding pictures, adding mail, and modifying desktop text.
+- Zeus modules for registering computers, changing power state, adding users, assigning live mobile profiles, adding text files, pictures, audio files, notes, mail, and modifying desktop/home text.
+- Eden modules for registering computers, adding users, layouts, adding text files, adding pictures, adding audio files, adding mail, and modifying desktop text.
 
 ## Current State
 
@@ -39,7 +39,7 @@ Richer media handling and more polished computer-screen object textures are stil
 - The `Register Computer` module turns synced objects into MMC computers.
 - Zeus operators can use `ACE Zeus Actions > Computer` to list every registered computer, including computers created during the mission. The action opens powered computers and starts powered-off computers before opening them.
 - The `Add User` module can be synced to specific registered computers. If it is not synced to a computer, the user is treated as globally available to registered computers unless a computer is marked as a closed system.
-- Text, picture, and mail modules can be synced to an `Add User` module for user content, a registered computer object for one computer, or a `Register Computer` module for every computer registered by that module.
+- Text, picture, audio, and mail modules can be synced to an `Add User` module for user content, a registered computer object for one computer, or a `Register Computer` module for every computer registered by that module.
 - Desktop modules can target users or computers depending on their sync setup.
 - `MMC: Modify Desktop` should normally be synced to a `Register Computer` module for computer defaults, to an `Add User` module for user-specific desktop text, or to a mobile profile module for mobile desktops. Direct object sync still works as a fallback.
 - Startup and login screens use a direct user layout first. If no user is added directly to that computer, they use a synced `MMC: Layout` module on the `Register Computer` module or computer object, then fall back to the client default.
@@ -53,15 +53,15 @@ Richer media handling and more polished computer-screen object textures are stil
 - New mail and Messenger messages trigger an ACE notification and the MMC mobile notification sound for the relevant device operator/owner. Mail notifications include the subject; Messenger notifications only show the sender. Notification sounds can be disabled in CBA settings.
 - Messenger opens to a home screen with visible contacts, unread counts, latest-message previews, and accent-colored unread contact cards with the unread counter on the right side. Select a contact card or navigator entry to open that chat; use the back arrow in a chat to return home.
 - Messenger sends with Enter. Use Shift+Enter for line breaks inside a longer message.
+- The mail composer `Files` button opens an attachment picker for the active user's visible text, picture, and audio files. Multiple files can be selected one after another; received attachments are added to the recipient's file browser.
 - Notes are stored on the active user account. Users can create multiple notes, save/delete them, use optional CBA-controlled autosave, and open a note as a prefilled e-mail draft.
 - Script-created mobile profiles can include a `notes` array with `title` and `body` fields to seed personal notes on matching devices.
 - Picture texture paths should point to valid `.paa` textures from the mission or a mod.
-- The file path fields are paths inside the computer's file browser, not necessarily real filesystem paths.
-- Audio playback currently relies on configured mod sounds. Mission-file audio is not treated as a reliable general-purpose file format yet.
+- Audio playback supports attachable audio classnames from `CfgSFX` and `CfgVehicles` sound sources. Use `MMC: Add Audio` to add audio entries to users, computers, or mobile profiles, and fill `Audio Classname` with a class from vanilla, a loaded mod, or mission `description.ext`. For mission-folder audio, define it as `CfgSFX`; `CfgMusic` is not used because it cannot reliably follow the device user or be replaced/stopped as a local source.
 - Placeable MMC device objects are compact/mobile computers. Their Eden attributes can set powered state, login behavior, the built-in username/password/e-mail, theme, and visible standard apps.
 - The `Mobile: Assign Profile` module is the simple route for player slots: sync it to playable or AI units, optionally give them a phone/tablet item, set their primary and linked e-mail addresses, lock code, theme, app scripts, and visible apps.
 - The advanced `Mobile: Profile` module configures personal/arsenal mobile devices without requiring one preplaced device per player. Use its selector fields to target a side, faction, UID, player name, unit variable, unit class, group, item class, device id, or picked-up device source.
-- Sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, and `MMC: Add Mail` modules to `Mobile: Assign Profile` or `Mobile: Profile` to give matching devices the same kind of layout, desktop, files, pictures, and mail content as desktop computers.
+- Sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, `MMC: Add Audio`, and `MMC: Add Mail` modules to `Mobile: Assign Profile` or `Mobile: Profile` to give matching devices the same kind of layout, desktop, files, pictures, audio, and mail content as desktop computers.
 - Zeus can assign a compact live mobile profile to a unit with `Assign Mobile Profile`. This is intended for ad-hoc mission control during play; use the Eden `Mobile: Assign Profile` or `Mobile: Profile` modules for preplanned profile content and synced layout/file/mail setup.
 
 ## Debugging
@@ -117,13 +117,13 @@ For ordinary player-slot setup, use `Mobile: Assign Profile`:
 - Use `Link E-Mail to Profile` for comma-separated role/shared addresses such as `overlord@mmcsystems.com` or `bravo1-4@aaf.ass`.
 - Set `Lock Code` to require a numeric unlock code for matching devices. Leave it empty to let personal/arsenal devices use the player's CBA fallback.
 - Use `Messenger Username` if that mobile profile should appear in Messenger as a callsign or role name instead of the synced unit name.
-- Sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, and `MMC: Add Mail` modules to the assign module to seed that profile.
+- Sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, `MMC: Add Audio`, and `MMC: Add Mail` modules to the assign module to seed that profile.
 
 The assigned profile applies when a personal MMC inventory device is first prepared, including devices taken from an arsenal after mission start. After that, the unique device keeps its own data. If an enemy steals the phone from a corpse, they open that phone's existing data rather than getting their own profile on it. Physical placed devices picked up from the world keep their own configured data from the start, which is usually what you want for stealable intel devices.
 
 During a live mission, Zeus can use the `Assign Mobile Profile` Zeus module on a unit to set a simple personal profile, optionally give a device, set a primary address or generated address domain, linked addresses, Messenger username/side, theme, custom app script files, and visible apps. It does not replace the full Eden profile module surface, but it is useful for quick role handoff or emergency devices.
 
-The advanced route is the `Mobile: Profile` Eden module. Configure its selectors, then sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, and `MMC: Add Mail` modules to it. The module broadcasts the profile to clients/JIP, while app script files listed in `Custom App Script Files` are still executed locally and therefore need to exist in the mission or a loaded mod.
+The advanced route is the `Mobile: Profile` Eden module. Configure its selectors, then sync `MMC: Layout`, `MMC: Modify Desktop`, `MMC: Add Text File`, `MMC: Add Picture`, `MMC: Add Audio`, and `MMC: Add Mail` modules to it. The module broadcasts the profile to clients/JIP, while app script files listed in `Custom App Script Files` are still executed locally and therefore need to exist in the mission or a loaded mod.
 
 Script profiles are still available for advanced or dynamic setup. Register script-created profiles on server and clients, usually from `init.sqf` or from a file called by both `initServer.sqf` and `initPlayerLocal.sqf`. Server-side data such as files and mail is applied on the server. App code is applied locally on the client, so app profiles with code need to exist client-side too.
 

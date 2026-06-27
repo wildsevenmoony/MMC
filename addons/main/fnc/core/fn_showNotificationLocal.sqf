@@ -63,4 +63,22 @@ if (GVAR(notificationSoundEnabled)) then {
 	] select ((toLowerANSI _type) isEqualTo "mail"));
 };
 
+if ((toLowerANSI _type) isEqualTo "mail") then {
+	[{
+		private _display = uiNamespace getVariable [QGVAR(display), displayNull];
+		if (isNull _display) exitWith {};
+		if ((_display getVariable [QGVAR(currentApp), ""]) isNotEqualTo "mail") exitWith {};
+		if ((_display getVariable [QGVAR(mailMode), "table"]) isNotEqualTo "table") exitWith {};
+		if ((_display getVariable [QGVAR(mailFolder), "inbox"]) isNotEqualTo "inbox") exitWith {};
+
+		private _computer = _display getVariable [QGVAR(computer), objNull];
+		if (isNull _computer) exitWith {};
+		_display setVariable [QGVAR(data), _computer getVariable [QGVAR(data), createHashMap]];
+		["table"] call FUNC(renderMail);
+		if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
+			[_display] call FUNC(applyMobileDisplayLayout);
+		};
+	}, [], 0.25] call CBA_fnc_waitAndExecute;
+};
+
 true

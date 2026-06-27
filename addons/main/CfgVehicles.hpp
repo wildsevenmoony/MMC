@@ -597,16 +597,16 @@ class CfgVehicles {
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Registers a PvP-safe mobile profile for arsenal/personal or picked-up MMC mobile devices. Sync Layout, Modify Desktop, Add Text File, Add Picture, or Add Mail modules to enrich this profile.";
+			description = "Registers a PvP-safe mobile profile for arsenal/personal or picked-up MMC mobile devices. Sync Layout, Modify Desktop, Add Text File, Add Picture, Add Audio, or Add Mail modules to enrich this profile.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
-				description[] = {"Optionally synchronise Layout, Modify Desktop, Add Text File, Add Picture, or Add Mail modules to this module."};
+				description[] = {"Optionally synchronise Layout, Modify Desktop, Add Text File, Add Picture, Add Audio, or Add Mail modules to this module."};
 				position = 0;
 				direction = 0;
 				optional = 1;
 				duplicate = 1;
-				synced[] = {QGVAR(customLayout), QGVAR(modifyDesktop), QGVAR(addTextFile), QGVAR(addPicture), QGVAR(addMail)};
+				synced[] = {QGVAR(customLayout), QGVAR(modifyDesktop), QGVAR(addTextFile), QGVAR(addPicture), QGVAR(addAudio), QGVAR(addMail)};
 			};
 		};
 	};
@@ -812,7 +812,7 @@ class CfgVehicles {
 		};
 
 		class ModuleDescription: ModuleDescription {
-			description = "Sync playable or AI units to assign their personal MMC mobile profile. Sync Layout, Modify Desktop, Add Text File, Add Picture, or Add Mail modules to enrich that profile.";
+			description = "Sync playable or AI units to assign their personal MMC mobile profile. Sync Layout, Modify Desktop, Add Text File, Add Picture, Add Audio, or Add Mail modules to enrich that profile.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {
@@ -821,7 +821,7 @@ class CfgVehicles {
 				direction = 0;
 				optional = 0;
 				duplicate = 1;
-				synced[] = {"AnyBrain", QGVAR(customLayout), QGVAR(modifyDesktop), QGVAR(addTextFile), QGVAR(addPicture), QGVAR(addMail)};
+				synced[] = {"AnyBrain", QGVAR(customLayout), QGVAR(modifyDesktop), QGVAR(addTextFile), QGVAR(addPicture), QGVAR(addAudio), QGVAR(addMail)};
 			};
 		};
 	};
@@ -1244,14 +1244,6 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
-			class GVAR(filePath): Edit {
-				property = QGVAR(filePath);
-				displayName = "File Path";
-				typeName = "STRING";
-				defaultValue = "'\\Desktop\\intel.txt'";
-				expression = "_this setVariable ['%s', _value, true];";
-			};
-
 			class GVAR(fileContent): Edit {
 				property = QGVAR(fileContent);
 				displayName = "File Content";
@@ -1300,15 +1292,6 @@ class CfgVehicles {
 				expression = "_this setVariable ['%s', _value, true];";
 			};
 
-			class GVAR(filePath): Edit {
-				property = QGVAR(filePath);
-				displayName = "File Path";
-				tooltip = "Path shown inside the computer's file system. This is not the picture texture path from the mission folder.";
-				typeName = "STRING";
-				defaultValue = "'\\Pictures\\picture.paa'";
-				expression = "_this setVariable ['%s', _value, true];";
-			};
-
 			class GVAR(fileTexture): Edit {
 				property = QGVAR(fileTexture);
 				displayName = "Picture Texture";
@@ -1332,6 +1315,62 @@ class CfgVehicles {
 
 		class ModuleDescription: ModuleDescription {
 			description = "Sync an MMC computer object, Register Computer module, Add User module, or Mobile Profile module to add a picture to the file browser.";
+			sync[] = {"LocationArea_F"};
+
+			class LocationArea_F {
+				description[] = {"Synchronise any registered MMC computer object, Register Computer module, Add User module, or Mobile Profile module."};
+				position = 0;
+				direction = 0;
+				optional = 0;
+				duplicate = 1;
+				synced[] = {QGVAR(registerComputer), "AnyStaticObject", "AnyVehicle", QGVAR(addUser), QGVAR(mobileProfile), QGVAR(assignMobileProfile)};
+			};
+		};
+	};
+
+	class GVAR(addAudio): Module_F {
+		category = QGVAR(Modules);
+		displayName = "MMC: Add Audio";
+		function = QFUNC(addAudioModule);
+		functionPriority = 30;
+		isDisposable = 0;
+		is3DEN = 1;
+		isGlobal = 0;
+		isTriggerActivated = 0;
+		scope = 2;
+
+		class Attributes: AttributesBase {
+			class GVAR(fileName): Edit {
+				property = QGVAR(fileName);
+				displayName = "Audio Name";
+				typeName = "STRING";
+				defaultValue = "'audio.ogg'";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(fileSoundClass): Edit {
+				property = QGVAR(fileSoundClass);
+				displayName = "Audio Classname";
+				tooltip = "Classname from CfgSFX or a CfgVehicles sound source. Use CfgSFX for mission or mod audio that must follow the listener and be stoppable.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class GVAR(fileDescription): Edit {
+				property = QGVAR(fileDescription);
+				displayName = "Audio Description";
+				tooltip = "Optional text shown when this audio file is selected in the Files app.";
+				typeName = "STRING";
+				defaultValue = "''";
+				expression = "_this setVariable ['%s', _value, true];";
+			};
+
+			class ModuleDescription: ModuleDescription {};
+		};
+
+		class ModuleDescription: ModuleDescription {
+			description = "Sync an MMC computer object, Register Computer module, Add User module, or Mobile Profile module to add an audio file to the file browser.";
 			sync[] = {"LocationArea_F"};
 
 			class LocationArea_F {

@@ -42,7 +42,7 @@ _objects append (synchronizedObjects _logic);
 _objects = _objects arrayIntersect _objects;
 
 private _name = _logic getVariable [QGVAR(fileName), "intel.txt"];
-private _path = _logic getVariable [QGVAR(filePath), "\Desktop\intel.txt"];
+private _path = _name;
 private _content = _logic getVariable [QGVAR(fileContent), "Mission intel goes here."];
 private _profileModules = _objects select {
 	private _type = typeOf _x;
@@ -53,7 +53,6 @@ private _userModules = _objects select {_x getVariable [QGVAR(isUserModule), fal
 ["Modules", "Add Text File module resolving targets", createHashMapFromArray [
 	["module", _logic],
 	["name", _name],
-	["path", _path],
 	["synced", _objects apply {format ["%1:%2", typeOf _x, _x]}],
 	["profileModules", count _profileModules],
 	["userModules", count _userModules]

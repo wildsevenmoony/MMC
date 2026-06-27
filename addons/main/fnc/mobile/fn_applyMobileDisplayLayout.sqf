@@ -588,13 +588,17 @@ private _bodyX = _bodyPos select 0;
 private _bodyY = _bodyPos select 1;
 private _bodyW = _bodyPos select 2;
 private _bodyH = _bodyPos select 3;
+private _actionBodyPos = +_bodyPos;
+if (_currentApp isEqualTo "files" && {_display getVariable [QGVAR(filesAudioSelected), false]}) then {
+	_actionBodyPos set [3, ((_actionBodyPos select 3) - 0.088) max 0.08];
+};
 
 {
 	if (!isNull _x) then {
 		if (isNull (ctrlParentControlsGroup _x)) then {
 			private _pos = ctrlPosition _x;
 			if ((_pos select 2) > 0.12 && {(_pos select 3) > 0.08}) then {
-				_x ctrlSetPosition _bodyPos;
+				_x ctrlSetPosition _actionBodyPos;
 				_x ctrlCommit 0;
 			};
 		};
@@ -1003,8 +1007,41 @@ _customList ctrlShow (_hasCustomApps && _customOpen);
 _customList ctrlSetPosition _customListPos;
 _customList ctrlCommit 0;
 
+private _mediaPaneOpen = (_hasNavPane && _navOpen) || {_hasCustomApps && _customOpen};
 private _mediaShown = ctrlShown (_display displayCtrl IDC_MMC_MEDIA_BAR);
 if (_mediaShown) then {
+	if (_mediaPaneOpen) then {
+		{
+			(_display displayCtrl _x) ctrlShow false;
+		} forEach [
+			IDC_MMC_MEDIA_BAR,
+			IDC_MMC_FRAME_MEDIA_BAR,
+			IDC_MMC_MEDIA_PREV,
+			IDC_MMC_FRAME_MEDIA_PREV,
+			IDC_MMC_MEDIA_PLAY,
+			IDC_MMC_FRAME_MEDIA_PLAY,
+			IDC_MMC_MEDIA_STOP,
+			IDC_MMC_FRAME_MEDIA_STOP,
+			IDC_MMC_MEDIA_NEXT,
+			IDC_MMC_FRAME_MEDIA_NEXT,
+			IDC_MMC_MEDIA_STATUS
+		];
+	} else {
+	{
+		(_display displayCtrl _x) ctrlShow true;
+	} forEach [
+		IDC_MMC_MEDIA_BAR,
+		IDC_MMC_FRAME_MEDIA_BAR,
+		IDC_MMC_MEDIA_PREV,
+		IDC_MMC_FRAME_MEDIA_PREV,
+		IDC_MMC_MEDIA_PLAY,
+		IDC_MMC_FRAME_MEDIA_PLAY,
+		IDC_MMC_MEDIA_STOP,
+		IDC_MMC_FRAME_MEDIA_STOP,
+		IDC_MMC_MEDIA_NEXT,
+		IDC_MMC_FRAME_MEDIA_NEXT,
+		IDC_MMC_MEDIA_STATUS
+	];
 	private _mediaH = 0.074;
 	private _mediaY = _bodyY + _bodyH - _mediaH - 0.008;
 	{
@@ -1029,6 +1066,7 @@ if (_mediaShown) then {
 	[IDC_MMC_MEDIA_STATUS, [_statusX, _buttonY, (_bodyX + _bodyW - 0.018 - _statusX) max 0.04, _buttonH]] call _set;
 	[QGVAR(mobileMediaPrevArrowIcon), _display displayCtrl IDC_MMC_MEDIA_PREV, "left", true] call _setArrowIcon;
 	[QGVAR(mobileMediaNextArrowIcon), _display displayCtrl IDC_MMC_MEDIA_NEXT, "right", true] call _setArrowIcon;
+	};
 } else {
 	[QGVAR(mobileMediaPrevArrowIcon), _display displayCtrl IDC_MMC_MEDIA_PREV, "left", false] call _setArrowIcon;
 	[QGVAR(mobileMediaNextArrowIcon), _display displayCtrl IDC_MMC_MEDIA_NEXT, "right", false] call _setArrowIcon;
@@ -1181,7 +1219,7 @@ _mailBackFrame ctrlShow false;
 } forEach [IDC_MMC_MAIL_SCROLL_LEFT, IDC_MMC_MAIL_SCROLL_RIGHT, IDC_MMC_FRAME_MAIL_SCROLL_LEFT, IDC_MMC_FRAME_MAIL_SCROLL_RIGHT];
 [QGVAR(mobileMailScrollLeftArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_LEFT, "left", false] call _setArrowIcon;
 [QGVAR(mobileMailScrollRightArrowIcon), _display displayCtrl IDC_MMC_MAIL_SCROLL_RIGHT, "right", false] call _setArrowIcon;
-if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table", "addressbook"]}) then {
+if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table", "addressbook", "attachments"]}) then {
 	if (_mailMode isEqualTo "compose") then {
 		private _fieldH = 0.041;
 		private _labelH = 0.025;
@@ -1189,11 +1227,13 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table", "
 		private _rowGap = 0.009;
 		private _topY = _innerY;
 		private _buttonGap = 0.006;
-		private _buttonW = (((_innerW - (_buttonGap * 2)) / 3) min 0.13) max 0.094;
+		private _buttonW = (_innerW * 0.34) min 0.138 max 0.1;
 		private _cancelX = _bodyX + _bodyW - 0.01 - _buttonW;
 		private _sendX = _cancelX - _buttonGap - _buttonW;
 		private _addressBookX = _sendX - _buttonGap - _buttonW;
+		private _filesX = _addressBookX - _buttonGap - _buttonW;
 		[IDC_MMC_MAIL_HEADER, [_innerX, _topY, (_addressBookX - _innerX - _buttonGap) max (_innerW * 0.3), 0.034]] call _set;
+		[IDC_MMC_MAIL_REPLY, [_filesX, _topY, _buttonW, 0.039]] call _set;
 		[IDC_MMC_MAIL_FORWARD, [_addressBookX, _topY, _buttonW, 0.039]] call _set;
 		[IDC_MMC_MAIL_SEND, [_sendX, _topY, _buttonW, 0.039]] call _set;
 		[IDC_MMC_MAIL_CANCEL, [_cancelX, _topY, _buttonW, 0.039]] call _set;
@@ -1269,6 +1309,24 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table", "
 			_mailTable ctrlSetFontHeight ([0.03, 0.028] select (_orientation isEqualTo "vertical"));
 			_mailTable lnbSetColumnsPos [0.03, 0.18, 0.52, 1.0, 1.2, 1.4];
 		} else {
+		if (_mailMode isEqualTo "attachments") then {
+			private _buttonGap = 0.006;
+			private _buttonW = (_innerW * 0.34) min 0.138 max 0.1;
+			private _doneX = _bodyX + _bodyW - 0.01 - _buttonW;
+			private _cancelX = _doneX - _buttonGap - _buttonW;
+			private _backX = _cancelX - _buttonGap - _buttonW;
+			[IDC_MMC_MAIL_HEADER, [_innerX, _innerY, (_backX - _innerX - _buttonGap) max (_innerW * 0.28), 0.034]] call _set;
+			[IDC_MMC_MAIL_FORWARD, [_backX, _innerY, _buttonW, 0.038]] call _set;
+			[IDC_MMC_MAIL_CANCEL, [_cancelX, _innerY, _buttonW, 0.038]] call _set;
+			[IDC_MMC_MAIL_SEND, [_doneX, _innerY, _buttonW, 0.038]] call _set;
+			[IDC_MMC_MAIL_ERROR, [_innerX, _innerY + 0.04, _innerW, 0.03]] call _set;
+			{
+				[_x, [_innerX, _innerY + 0.076, _innerW, (_bodyH - 0.096) max 0.1]] call _set;
+			} forEach [IDC_MMC_MAIL_TABLE, IDC_MMC_FRAME_MAIL_TABLE];
+			private _mailTable = _display displayCtrl IDC_MMC_MAIL_TABLE;
+			_mailTable ctrlSetFontHeight ([0.03, 0.028] select (_orientation isEqualTo "vertical"));
+			_mailTable lnbSetColumnsPos [0.03, 0.4, 0.72, 1.1, 1.3, 1.5];
+		} else {
 		if (_mailMode isEqualTo "read") then {
 			private _backW = 0.032;
 			private _backH = 0.038;
@@ -1280,7 +1338,7 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table", "
 			_mailBackFrame ctrlCommit 0;
 			[QGVAR(mobileMailBackArrowIcon), _mailBack, "left", true] call _setArrowIcon;
 			private _buttonGap = 0.006;
-			private _buttonW = (((_innerW - _backW - (_buttonGap * 4)) / 3) min 0.13) max 0.094;
+			private _buttonW = (((_innerW - _backW - (_buttonGap * 4)) / 3) min 0.138) max 0.1;
 			private _saveX = _bodyX + _bodyW - 0.01 - _buttonW;
 			private _forwardX = _saveX - _buttonGap - _buttonW;
 			private _replyX = _forwardX - _buttonGap - _buttonW;
@@ -1302,7 +1360,7 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table", "
 			private _scrollGap = 0.005;
 			private _drawerOpen = (_hasNavPane && _navOpen) || {_hasCustomApps && _customOpen};
 			private _buttonGap = 0.006;
-			private _buttonW = (_innerW * 0.33) min 0.13 max 0.094;
+			private _buttonW = (_innerW * 0.34) min 0.138 max 0.1;
 			private _rightArrowX = _innerX + _innerW - _scrollW;
 			private _addressBookX = _rightArrowX - _buttonGap - _buttonW;
 			private _newMailX = _addressBookX - _buttonGap - _buttonW;
@@ -1342,6 +1400,7 @@ if (_currentApp isEqualTo "mail" && {_mailMode in ["compose", "read", "table", "
 				private _iconPath = ["", [_unreadIcon, _readIcon] select (_mail getOrDefault ["read", true])] select (_tablePage == 0);
 				_mailTable lnbSetPicture [[_row, 0], _iconPath];
 			};
+		};
 		};
 		};
 	};

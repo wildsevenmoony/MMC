@@ -16,5 +16,5 @@ params [["_object", objNull, [objNull]]];
 if (isNull _object) exitWith {false};
 
 _object setVariable [QGVAR(audioIndex), -1, true];
-[_object] remoteExecCall [QFUNC(stopAudioLocal), 2];
+[_object] remoteExecCall [QFUNC(stopAudioLocal), 0];
 true
