@@ -13,6 +13,7 @@ Moony's Magnificent Computers, or MMC, is an Arma 3 framework for interactive in
 - MMC Smartphone, Tablet, and Rugged Tablet inventory items for mobile computer access.
 - Placeable MMC phone/tablet objects under Eden Things > MMC Devices, with device user and app attributes.
 - Phone-style mobile lock screen with numeric unlock codes from placed-device attributes, mobile profile modules, Zeus-assigned profiles, or the player's CBA fallback.
+- Optional hacking flow with an Intrusion Tool item, timed ACE progress, and a word-likeness puzzle for unknown desktop account passwords or mobile lock codes.
 - User accounts with username, password, e-mail address, theme, and closed-system support.
 - Eden mobile profiles for PvP-safe arsenal/personal device setup by synced unit, side, role, UID, faction, item class, or picked-up device source.
 - Client CBA settings for default dark/light theme preference and logging out when the computer dialog is closed.
@@ -47,6 +48,7 @@ Richer media handling and more polished computer-screen object textures are stil
 - Uncheck standard app boxes on `Register Computer` to hide apps for the whole computer, or on `Add User` to hide apps only while that user is logged in.
 - In-world screen textures are applied automatically only for supported 1x1 and 2x1 laptop/PC/TV objects. Add more supported device classes in `fn_getScreenDeviceConfig.sqf`.
 - The `MMC: Layout` module can disable in-world screen texture application, or override the `setObjectTexture` selections with a comma-separated list such as `0` or `0,1`.
+- Hacking can be enabled/disabled in CBA. By default the `Hack` option only appears when the player carries `MMC_main_hackingTool`. The player spends the configured hacking time, then solves a word-likeness puzzle. Desktop hacking targets the account typed into the username field and only opens accounts directly linked to that computer; mobile hacking targets the current device lock screen.
 - Messenger lists registered devices on the user's own side by default. A CBA setting can allow friendly-side devices too, and another setting can hide civilian devices from that friendly list.
 - Use `Messenger Username` fields when a contact should appear under a mission-specific callsign or role name instead of the device name, account username, or e-mail prefix.
 - Desktop users use `Messenger Side` in the `Computer: Add User` module. `Auto (Theme)` derives NATO as BLUFOR, CSAT as OPFOR, and AAF as Independent; use `Hidden` to keep a user out of Messenger contact lists. Physical mobile devices can set a `Messenger Side` in their Eden attributes, while mobile profile devices receive their side from the synced unit or from the player opening an arsenal/personal device.
@@ -82,6 +84,8 @@ Players open mobile devices through `ACE Self Actions > Mobile Device`. If a pla
 
 Mobile devices show a phone-style lock screen before the home screen, with a large mission time/date readout, PIN dots, number buttons, rotate support, and an arrow confirm button. Mission makers can set a numeric lock code on placed device attributes, `Mobile: Assign Profile`, `Mobile: Profile`, or the live Zeus assign profile module. Profile lock codes only override the player's fallback when they are filled; personal inventory/arsenal devices without a filled mission profile code use the client's CBA `Mobile Lock Code` setting when opened. Empty lock codes intentionally unlock with any entry, including leaving the field blank.
 
+If hacking is enabled and the player carries the configured intrusion item, the mobile lock screen offers a timed hacking attempt. A successful word puzzle unlocks the device without revealing the configured PIN.
+
 The personal mobile device is backed by a server-registered hidden MMC computer, so mail validation, delivery, and Messenger contacts still work on dedicated servers. It opens straight to a personal desktop and uses the same Files, Mail, Messenger, Notes, and custom app renderer as normal computers. The dialog is constrained into a compact mobile surface and includes a `Rotate` button to switch between horizontal and vertical layouts. Smartphones start in vertical orientation; tablets start horizontal.
 
 On mobile, the built-in apps stay on the icon dock. Scripted custom apps appear in a collapsible `Apps` drawer so long app names do not have to fit into the compact icon buttons. In vertical mode the drawer opens from the right side of the content area; in horizontal mode it opens from the bottom.
@@ -93,6 +97,7 @@ The new device items appear as ACE misc items:
 - `MMC_main_ruggedTabletGreen`
 - `MMC_main_ruggedTabletSand`
 - `MMC_main_tablet`
+- `MMC_main_hackingTool`
 
 Mission makers can also place physical device objects from `Things > MMC Devices`. These are useful for a phone/tablet lying on a desk: they register themselves as compact MMC computers and can be configured directly through Eden object attributes. Players can pick these objects up with ACE interaction, turning them into a hidden unique inventory item while preserving the configured device content.
 

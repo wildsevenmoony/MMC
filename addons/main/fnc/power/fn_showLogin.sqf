@@ -44,6 +44,8 @@ private _themeConfig = [_display] call FUNC(getThemeConfig);
 	(_display displayCtrl (_x select 0)) ctrlSetPosition (_x select 1);
 	(_display displayCtrl (_x select 0)) ctrlCommit 0;
 } forEach [
+	[IDC_MMC_LOGIN_BUTTON, [safeZoneX + safeZoneW * 0.39, safeZoneY + safeZoneH * 0.545, safeZoneW * 0.068, 0.052]],
+	[IDC_MMC_FRAME_LOGIN_BUTTON, [safeZoneX + safeZoneW * 0.39, safeZoneY + safeZoneH * 0.545, safeZoneW * 0.068, 0.052]],
 	[IDC_MMC_LOGIN_SHUTDOWN, [safeZoneX + safeZoneW * 0.548, safeZoneY + safeZoneH * 0.545, safeZoneW * 0.072, 0.052]],
 	[IDC_MMC_FRAME_LOGIN_SHUTDOWN, [safeZoneX + safeZoneW * 0.548, safeZoneY + safeZoneH * 0.545, safeZoneW * 0.072, 0.052]]
 ];
@@ -162,4 +164,5 @@ private _themeConfig = [_display] call FUNC(getThemeConfig);
 _display setVariable [QGVAR(passwordVisible), false];
 _display setVariable [QGVAR(loginPassword), ""];
 (_display displayCtrl IDC_MMC_LOGIN_ERROR) ctrlSetStructuredText parseText "";
+[_display, "login"] call FUNC(hackingAddEntryButton);
 ctrlSetFocus (_display displayCtrl IDC_MMC_LOGIN_USERNAME);

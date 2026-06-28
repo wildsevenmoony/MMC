@@ -334,6 +334,11 @@ if (_display getVariable [QGVAR(mobileLockScreen), false]) exitWith {
 	private _confirmIcon = _map getOrDefault ["confirmIcon", controlNull];
 	private _delete = _map getOrDefault ["delete", controlNull];
 	private _deleteFrame = _map getOrDefault ["deleteFrame", controlNull];
+	private _hack = _map getOrDefault ["hack", controlNull];
+	private _hackPatch = _map getOrDefault ["hackPatch", controlNull];
+	private _hackFrame = _map getOrDefault ["hackFrame", controlNull];
+	private _hackIcon = _map getOrDefault ["hackIcon", controlNull];
+	private _hackLabel = _map getOrDefault ["hackLabel", controlNull];
 
 	private _lockX = _screenX + (_screenW * 0.06);
 	private _lockY = _screenY + (_screenH * 0.055);
@@ -360,6 +365,7 @@ if (_display getVariable [QGVAR(mobileLockScreen), false]) exitWith {
 	private _dateY = _timeY + _timeH - ([0.006, 0.012] select _isHorizontalLock);
 	private _dotsY = _lockY + (_lockH * ([0.27, 0.49] select _isHorizontalLock));
 	private _errorY = _lockY + (_lockH * ([0.335, 0.58] select _isHorizontalLock));
+	private _promptPos = [_infoX, _lockY + _lockH - 0.075, _infoW, 0.038];
 	{
 		_x params ["_ctrl", "_pos"];
 		if (!isNull _ctrl) then {
@@ -372,7 +378,7 @@ if (_display getVariable [QGVAR(mobileLockScreen), false]) exitWith {
 		[_time, [_infoX, _timeY, _infoW, _timeH]],
 		[_date, [_infoX, _dateY, _infoW, 0.04]],
 		[_dots, [_infoX, _dotsY, _infoW, 0.055]],
-		[_prompt, [_infoX, _lockY + _lockH - 0.075, _infoW, 0.038]],
+		[_prompt, _promptPos],
 		[_error, [_infoX, _errorY, _infoW, 0.034]]
 	];
 	if (!isNull _error) then {
@@ -460,6 +466,63 @@ if (_display getVariable [QGVAR(mobileLockScreen), false]) exitWith {
 		];
 		_confirmIcon ctrlShow true;
 		_confirmIcon ctrlCommit 0;
+	};
+
+	private _hackSize = _keySize * ([1.08, 1.22] select _isHorizontalLock);
+	private _hackPos = if (_isHorizontalLock) then {
+		[
+			(_promptPos select 0) - (_hackSize * 0.18),
+			(_promptPos select 1) - (_hackSize * 0.24),
+			_hackSize,
+			_hackSize
+		]
+	} else {
+		[
+			(_promptPos select 0) + ((_promptPos select 2) * 0.10),
+			(_promptPos select 1) - (_hackSize * 0.36),
+			_hackSize,
+			_hackSize
+		]
+	};
+	private _canHack = [_display, "mobile"] call FUNC(hackingCanStart);
+	private _hackFrameColor = +(_themeConfig getOrDefault ["bootAccent", [0.13, 0.54, 0.21, 0.95]]);
+	_hackFrameColor set [3, 0.95];
+	if (!isNull _hackPatch) then {
+		_hackPatch ctrlSetBackgroundColor [0.01, 0.012, 0.014, 0.96];
+		_hackPatch ctrlSetPosition _hackPos;
+		_hackPatch ctrlShow _canHack;
+		_hackPatch ctrlCommit 0;
+	};
+	if (!isNull _hackFrame) then {
+		_hackFrame ctrlSetTextColor _hackFrameColor;
+		_hackFrame ctrlSetPosition _hackPos;
+		_hackFrame ctrlShow _canHack;
+		_hackFrame ctrlCommit 0;
+	};
+	if (!isNull _hackIcon) then {
+		private _hackIconSize = (_hackPos select 3) * 0.66;
+		_hackIcon ctrlSetText PATHTOF(img\hack_white.paa);
+		_hackIcon ctrlSetPosition [
+			(_hackPos select 0) + (((_hackPos select 2) - _hackIconSize) / 2),
+			(_hackPos select 1) + (((_hackPos select 3) - _hackIconSize) / 2),
+			_hackIconSize,
+			_hackIconSize
+		];
+		_hackIcon ctrlShow _canHack;
+		_hackIcon ctrlCommit 0;
+	};
+	if (!isNull _hackLabel) then {
+		_hackLabel ctrlSetStructuredText parseText "";
+		_hackLabel ctrlSetPosition _hackPos;
+		_hackLabel ctrlShow false;
+		_hackLabel ctrlCommit 0;
+	};
+	if (!isNull _hack) then {
+		_hack ctrlSetTooltip "Start a timed security bypass.";
+		_hack ctrlEnable _canHack;
+		_hack ctrlSetPosition _hackPos;
+		_hack ctrlShow _canHack;
+		_hack ctrlCommit 0;
 	};
 
 	true

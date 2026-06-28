@@ -9,6 +9,8 @@ params [["_display", displayNull, [displayNull]]];
 
 if (isNull _display) exitWith {};
 
+[_display, true, true] call FUNC(hackingClose);
+
 {
 	(_display displayCtrl _x) ctrlShow false;
 } forEach [

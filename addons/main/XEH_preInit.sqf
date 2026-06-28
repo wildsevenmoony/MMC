@@ -18,6 +18,11 @@ GVAR(notificationSoundEnabled) = true;
 GVAR(notesAutosaveEnabled) = true;
 GVAR(mailAddressBookIncludeFriendlySides) = true;
 GVAR(mailAddressBookExcludeCivilians) = true;
+GVAR(hackingEnabled) = true;
+GVAR(hackingRequiredItem) = QGVAR(hackingTool);
+GVAR(hackingDuration) = 60;
+GVAR(hackingAttempts) = 4;
+GVAR(hackingWordCount) = 21;
 
 [
 	QGVAR(debugEnabled),
@@ -26,6 +31,51 @@ GVAR(mailAddressBookExcludeCivilians) = true;
 	["Moony's Magnificent Computers", "Debug"],
 	false,
 	0
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(hackingEnabled),
+	"CHECKBOX",
+	["Enable Hacking", "Allows players carrying the required intrusion item to attempt hacking on MMC login and mobile lock screens."],
+	["Moony's Magnificent Computers", "Hacking"],
+	true,
+	1
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(hackingRequiredItem),
+	"EDITBOX",
+	["Required Hacking Item", "Inventory class required to start a hacking attempt. Leave empty to allow hacking without a special item."],
+	["Moony's Magnificent Computers", "Hacking"],
+	QGVAR(hackingTool),
+	1
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(hackingDuration),
+	"SLIDER",
+	["Hacking Duration", "Seconds spent running the security bypass before the word puzzle opens."],
+	["Moony's Magnificent Computers", "Hacking"],
+	[5, 300, 60, 0],
+	1
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(hackingAttempts),
+	"SLIDER",
+	["Hacking Attempts", "How many wrong word guesses are allowed before the hacking attempt fails."],
+	["Moony's Magnificent Computers", "Hacking"],
+	[1, 10, 4, 0],
+	1
+] call CBA_fnc_addSetting;
+
+[
+	QGVAR(hackingWordCount),
+	"SLIDER",
+	["Hacking Word Count", "How many candidate words are shown in the hacking puzzle."],
+	["Moony's Magnificent Computers", "Hacking"],
+	[6, 36, 21, 0],
+	1
 ] call CBA_fnc_addSetting;
 
 [

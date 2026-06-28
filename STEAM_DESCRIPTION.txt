@@ -17,6 +17,7 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [*]Arsenal mobile items are prepared into hidden unique device items, so their mail, files, apps, and desktop data can follow the physical phone/tablet when it is looted or stolen.
 [*]Place physical MMC phone/tablet devices from Things > MMC Devices, configure their built-in user, e-mail, login behavior, theme, and apps through Eden attributes, then let players pick them up as inventory items.
 [*]Use phone-style mobile lock screens with numeric unlock codes from placed devices, profile modules, Zeus-assigned profiles, or the player's CBA fallback.
+[*]Use optional hacking with the MMC Intrusion Tool, timed ACE progress, and a word-likeness puzzle to bypass unknown desktop passwords or mobile lock codes.
 [*]Use Eden or script-registered mobile profiles to give arsenal devices synced-unit, side, role, UID, faction, or item-specific aliases, files, mail, layouts, and custom apps.
 [*]Use user accounts with usernames, passwords, e-mail addresses, and themes.
 [*]Create closed systems that only allow explicitly added users.
@@ -38,6 +39,7 @@ This is mainly built for my friends and me, so expect the usual: useful, probabl
 [*]Text, picture, audio, and mail modules can sync to users, individual computers, or Register Computer modules.
 [*]The MMC: Layout Eden module syncs to Register Computer modules, registered computers, or mobile profile modules and controls the pre-login computer look.
 [*]The MMC: Layout module can disable in-world screen texture application or override the setObjectTexture selections with comma-separated numbers.
+[*]Hacking can be disabled or tuned in CBA. By default the Hack option only appears while players carry [code]MMC_main_hackingTool[/code]. They must wait through the configured hacking duration, then solve a candidate-word puzzle. Desktop hacking targets the username typed into the login screen and only opens accounts directly linked to that computer; mobile hacking targets the active lock screen.
 [*]Mobile devices use the included MMC device items: [code]MMC_main_smartphone[/code], [code]MMC_main_ruggedTabletBlack[/code], [code]MMC_main_ruggedTabletGreen[/code], [code]MMC_main_ruggedTabletSand[/code], and [code]MMC_main_tablet[/code].
 [*]When one of these prototype items is taken from an arsenal, MMC replaces it with a hidden unique subclass and uses that item as the persistent device id.
 [*]Mobile devices use icon buttons for built-in apps and a collapsible Apps drawer for scripted custom apps.

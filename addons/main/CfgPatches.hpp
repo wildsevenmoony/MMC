@@ -42,6 +42,7 @@ class CfgPatches {
 			QGVAR(deviceTablet)
 		};
 		weapons[] = {
+			QGVAR(hackingTool),
 			QGVAR(smartphone),
 			QGVAR(ruggedTabletBlack),
 			QGVAR(ruggedTabletGreen),

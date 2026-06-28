@@ -21,6 +21,8 @@ params [
 
 if (isNull _display) exitWith {};
 
+[_display, true, true] call FUNC(hackingClose);
+
 if (_display getVariable [QGVAR(isMobileDisplay), false]) then {
 	private _focusSink = _display getVariable [QGVAR(mobileFocusSinkControl), controlNull];
 	if (isNull _focusSink) then {

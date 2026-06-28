@@ -109,6 +109,27 @@ class CfgFunctions {
 			class unlockMobile {};
 		};
 
+		class ComputerHacking {
+			file = PATHTOF(fnc\hacking);
+			class hackingAddEntryButton {};
+			class hackingBegin {};
+			class hackingCanStart {};
+			class hackingClose {};
+			class hackingFinish {};
+			class hackingLoginKnown {};
+			class hackingLikeness {};
+			class hackingPlaySoundLocal {};
+			class hackingRecordMobileCode {};
+			class hackingRecordReport {};
+			class hackingRender {};
+			class hackingRenderAccountList {};
+			class hackingSelect {};
+			class hackingSetEffectsLocal {};
+			class hackingSetScreenLocked {};
+			class hackingStartAccount {};
+			class hackingStart {};
+		};
+
 		class ComputerModules {
 			file = PATHTOF(fnc\modules);
 			class addAudioModule {};

@@ -7,6 +7,19 @@ class CfgWeapons {
 	class ACE_ItemCore;
 	class CBA_MiscItem_ItemInfo;
 
+	class GVAR(hackingTool): ACE_ItemCore {
+		author = "Moony";
+		displayName = "Intrusion Tool";
+		descriptionShort = "Compact MMC security bypass device used for hacking computers and mobile devices.";
+		model = "\A3\Structures_F_Heli\Items\Electronics\Tablet_01_F.p3d";
+		picture = PATHTOF(img\icon_tablet.paa);
+		scope = 2;
+
+		class ItemInfo: CBA_MiscItem_ItemInfo {
+			mass = 6;
+		};
+	};
+
 	class GVAR(smartphone): ACE_ItemCore {
 		author = "Moony";
 		displayName = "Smartphone";

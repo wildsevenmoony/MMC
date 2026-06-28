@@ -163,6 +163,19 @@ private _confirmFrame = _display ctrlCreate [QGVAR(RscComputerFrame), [_display]
 private _confirmIcon = _display ctrlCreate ["RscPictureKeepAspect", [_display] call FUNC(nextDynamicIdc)];
 private _delete = _display ctrlCreate [QGVAR(RscComputerButton), [_display] call FUNC(nextDynamicIdc)];
 private _deleteFrame = _display ctrlCreate [QGVAR(RscComputerFrame), [_display] call FUNC(nextDynamicIdc)];
+private _canHack = [_display, "mobile"] call FUNC(hackingCanStart);
+private _hack = controlNull;
+private _hackPatch = controlNull;
+private _hackFrame = controlNull;
+private _hackIcon = controlNull;
+private _hackLabel = controlNull;
+if (_canHack) then {
+	_hackPatch = _display ctrlCreate ["RscText", [_display] call FUNC(nextDynamicIdc)];
+	_hackFrame = _display ctrlCreate [QGVAR(RscComputerFrame), [_display] call FUNC(nextDynamicIdc)];
+	_hackIcon = _display ctrlCreate ["RscPictureKeepAspect", [_display] call FUNC(nextDynamicIdc)];
+	_hackLabel = _display ctrlCreate ["RscStructuredText", [_display] call FUNC(nextDynamicIdc)];
+	_hack = _display ctrlCreate [QGVAR(RscComputerInvisibleButton), [_display] call FUNC(nextDynamicIdc)];
+};
 private _buttons = [];
 private _buttonFrames = [];
 
@@ -246,7 +259,24 @@ _delete ctrlAddEventHandler ["ButtonClick", {
 _deleteFrame ctrlSetTextColor _border;
 _deleteFrame ctrlEnable false;
 
-private _allControls = [_panel, _frame, _time, _dateText, _dots, _prompt, _error, _confirm, _confirmFrame, _confirmIcon, _delete, _deleteFrame] + _buttons + _buttonFrames;
+if (_canHack) then {
+	_hackPatch ctrlSetBackgroundColor [0.01, 0.012, 0.014, 0.96];
+	_hackPatch ctrlEnable false;
+	_hackFrame ctrlSetTextColor _border;
+	_hackFrame ctrlEnable false;
+	_hackIcon ctrlSetText PATHTOF(img\hack_white.paa);
+	_hackIcon ctrlEnable false;
+	_hackLabel ctrlSetStructuredText parseText "";
+	_hackLabel ctrlEnable false;
+	_hack ctrlSetTooltip "Start a timed security bypass.";
+	_hack ctrlEnable true;
+	_hack ctrlAddEventHandler ["ButtonClick", {
+		params ["_control"];
+		[ctrlParent _control, "mobile"] call MMC_fnc_hackingStart;
+	}];
+};
+
+private _allControls = [_panel, _frame, _time, _dateText, _dots, _prompt, _error, _confirm, _confirmFrame, _confirmIcon, _delete, _deleteFrame, _hackPatch, _hackFrame, _hackIcon, _hackLabel, _hack] + _buttons + _buttonFrames;
 _display setVariable [QGVAR(mobileLockControls), _allControls];
 _display setVariable [QGVAR(mobileLockControlMap), createHashMapFromArray [
 	["panel", _panel],
@@ -262,7 +292,12 @@ _display setVariable [QGVAR(mobileLockControlMap), createHashMapFromArray [
 	["confirmFrame", _confirmFrame],
 	["confirmIcon", _confirmIcon],
 	["delete", _delete],
-	["deleteFrame", _deleteFrame]
+	["deleteFrame", _deleteFrame],
+	["hack", _hack],
+	["hackPatch", _hackPatch],
+	["hackFrame", _hackFrame],
+	["hackIcon", _hackIcon],
+	["hackLabel", _hackLabel]
 ]];
 
 if ((_display getVariable [QGVAR(mobileLockKeyEh), -1]) < 0) then {

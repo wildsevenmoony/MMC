@@ -278,9 +278,7 @@ switch (_app) do {
 			call _applyMobileNow;
 		};
 		private _groupPos = ctrlPosition _body;
-		if (!(_display getVariable [QGVAR(isMobileDisplay), false])) then {
-			_groupPos set [3, ((_groupPos select 3) - 0.09) max 0.08];
-		};
+		_groupPos set [3, ((_groupPos select 3) - 0.09) max 0.08];
 		private _group = _display ctrlCreate [QGVAR(RscComputerAppGroup), [_display] call FUNC(nextDynamicIdc)];
 		_group ctrlSetPosition _groupPos;
 		_group ctrlSetText "";

@@ -1,6 +1,7 @@
 # **Moony's Magnificent Computers** - Update DD.MM.YYYY
--# Version 1.1.1.1
+-# Version 0.1.2.0
 ## Added
+- Optional hacking flow with the MMC Intrusion Tool, timed ACE progress and a word-likeness puzzle for desktop account login screens and mobile lock screens.
 - Mobile device system with smartphone, tablet and rugged tablet items
 - Unique mobile device IDs so phones and tablets can keep their data when looted, stolen or dropped
 - Mobile lock screen with numeric unlock codes for placed, profile-assigned, Zeus-assigned, inventory and arsenal devices
@@ -20,31 +21,6 @@
 - Mail attachment picker for selecting existing text, picture and audio files from the active file browser.
 - Support for multiple mail attachments on a single e-mail.
 - Eden and Zeus Add Audio modules for seeding audio files onto users, computers and mobile profiles.
-## Fixed
-- Audio playback now creates/stops local sound sources on clients instead of only on the server.
-- Audio playback now logs missing or invalid sound source classes instead of failing silently.
-- Audio playback now accepts mission-relative file paths without a leading slash as a fallback when no sound class is stored.
-- Files app navigation no longer puts every file into the mobile navigator pane.
-- Mobile Send Mail action buttons now use the same sizing as the Inbox and Outbox mail action buttons.
-- Mobile lock screen cleanup no longer errors when reopening devices with nested dynamic controls
-- Mobile lock screen now hides the custom app drawer controls while locked
-- Personal inventory and arsenal devices now correctly use the player's CBA mobile lock code when the matching mobile profile has no filled lock code
-- Mobile lock screen layout now keeps the keypad and time/date separated in horizontal orientation
-- Messenger home contact cards and the chat back button are now clickable through the full visible control.
-- Messenger home cards now use real transparent buttons plus an index fallback so card clicks open the selected chat reliably.
-- Messenger home unread counters now sit on the far right side of the contact card.
-- Address Book Use To and Use CC now only fill their intended composer fields.
-- Address Book now preserves composer drafts when selecting To or CC contacts.
-- Address Book actions now require a selected address and no longer clear drafts when clicked empty.
-- Mail table action buttons now keep clear of mobile scroll arrows and remain visible, but disabled, below open mobile panes.
-- Mail action buttons and Address Book controls now use more consistent sizing and spacing.
-- Mail now opens the Inbox when the Mail app button is pressed, while preserving normal folder navigation inside the app.
-- Address Book Use To, Use CC and Delete buttons now enable immediately after selecting an address.
-- Mail action controls are now hidden reliably when switching away from the Mail app.
-- Address Book Save is now disabled until both Name and E-Mail fields contain text.
-- Address Book Save state updates no longer error when typing into the Name or E-Mail fields.
-- Address Book status messages now stay on the Address Book screen instead of carrying into the composer.
-- Address Book status is now shown beside the Name label and the composer clears stale status text on open.
 ## Removed
 - Experimental video playback support, because it was not reliable enough inside the dialog
 ## Changed
@@ -57,7 +33,6 @@
 - Mail system gained read/unread icons, CC, attachments, reply/forward improvements and mission-time timestamps
 - Mail, file, picture, desktop/home and mobile-profile module syncing was expanded
 - Dedicated server behavior was improved for mail, devices, mobile profiles and Messenger
-- Documentation and Steam description were updated for the expanded system
 - Messenger notifications now show who sent the message without exposing the message text.
 - Unread Messenger home cards now use the theme accent color until opened.
 - Added a CBA setting to disable MMC notification sounds while keeping ACE text notifications.
@@ -71,6 +46,8 @@
 - Files app now shows file buttons in the content area while the navigator pane only switches file categories.
 - Mobile media controls now hide under open mobile panes so their arrows cannot overlap the pane.
 
+---
+
 # **Moony's Magnificent Computers** - Initial Release DD.MM.YYYY
 -# Version 1.0.0.0
 ## Added
@@ -81,8 +58,6 @@
 - Mail app with inbox, outbox, reply and forward workflow
 - Eden and Zeus modules for registering computers, adding users, adding text files, adding mail and changing power state
 - Default, NATO, CSAT and AAF visual themes
-## Fixed
-- Mobile lock screen cleanup no longer errors when reopening devices with nested dynamic controls
 ## Removed
 - Nothing
 ## Changed
